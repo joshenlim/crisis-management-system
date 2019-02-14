@@ -18,8 +18,8 @@ function action() {
     chunks: ['login'],
     title,
     component: (
-      <Layout>
-        <Login title={title} />
+      <Layout hideHeader>
+        <Login />
       </Layout>
     ),
   };

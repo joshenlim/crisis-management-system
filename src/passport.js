@@ -15,8 +15,91 @@
 
 import passport from 'passport';
 import { Strategy as FacebookStrategy } from 'passport-facebook';
+import { Strategy as LocalStrategy} from 'passport-local';
+
 import { User, UserLogin, UserClaim, UserProfile } from './data/models';
 import config from './config';
+
+passport.serializeUser((data, cb) => {
+  cb(null, data);
+});
+
+passport.deserializeUser((data, cb) => {
+  /**
+   * TO-DO: Create a class to handle MYSQL access
+   *        Implement bcrypt for password storage and reading
+   */
+
+  // const userId = data.user.id
+  // const user = data.clientId
+    // ? database.findUser(userId).filter(item => {
+    //   return item.client_id == data.clientId;
+    // })
+    // : database.findUser(userId)
+  // const policies = {}
+  // for (const i in user) {
+  //   policies[user[i].resource] = user[i].access
+  // }
+  // const clientId = data.clientId || user[0].client_id;
+  // const clientName = data.clientName || user[0].client_name;
+  // const role = data.clientId
+  //   ? user.filter(item => {
+  //     return item.client_id == clientId
+  //   })[0].role
+  //   : user[0].role
+  // const userClientActive = data.userClientActive || user[0].userClientActivated;
+  // const userProfile = {
+  //   id: userId,
+  //   email: user[0].email,
+  //   name: user[0].name,
+  //   role: role,
+  //   clientId: clientId,
+  //   clientName: clientName,
+  //   userClientActivated: userClientActive,
+  //   activated: user[0].activated,
+  //   policies: policies
+  // }
+  console.log("Deserialize: ", data);
+  const userProfile = {
+    name: 'Joshen'
+  }
+  cb(null, userProfile)
+});
+
+/**
+ * Sign in locally
+ */
+passport.use('local-login', new LocalStrategy(
+  {
+    usernameField: 'username',
+    passwordField: 'password',
+    passReqToCallback: true
+  },
+  (req, username, password, done) => {
+    // const user = database.findUserByEmail(email);
+    // if (!user.length) {
+    //   return done(null, false, 'User not found, try another set of credentials!');
+    // }
+    // if (!authUtils.validPassword(password, user[0].password)) {
+    //   return done(null, false, 'You\'ve entered a wrong password!');
+    // }
+    // const updateLoggedIn = database.updateLastLoggedIn(email, date.current());
+    console.log("Passport local login");
+    console.log("Username:", username);
+    console.log("Password:", password)
+
+    return done(null, {
+      user: {
+        name: 'Joshen'
+      }
+      // user: user[0],
+      // clientId: req.body.clientId,
+      // clientName: req.body.clientName,
+      // userClientActive: req.body.userClientActive,
+    });
+  })
+);
+
 
 /**
  * Sign in with Facebook.

@@ -10,6 +10,8 @@
 import path from 'path';
 import express from 'express';
 import cookieParser from 'cookie-parser';
+import cookieSession from 'cookie-session';
+import flash from 'connect-flash';
 import bodyParser from 'body-parser';
 import expressJwt, { UnauthorizedError as Jwt401Error } from 'express-jwt';
 import { graphql } from 'graphql';
@@ -33,6 +35,8 @@ import chunks from './chunk-manifest.json'; // eslint-disable-line import/no-unr
 import configureStore from './store/configureStore';
 import { setRuntimeVariable } from './actions/runtime';
 import config from './config';
+
+import authRouter from './api/auth';
 
 process.on('unhandledRejection', (reason, p) => {
   console.error('Unhandled Rejection at:', p, 'reason:', reason);
@@ -60,8 +64,15 @@ app.set('trust proxy', config.trustProxy);
 // -----------------------------------------------------------------------------
 app.use(express.static(path.resolve(__dirname, 'public')));
 app.use(cookieParser());
+app.use(cookieSession({
+  maxAge: 86400000,
+  keys: [config.session.cookieKey]
+}))
+app.use(passport.initialize());
+app.use(passport.session());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+app.use(flash());
 
 //
 // Authentication
@@ -85,6 +96,41 @@ app.use((err, req, res, next) => {
 });
 
 app.use(passport.initialize());
+
+app.post('/login', (req, res, next) => {
+  console.log("LOGIN: ", req.body);
+  // eslint-disable-next-line consistent-return
+  passport.authenticate('local-login', (err, user, info) => {
+    if (err || !user ) {
+      console.log("Login Error", err);
+      if (req.headers['auth-type'] === 'return') {
+        return res.status(400).json({ error: info });
+      }
+      req.flash('error', info)
+      // TO-DO: Trigger flash message upon unsuccessful login
+      res.redirect('/')
+    } else {
+      // eslint-disable-next-line consistent-return
+      req.login(user, (error) => {
+        if (error) {
+          res.send(error)
+        } else {
+          const token = jwt.sign(
+            { username: user.email },
+            config.session.jwtSecret,
+            { expiresIn: '24h'}
+          );
+          if (req.headers['auth-type'] === 'return') {
+            return res.json({token});
+          }
+          req.session.jwt = token;
+          // TO-DO: Redirect to dashboard or something upon successful login
+          res.redirect('/');
+        }
+      })
+    }
+  })(req, res, next);
+});
 
 app.get(
   '/login/facebook',
@@ -119,6 +165,12 @@ app.use(
     pretty: __DEV__,
   })),
 );
+
+//
+// Custom-written APIs
+// -----------------------------------------------------------------------------
+
+app.use('/api/auth', authRouter);
 
 //
 // Register server-side rendering middleware

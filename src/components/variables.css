@@ -12,7 +12,7 @@
    * Typography
    * ======================================================================== */
 
-  --font-family-base: 'Segoe UI', 'HelveticaNeue-Light', sans-serif;
+  --font-family-base: 'Roboto', 'Segoe UI', sans-serif;
 
   /*
    * Layout
@@ -28,4 +28,18 @@
   --screen-sm-min: 768px;  /* Small screen / tablet */
   --screen-md-min: 992px;  /* Medium screen / desktop */
   --screen-lg-min: 1200px; /* Large screen / wide desktop */
+
+  /* Custom Colors */
+  --blue: #2196f3;
+  --orange: #ff8a65;
+  --red: #ff5722;
+  --green: #66bb6a;
+  --light-green: #9ccc65;
+  --yellow: #ffeb3b;
+  --cyan: #00bcd4;
+  --indigo: #3f51b5;
+  --teal: #009688;
+  --black: #333;
+  --white: #fff;
+  --shadow: rgba(0, 0, 0, 0.5);
 }

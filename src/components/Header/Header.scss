@@ -9,10 +9,6 @@
 
 @import '../variables.css';
 
-:root {
-  --brand-color: #61dafb;
-}
-
 .root {
   background: #373277;
   color: #fff;
@@ -25,7 +21,7 @@
 }
 
 .brand {
-  color: color(var(--brand-color) lightness(+10%));
+  color: #61dafb;
   text-decoration: none;
   font-size: 1.75em; /* ~28px */
 }

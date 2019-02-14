@@ -42,9 +42,12 @@ module.exports = {
     'no-console': [
       'error',
       {
-        allow: ['warn', 'error', 'info'],
+        allow: ['warn', 'error', 'info', 'log'],
       },
     ],
+
+    // Custom lint rules for less trouble
+    'import/prefer-default-export': 'off',
 
     // Prefer destructuring from arrays and objects
     // http://eslint.org/docs/rules/prefer-destructuring
@@ -86,7 +89,7 @@ module.exports = {
 
     // ESLint plugin for prettier formatting
     // https://github.com/prettier/eslint-plugin-prettier
-    'prettier/prettier': 'error',
+    // 'prettier/prettier': 'error',
   },
 
   settings: {

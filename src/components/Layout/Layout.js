@@ -15,21 +15,23 @@ import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import normalizeCss from 'normalize.css';
 import s from './Layout.css';
 import Header from '../Header';
-import Feedback from '../Feedback';
-import Footer from '../Footer';
+// import Feedback from '../Feedback';
+// import Footer from '../Footer';
 
 class Layout extends React.Component {
   static propTypes = {
     children: PropTypes.node.isRequired,
+    hideHeader: PropTypes.bool.isRequired,
   };
 
   render() {
+    const { hideHeader } = this.props;
     return (
       <div>
-        <Header />
+        {!hideHeader && <Header />}
         {this.props.children}
-        <Feedback />
-        <Footer />
+        {/* <Feedback /> */}
+        {/* <Footer /> */}
       </div>
     );
   }

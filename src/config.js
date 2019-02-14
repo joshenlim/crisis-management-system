@@ -41,6 +41,11 @@ module.exports = {
     googleTrackingId: process.env.GOOGLE_TRACKING_ID, // UA-XXXXX-X
   },
 
+  session: {
+    cookieKey: 'crisis',
+    jwtSecret: 'ac2bdc081f9e4719934d4ec04e2fe58b' // make this to env var
+  },
+
   // Authentication
   auth: {
     jwt: { secret: process.env.JWT_SECRET || 'React Starter Kit' },
