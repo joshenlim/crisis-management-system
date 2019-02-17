@@ -125,7 +125,7 @@ app.post('/login', (req, res, next) => {
           }
           req.session.jwt = token;
           // TO-DO: Redirect to dashboard or something upon successful login
-          res.redirect('/');
+          res.redirect('/home');
         }
       })
     }
