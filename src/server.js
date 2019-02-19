@@ -1,12 +1,3 @@
-/**
- * React Starter Kit (https://www.reactstarterkit.com/)
- *
- * Copyright © 2014-present Kriasoft, LLC. All rights reserved.
- *
- * This source code is licensed under the MIT license found in the
- * LICENSE.txt file in the root directory of this source tree.
- */
-
 import path from 'path';
 import express from 'express';
 import cookieParser from 'cookie-parser';
@@ -21,6 +12,7 @@ import nodeFetch from 'node-fetch';
 import React from 'react';
 import ReactDOM from 'react-dom/server';
 import PrettyError from 'pretty-error';
+import config from './config';
 import App from './components/App';
 import Html from './components/Html';
 import { ErrorPageWithoutStyle } from './routes/error/ErrorPage';
@@ -33,8 +25,9 @@ import schema from './data/schema';
 // import assets from './asset-manifest.json'; // eslint-disable-line import/no-unresolved
 import chunks from './chunk-manifest.json'; // eslint-disable-line import/no-unresolved
 import configureStore from './store/configureStore';
+
 import { setRuntimeVariable } from './actions/runtime';
-import config from './config';
+// import { updateFlash } from './actions/flash'
 
 import authRouter from './api/auth';
 
@@ -98,15 +91,18 @@ app.use((err, req, res, next) => {
 app.use(passport.initialize());
 
 app.post('/login', (req, res, next) => {
-  console.log("LOGIN: ", req.body);
   // eslint-disable-next-line consistent-return
   passport.authenticate('local-login', (err, user, info) => {
     if (err || !user ) {
-      console.log("Login Error", err);
       if (req.headers['auth-type'] === 'return') {
         return res.status(400).json({ error: info });
       }
-      req.flash('error', info)
+      console.log("ERR: ", info);
+
+      // store.dispatch(
+      //   updateFlash(info, "Error")
+      // );
+
       // TO-DO: Trigger flash message upon unsuccessful login
       res.redirect('/')
     } else {
@@ -132,26 +128,31 @@ app.post('/login', (req, res, next) => {
   })(req, res, next);
 });
 
-app.get(
-  '/login/facebook',
-  passport.authenticate('facebook', {
-    scope: ['email', 'user_location'],
-    session: false,
-  }),
-);
-app.get(
-  '/login/facebook/return',
-  passport.authenticate('facebook', {
-    failureRedirect: '/login',
-    session: false,
-  }),
-  (req, res) => {
-    const expiresIn = 60 * 60 * 24 * 180; // 180 days
-    const token = jwt.sign(req.user, config.auth.jwt.secret, { expiresIn });
-    res.cookie('id_token', token, { maxAge: 1000 * expiresIn, httpOnly: true });
-    res.redirect('/');
-  },
-);
+app.get('/logout', (req, res) => {
+  req.logout();
+  res.redirect('/');
+});
+
+// app.get(
+//   '/login/facebook',
+//   passport.authenticate('facebook', {
+//     scope: ['email', 'user_location'],
+//     session: false,
+//   }),
+// );
+// app.get(
+//   '/login/facebook/return',
+//   passport.authenticate('facebook', {
+//     failureRedirect: '/login',
+//     session: false,
+//   }),
+//   (req, res) => {
+//     const expiresIn = 60 * 60 * 24 * 180; // 180 days
+//     const token = jwt.sign(req.user, config.auth.jwt.secret, { expiresIn });
+//     res.cookie('id_token', token, { maxAge: 1000 * expiresIn, httpOnly: true });
+//     res.redirect('/');
+//   },
+// );
 
 //
 // Register API middleware
@@ -171,6 +172,7 @@ app.use(
 // -----------------------------------------------------------------------------
 
 app.use('/api/auth', authRouter);
+// app.use('/ops/dashboard', opsRouter);
 
 //
 // Register server-side rendering middleware

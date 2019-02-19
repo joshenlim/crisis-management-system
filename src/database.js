@@ -48,62 +48,26 @@ class MySQLDB {
     } );
   }
 
-//   async deactivateJob(jobId) {
-//     const res = await this.query("UPDATE audit SET active = false WHERE job_id = ?", jobId)
-//       .then(rows => {
-//         return rows;
-//       })
-//     return res;
-//   }
+  getStaff(username) {
+    const res = this.query("SELECT * FROM users WHERE username = ?", username)
+      .then(rows => rows)
+      .catch(err => {
+        console.error("Error from getStaff:", err.sqlMessage);
+        return err.code
+      });
+    return res;
+  }
 
-//   async retrieveAllArticlesTags() {
-//     const res = await this.query(`SELECT tag, count(*) as tagCount FROM articles \
-//                                   GROUP BY tag`)
-//       .then(rows => rows);
-//     return res;
-//   }
-
-  
-
-//   async retrieveGenImagesByJobId(jobId) {
-//     const res = await this.query(`SELECT generated_visual.id, generated_visual.approved,\
-//                                   generated_visual.tracer_id,\
-//                                   output_key, output_bucket, template_name, job_name FROM audit\
-//                                   INNER JOIN generated_visual ON generated_visual.tracer_id = audit.tracer_id\
-//                                   WHERE job_id = ?`, jobId)
-//       .then(rows => {
-//         return rows;
-//       })
-//       .catch(err => {
-//         console.error("Error from retrieveGenImagesByJobId:", err.sqlMessage, " for audit table");
-//         return err.code;
-//       })
-//     return res;
-//   }
-
-//   async retrieveJobsByUserIdAndClientId(userId, clientId) {
-//     const batches = await this.query(`SELECT a.job_id, a.job_name, a.job_type, a.client_id, a.created_at, a.user_id, a.active, b.name\
-//                                       FROM ( SELECT job_id, ANY_VALUE(job_name) as job_name,\
-//                                       ANY_VALUE(job_type) as job_type,\
-//                                       ANY_VALUE(active) as active,\
-//                                       ANY_VALUE(client_id) as client_id,\
-//                                       MIN(created_at) as created_at,\
-//                                       ANY_VALUE(user_id) as user_id FROM audit GROUP BY job_id )\
-//                                       AS a JOIN ( SELECT id, name FROM users) AS b ON\
-//                                       a.user_id = b.id\
-//                                       WHERE a.user_id = ? AND a.client_id = ? AND a.job_type = 'FB_PRODUCT_FEED'\
-//                                       ORDER BY a.created_at DESC`, [userId, clientId])
-//       .then(rows => {
-//         return rows;
-//       })
-//       .catch(err => {
-//         console.error("Error from retrieveJobsByUserId:", err.sqlMessage, " for audit table");
-//         return err.code;
-//       })
-//     return batches;
-//   }
-
+  createStaff(name, username, password) {
+    const res = this.query(`INSERT INTO users (name, username, password)
+                            VALUES (?, ?, ?)`, [name, username, password])
+      .then(rows => rows)
+      .catch(err => {
+        console.error("Error from createStaff:", err.sqlMessage);
+        return err.code
+      });
+    return res;
+  }
 }
 
-// module.exports = MySQLDB
 export default MySQLDB;

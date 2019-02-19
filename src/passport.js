@@ -5,8 +5,6 @@ import { Strategy as LocalStrategy} from 'passport-local';
 import config from './config';
 import MySQLDB from './database';
 
-// const MySQLDB = require('./database');
-
 // import { Strategy as FacebookStrategy } from 'passport-facebook';
 // import { User, UserLogin, UserClaim, UserProfile } from './data/models';
 // import config from './config';
@@ -19,93 +17,29 @@ passport.serializeUser((data, cb) => {
 });
 
 passport.deserializeUser((data, cb) => {
-  /**
-   * TO-DO: Create a class to handle MYSQL access
-   *        Implement bcrypt for password storage and reading
-   */
-
-  // const userId = data.user.id
-  // const user = data.clientId
-    // ? database.findUser(userId).filter(item => {
-    //   return item.client_id == data.clientId;
-    // })
-    // : database.findUser(userId)
-  // const policies = {}
-  // for (const i in user) {
-  //   policies[user[i].resource] = user[i].access
-  // }
-  // const clientId = data.clientId || user[0].client_id;
-  // const clientName = data.clientName || user[0].client_name;
-  // const role = data.clientId
-  //   ? user.filter(item => {
-  //     return item.client_id == clientId
-  //   })[0].role
-  //   : user[0].role
-  // const userClientActive = data.userClientActive || user[0].userClientActivated;
-  // const userProfile = {
-  //   id: userId,
-  //   email: user[0].email,
-  //   name: user[0].name,
-  //   role: role,
-  //   clientId: clientId,
-  //   clientName: clientName,
-  //   userClientActivated: userClientActive,
-  //   activated: user[0].activated,
-  //   policies: policies
-  // }
-  console.log("Deserialize: ", data);
-  const userProfile = {
-    name: 'Joshen'
-  }
-  cb(null, userProfile)
+  // TO-DO: Once RBAC is up, probably need to a create user profile to map the roles and policies
+  // and pass it to the callback function
+  cb(null, data)
 });
 
-/**
- * Sign in locally
- */
+// Sign in locally
 passport.use('local-login', new LocalStrategy(
   {
     usernameField: 'username',
     passwordField: 'password',
     passReqToCallback: true
   },
-  (req, username, password, done) => {
-    // const user = database.findUserByEmail(email);
-    // if (!user.length) {
-    //   return done(null, false, 'User not found, try another set of credentials!');
-    // }
-    // if (!authUtils.validPassword(password, user[0].password)) {
-    //   return done(null, false, 'You\'ve entered a wrong password!');
-    // }
-    // const updateLoggedIn = database.updateLastLoggedIn(email, date.current());
-
-    /**
-     *  generateHash: function(password) {
-          return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);
-        },
-
-        validPassword: function(password, hash) {
-          return bcrypt.compareSync(password, hash);
-        }
-     */
-
-    if (username !== 'admin' && password !== 'password') {
+  async (req, username, password, done) => {
+    const user = await database.getStaff(username);
+    if (!user.length) {
       return done(null, false, 'User not found, try another set of credentials!');
     }
-
-    console.log("Passport local login");
-    console.log("Username:", username);
-    console.log("Password:", password)
-    console.log("Hashed:", bcrypt.hashSync(password, bcrypt.genSaltSync(8), null))
-
+    if (!bcrypt.compareSync(password, user[0].password)) {
+      return done(null, false, 'You\'ve entered a wrong password!');
+    }
     return done(null, {
-      user: {
-        name: 'admin'
-      }
-      // user: user[0],
-      // clientId: req.body.clientId,
-      // clientName: req.body.clientName,
-      // userClientActive: req.body.userClientActive,
+      id: user[0].id,
+      name: user[0].name
     });
   })
 );
