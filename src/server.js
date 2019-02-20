@@ -27,7 +27,6 @@ import chunks from './chunk-manifest.json'; // eslint-disable-line import/no-unr
 import configureStore from './store/configureStore';
 
 import { setRuntimeVariable } from './actions/runtime';
-// import { updateFlash } from './actions/flash'
 
 import authRouter from './api/auth';
 
@@ -98,11 +97,6 @@ app.post('/login', (req, res, next) => {
         return res.status(400).json({ error: info });
       }
       console.log("ERR: ", info);
-
-      // store.dispatch(
-      //   updateFlash(info, "Error")
-      // );
-
       // TO-DO: Trigger flash message upon unsuccessful login
       res.redirect('/')
     } else {
