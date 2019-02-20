@@ -11,6 +11,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import s from './OpsDashboard.scss';
+import Map from '../../components/Map/Map';
 
 class OpsDashboard extends React.Component {
   static propTypes = {
@@ -23,11 +24,13 @@ class OpsDashboard extends React.Component {
     ).isRequired,
   };
 
+
   render() {
 
     return (
       <div className={s.root}>
         <div className={s.container}>
+          <Map />
           <h1>React.js News</h1>
           {this.props.news.map(item => (
             <article key={item.link} className={s.newsItem}>
