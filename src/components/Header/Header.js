@@ -1,39 +1,66 @@
-/**
- * React Starter Kit (https://www.reactstarterkit.com/)
- *
- * Copyright © 2014-present Kriasoft, LLC. All rights reserved.
- *
- * This source code is licensed under the MIT license found in the
- * LICENSE.txt file in the root directory of this source tree.
- */
-
 import React from 'react';
+import PropTypes from 'prop-types';
+import axios from 'axios';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import s from './Header.scss';
-import Link from '../Link';
-import Navigation from '../Navigation';
-import logoUrl from './logo-small.png';
-import logoUrl2x from './logo-small@2x.png';
+import logo from '../../assets/images/logo-light.svg';
 
 class Header extends React.Component {
+  static propTypes = {
+    user: PropTypes.objectOf(
+      PropTypes.shape({
+        id: PropTypes.number.isRequired,
+        name: PropTypes.string.isRequired,
+      })
+    ).isRequired,
+    onClick: PropTypes.func,
+  };
+
+  static defaultProps = {
+    onClick: null,
+  };
+
+  constructor(props) {
+    super(props);
+    this.handleClick = this.handleClick.bind(this);
+    this.handleOnKeyDown = this.handleOnKeyDown.bind(this);
+  }
+
+  handleClick = event => {
+    if (this.props.onClick) this.props.onClick(event);
+    const originURL = window.location.origin;
+    axios.post(`${originURL}/logout`).then(window.location = originURL);
+  }
+
+  handleOnKeyDown = event => {
+    event.preventDefault();
+  }
+
   render() {
+    const { user } = this.props;
+    const mockProfile = "https://az616578.vo.msecnd.net/files/2016/07/24/6360498492827782071652557381_corgi%20header.jpg";
+    const userProfileStyle = {
+      backgroundImage: `url(${mockProfile})`,
+    }
     return (
-      <div className={s.root}>
-        <div className={s.container}>
-          <Navigation />
-          <Link className={s.brand} to="/">
-            <img
-              src={logoUrl}
-              srcSet={`${logoUrl2x} 2x`}
-              width="38"
-              height="38"
-              alt="React"
-            />
-            <span className={s.brandTxt}>Your Company</span>
-          </Link>
-          <div className={s.banner}>
-            <h1 className={s.bannerTitle}>React</h1>
-            <p className={s.bannerDesc}>Complex web apps made easy</p>
+      <div className={s.header}>
+        <div className={s.logo}>
+          <img className={s.logo} alt="Logo-White" src={logo} />
+        </div>
+        <div className={s.nav}>
+          <div className={s.userProfile}>
+            <div className={s.userInfo}>
+              <div className={s.name}>{user.name}</div>
+              <div className={s.role}>Ops Center Administrator</div>
+            </div>
+            <div className={s.image} style={userProfileStyle} />
+          </div>
+          <div className={s.logout} 
+               onClick={this.handleClick}
+               onKeyDown={this.handleOnKeyDown}
+               role="button"
+               tabIndex={0}>
+               Log out
           </div>
         </div>
       </div>

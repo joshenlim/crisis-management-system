@@ -24,6 +24,7 @@ class OpsDashboard extends React.Component {
   };
 
   render() {
+
     return (
       <div className={s.root}>
         <div className={s.container}>

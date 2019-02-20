@@ -42,4 +42,5 @@
   --black: #333;
   --white: #fff;
   --shadow: rgba(0, 0, 0, 0.5);
+  --border-black: rgba(51, 51, 51, 0.3);
 }

@@ -8,6 +8,7 @@
  */
 
 import React from 'react';
+import { connect } from 'react-redux'
 import PropTypes from 'prop-types';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
 
@@ -18,17 +19,26 @@ import Header from '../Header';
 // import Feedback from '../Feedback';
 // import Footer from '../Footer';
 
+@connect(state => ({
+  user: state.user,
+}))
 class Layout extends React.Component {
   static propTypes = {
     children: PropTypes.node.isRequired,
     hideHeader: PropTypes.bool.isRequired,
+    user: PropTypes.objectOf(
+      PropTypes.shape({
+        id: PropTypes.number.isRequired,
+        name: PropTypes.string.isRequired,
+      })
+    ).isRequired,
   };
 
   render() {
-    const { hideHeader } = this.props;
+    const { hideHeader, user } = this.props;
     return (
       <div>
-        {!hideHeader && <Header />}
+        {!hideHeader && <Header user={user} />}
         {this.props.children}
         {/* <Feedback /> */}
         {/* <Footer /> */}

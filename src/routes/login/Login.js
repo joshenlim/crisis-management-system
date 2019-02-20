@@ -12,7 +12,7 @@ import React from 'react';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import s from './Login.scss';
 import loading from '../../assets/images/loading.svg';
-import logoWhite from '../../assets/images/logo-white.svg';
+import logo from '../../assets/images/logo-dark.svg';
 
 
 class Login extends React.Component {
@@ -61,7 +61,7 @@ class Login extends React.Component {
     return (
       <div className={`${s.background} ${this.state.showCard && s.showCard}`}>
         <img className={s.loading} alt="Loading" src={loading} />
-        <img className={s.logo} alt="Logo-White" src={logoWhite} />
+        <img className={s.logo} alt="Logo-White" src={logo} />
         <div className={s.cardWrapper}>
           <div className={s.descCard}>
             <h1>Crisis Management System (CMS)</h1>
