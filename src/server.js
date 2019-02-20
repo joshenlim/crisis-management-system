@@ -30,6 +30,13 @@ import { setRuntimeVariable } from './actions/runtime';
 
 import authRouter from './api/auth';
 
+const isAuthorized = (req, res, next) => {
+  if (req.isAuthenticated()) {
+    return next();
+  }
+  return res.redirect('/');
+}
+
 process.on('unhandledRejection', (reason, p) => {
   console.error('Unhandled Rejection at:', p, 'reason:', reason);
   // send entire app down. Process manager will restart it
@@ -115,7 +122,7 @@ app.post('/login', (req, res, next) => {
           }
           req.session.jwt = token;
           // TO-DO: Redirect to dashboard or something upon successful login
-          res.redirect('/home');
+          res.redirect('/ops/dashboard');
         }
       })
     }
@@ -167,6 +174,13 @@ app.use(
 
 app.use('/api/auth', authRouter);
 // app.use('/ops/dashboard', opsRouter);
+
+//
+// Middleware Auth for ops, hq, pmo systems
+// -----------------------------------------------------------------------------
+app.all('/ops/*', isAuthorized);
+app.all('/hq/*',  isAuthorized);
+app.all('/pmo/*', isAuthorized);
 
 //
 // Register server-side rendering middleware

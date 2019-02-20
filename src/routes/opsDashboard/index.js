@@ -8,7 +8,7 @@
  */
 
 import React from 'react';
-import Home from './Home';
+import OpsDashboard from './OpsDashboard';
 import Layout from '../../components/Layout';
 
 async function action({ fetch }) {
@@ -21,10 +21,10 @@ async function action({ fetch }) {
   if (!data || !data.news) throw new Error('Failed to load the news feed.');
   return {
     title: 'React Starter Kit',
-    chunks: ['home'],
+    chunks: ['opsDashboard'],
     component: (
       <Layout>
-        <Home news={data.news} />
+        <OpsDashboard news={data.news} />
       </Layout>
     ),
   };

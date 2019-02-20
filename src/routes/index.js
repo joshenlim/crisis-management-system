@@ -17,16 +17,21 @@ const routes = {
   children: [
     {
       path: '',
-      load: () => import(/* webpackChunkName: 'home' */ './login'),
+      load: () => import(/* webpackChunkName: 'login' */ './login'),
     },
+    {
+      path: '/ops/dashboard',
+      load: () => import(/* webpackChunkName: 'opsDashboard' */ './opsDashboard'),
+    },
+    // These are all left here for reference, will remove all of them eventually prior to deployment
     {
       path: '/contact',
       load: () => import(/* webpackChunkName: 'contact' */ './contact'),
     },
-    {
-      path: '/home',
-      load: () => import(/* webpackChunkName: 'login' */ './home'),
-    },
+    // {
+    //   path: '/home',
+    //   load: () => import(/* webpackChunkName: 'login' */ './home'),
+    // },
     {
       path: '/register',
       load: () => import(/* webpackChunkName: 'register' */ './register'),
