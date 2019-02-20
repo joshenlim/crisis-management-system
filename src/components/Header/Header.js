@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import axios from 'axios';
+import throttle from 'lodash.throttle';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import s from './Header.scss';
 import logo from '../../assets/images/logo-light.svg';
@@ -24,6 +25,11 @@ class Header extends React.Component {
     super(props);
     this.handleClick = this.handleClick.bind(this);
     this.handleOnKeyDown = this.handleOnKeyDown.bind(this);
+    this.handleClickThrottled = throttle(this.handleClick, 1000);
+  }
+
+  componentWillUnmount() {
+    this.handleClickThrottled.cancel();
   }
 
   handleClick = event => {
@@ -56,7 +62,7 @@ class Header extends React.Component {
             <div className={s.image} style={userProfileStyle} />
           </div>
           <div className={s.logout} 
-               onClick={this.handleClick}
+               onClick={this.handleClickThrottled}
                onKeyDown={this.handleOnKeyDown}
                role="button"
                tabIndex={0}>
