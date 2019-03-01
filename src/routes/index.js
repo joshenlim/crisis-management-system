@@ -21,7 +21,8 @@ const routes = {
     },
     {
       path: '/ops/dashboard',
-      load: () => import(/* webpackChunkName: 'opsDashboard' */ './opsDashboard'),
+      load: () =>
+        import(/* webpackChunkName: 'opsDashboard' */ './opsDashboard'),
     },
     // These are all left here for reference, will remove all of them eventually prior to deployment
     {
@@ -47,6 +48,10 @@ const routes = {
     {
       path: '/admin',
       load: () => import(/* webpackChunkName: 'admin' */ './admin'),
+    },
+    {
+      path: '/socket',
+      load: () => import(/* webpackChunkName: 'admin' */ './socket'),
     },
 
     // Wildcard routes, e.g. { path: '(.*)', ... } (must go last)
