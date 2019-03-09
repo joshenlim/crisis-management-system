@@ -76,6 +76,18 @@ class MySQLDB {
       });
     return res;
   }
+
+  getIncidentById(id) {
+    const res = this.query('SELECT * FROM incidents WHERE incident_id = ?', [
+      id,
+    ])
+      .then(rows => rows)
+      .catch(err => {
+        console.error('Error from getIncidentById:', err.sqlMessage);
+        return err.code;
+      });
+    return res;
+  }
 }
 
 export default MySQLDB;
