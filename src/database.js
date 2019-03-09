@@ -67,6 +67,57 @@ class MySQLDB {
     return res;
   }
 
+  createIncident(
+    incidentId,
+    postalCode,
+    address,
+    createdAt,
+    updatedAt,
+    completedAt,
+    addiDesc,
+    casualtyNo,
+    category,
+    description,
+    status,
+    opCreateId,
+    opUpdateId,
+  ) {
+    const res = this.query(
+      `INSERT INTO incidents (incident_id, postal_code, address, created_at,
+        updated_at,
+        completed_at,
+        addi_desc,
+        casualty_no,
+        category,
+        description,
+        status,
+        op_create_id,
+        op_update_id)
+                            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      [
+        incidentId,
+        postalCode,
+        address,
+        createdAt,
+        updatedAt,
+        completedAt,
+        addiDesc,
+        casualtyNo,
+        category,
+        description,
+        status,
+        opCreateId,
+        opUpdateId,
+      ],
+    )
+      .then(rows => rows)
+      .catch(err => {
+        console.error('Error from createIncident:', err.sqlMessage);
+        return err.code;
+      });
+    return res;
+  }
+
   getAllIncident() {
     const res = this.query("SELECT * FROM incidents WHERE status = 'ongoing'")
       .then(rows => rows)
