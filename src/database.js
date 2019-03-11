@@ -79,9 +79,8 @@ class MySQLDB {
     category,
     description,
     status,
-    opCreateId,
-    opUpdateId,
   ) {
+    console.log(incidentId);
     const res = this.query(
       `INSERT INTO incidents (incident_id, postal_code, address, created_at,
         updated_at,
@@ -90,10 +89,8 @@ class MySQLDB {
         casualty_no,
         category,
         description,
-        status,
-        op_create_id,
-        op_update_id)
-                            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+        status)
+                            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       [
         incidentId,
         postalCode,
@@ -106,8 +103,6 @@ class MySQLDB {
         category,
         description,
         status,
-        opCreateId,
-        opUpdateId,
       ],
     )
       .then(rows => rows)
