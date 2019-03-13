@@ -35,6 +35,8 @@ router.post('/create', async (req, res) => {
     category,
     description,
     status,
+    createopid,
+    updateopid,
   } = req.headers;
   console.log(req.headers);
   await database.createIncident(
@@ -49,6 +51,8 @@ router.post('/create', async (req, res) => {
     category,
     description,
     status,
+    createopid,
+    updateopid,
   );
   return res.status(200).send({
     Success: 'Incident successfully created',
