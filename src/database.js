@@ -68,18 +68,18 @@ class MySQLDB {
   }
 
   createIncident(
-    postalCode,
+    postal_code,
     address,
-    createdAt,
-    updatedAt,
-    completedAt,
-    addiDesc,
-    casualtyNo,
+    created_at,
+    updated_at,
+    completed_at,
+    addi_desc,
+    casualty_no,
     category,
     description,
     status,
-    opCreateId,
-    opUpdateId,
+    create_op_id,
+    update_op_id,
   ) {
     const res = this.query(
       `INSERT INTO incidents (postal_code, 
@@ -96,18 +96,18 @@ class MySQLDB {
         op_update_id)
                             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       [
-        postalCode,
+        postal_code,
         address,
-        createdAt,
-        updatedAt,
-        completedAt,
-        addiDesc,
-        casualtyNo,
+        created_at,
+        updated_at,
+        completed_at,
+        addi_desc,
+        casualty_no,
         category,
         description,
         status,
-        opCreateId,
-        opUpdateId,
+        create_op_id,
+        update_op_id,
       ],
     )
       .then(rows => rows)
