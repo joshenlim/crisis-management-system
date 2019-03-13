@@ -68,7 +68,6 @@ class MySQLDB {
   }
 
   createIncident(
-    incidentId,
     postalCode,
     address,
     createdAt,
@@ -82,9 +81,10 @@ class MySQLDB {
     opCreateId,
     opUpdateId,
   ) {
-    console.log(incidentId);
     const res = this.query(
-      `INSERT INTO incidents (incident_id, postal_code, address, created_at,
+      `INSERT INTO incidents (postal_code, 
+        address, 
+        created_at,
         updated_at,
         completed_at,
         addi_desc,
@@ -94,9 +94,8 @@ class MySQLDB {
         status,
         op_create_id,
         op_update_id)
-                            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+                            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       [
-        incidentId,
         postalCode,
         address,
         createdAt,

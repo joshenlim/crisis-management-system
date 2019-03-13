@@ -1,3 +1,4 @@
+/* eslint-disable */
 import express from 'express';
 import config from '../config';
 import MySQLDB from '../database';
@@ -17,14 +18,12 @@ router.get('/get_ongoing', async (req, res) => {
   return res.status(200).send(incidents);
 });
 
-// router.get('/update', async (req, res) => {
-//   const incidents = await database.getAllIncident();
-//   return res.status(200).send(incidents);
-// });
+router.post('/update', async (req, res) => {
+  return res.status(200).send(incidents);
+});
 
 router.post('/create', async (req, res) => {
   const {
-    incidentid,
     postalcode,
     address,
     createdat,
@@ -40,7 +39,6 @@ router.post('/create', async (req, res) => {
   } = req.headers;
   console.log(req.headers);
   await database.createIncident(
-    incidentid,
     postalcode,
     address,
     createdat,
