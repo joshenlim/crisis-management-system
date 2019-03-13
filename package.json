@@ -148,7 +148,6 @@
     ],
     "linters": {
       "*.{js,jsx}": [
-        "eslint --no-ignore --fix",
         "git add --force"
       ],
       "*.{json,md,graphql}": [
