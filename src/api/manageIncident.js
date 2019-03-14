@@ -17,7 +17,11 @@ router.get('/get_ongoing', async (req, res) => {
   return res.status(200).send(incidents);
 });
 
-router.post('/update', async (req, res) => res.status(200).send(incidents));
+// router.post('/update', async (req, res) => res.status(200).send(incidents));
+router.get('/get_all_station', async (req, res) => {
+  const stations = await database.getAllStation();
+  return res.status(200).send(stations);
+});
 
 router.post('/create', async (req, res) => {
   const {

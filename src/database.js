@@ -118,6 +118,16 @@ class MySQLDB {
     return res;
   }
 
+  getAllStation() {
+    const res = this.query('SELECT * FROM fire_station')
+      .then(rows => rows)
+      .catch(err => {
+        console.error('Error from getAllStation:', err.sqlMessage);
+        return err.code;
+      });
+    return res;
+  }
+
   getAllIncident() {
     const res = this.query("SELECT * FROM incidents WHERE status = 'ongoing'")
       .then(rows => rows)
