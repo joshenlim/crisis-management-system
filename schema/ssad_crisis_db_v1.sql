@@ -208,5 +208,5 @@ CREATE TABLE `social_media_log` (
   FOREIGN KEY (incident_id) REFERENCES civil_emergency(incident_id)
 );
 
-INSERT INTO `role` (name) VALUES ('superadmin');
+INSERT INTO `role` (name) VALUES ('Ops Center Manager');
 INSERT INTO `policy` (role_id, name) VALUES (1, 'CREATE_INCIDENT');
