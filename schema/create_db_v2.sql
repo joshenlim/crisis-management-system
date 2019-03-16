@@ -1,4 +1,4 @@
-CREATE TABLE policy (
+CREATE TABLE Policy (
   policy_id INT(11) NOT NULL AUTO_INCREMENT,
   name VARCHAR(255) NOT NULL,
   PRIMARY KEY (policy_id)
@@ -6,7 +6,7 @@ CREATE TABLE policy (
 
 --------------------------------------------------
 
-CREATE TABLE role (
+CREATE TABLE Role (
   role_id INT(11) NOT NULL AUTO_INCREMENT,
   policy_id INT(11) NOT NULL,
   name VARCHAR(255) NOT NULL,
@@ -14,7 +14,9 @@ CREATE TABLE role (
   PRIMARY KEY (role_id)
 );
 
-CREATE TABLE staff (
+--------------------------------------------------
+
+CREATE TABLE Staff (
   staff_id INT(11) NOT NULL AUTO_INCREMENT,
   name VARCHAR(255) NOT NULL,
   s_rank VARCHAR(255) DEFAULT 'Recruit',
@@ -41,7 +43,7 @@ CREATE TABLE vehicle (
   plate_number VARCHAR(255) NOT NULL,
   call_sign VARCHAR(255) NOT NULL,
   type VARCHAR(255) NOT NULL,
-  on_off_call BOOLEAN DEFAULT FALSE,
+  on_off_call VARCHAR(255) NOT NULL,
   PRIMARY KEY (plate_number),
   FOREIGN KEY (call_sign) REFERENCES fire_station(call_sign)
 );
@@ -58,22 +60,7 @@ CREATE TABLE ops_manager (
 
 CREATE TABLE ops_operator (
   staff_id INT(11) NOT NULL,
-  PRIMARY KEY (staff_id),
-  FOREIGN KEY (staff_id) REFERENCES staff(staff_id)
-);
-
---------------------------------------------------
-
-CREATE TABLE specialist (
-  staff_id INT(11) NOT NULL,
-  PRIMARY KEY (staff_id),
-  FOREIGN KEY (staff_id) REFERENCES staff(staff_id)
-);
-
---------------------------------------------------
-
-CREATE TABLE relations_officer (
-  staff_id INT(11) NOT NULL,
+  incident_id INT(11) NOT NULL,
   PRIMARY KEY (staff_id),
   FOREIGN KEY (staff_id) REFERENCES staff(staff_id)
 );
@@ -81,19 +68,19 @@ CREATE TABLE relations_officer (
 --------------------------------------------------
 
 CREATE TABLE incidents (
-  incident_id INT(11) NOT NULL AUTO_INCREMENT,
+  incident_id INT(11) NOT NULL,
   postal_code INT(11) NOT NULL,
   address VARCHAR(255) NOT NULL,
-  call_time DATETIME NOT NULL,
-  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-  completed_at DATETIME DEFAULT NULL,
+  created_at DATETIME NOT NULL,
+  updated_at DATETIME NOT NULL,
+  completed_at DATETIME NOT NULL,
+  addi_desc VARCHAR(255) NOT NULL,
   casualty_no INT(11) NOT NULL,
-  category VARCHAR(255) NOT NULL, -- for search by category
+  category VARCHAR(255) NOT NULL,
   description VARCHAR(255) NOT NULL,
-  status VARCHAR(255) DEFAULT 'NEW', -- will think of a better starting status
+  status VARCHAR(255) NOT NULL,
   op_create_id INT(11) NOT NULL,
-  op_update_id INT(11) DEFAULT NULL,
+  op_update_id INT(11) NOT NULL,
   FOREIGN KEY (op_create_id) REFERENCES ops_operator(staff_id),
   FOREIGN KEY (op_update_id) REFERENCES ops_operator(staff_id),
   PRIMARY KEY (incident_id)
@@ -151,21 +138,8 @@ CREATE TABLE med_emergency (
 
 --------------------------------------------------
 
-CREATE TABLE civil_emergency (
-  incident_id INT(11) NOT NULL,
-  supp_doc_dir VARCHAR(255) DEFAULT NULL, -- Link to the uploaded supplement document
-  ce_handle_id INT(11) NOT NULL,
-  ce_upload_id INT(11) NOT NULL,
-  PRIMARY KEY (incident_id),
-  FOREIGN KEY (incident_id) REFERENCES incidents(incident_id),
-  FOREIGN KEY (ce_handle_id) REFERENCES specialist(staff_id),
-  FOREIGN KEY (ce_upload_id) REFERENCES specialist(staff_id)
-);
-
---------------------------------------------------
-
 CREATE TABLE hospital (
-  hospital_id INT(11) NOT NULL AUTO_INCREMENT,
+  hospital_id INT(11) NOT NULL,
   name VARCHAR(255) NOT NULL,
   ownership VARCHAR(255) NOT NULL,
   postal_code INT(11) NOT NULL,
@@ -190,65 +164,3 @@ CREATE TABLE inc_casualty (
   FOREIGN KEY (hospital_id) REFERENCES hospital(hospital_id),
   FOREIGN KEY (incident_id) REFERENCES incidents(incident_id)
 );
-
---------------------------------------------------
-
-CREATE TABLE email_directory (
-  email_id INT(11) NOT NULL AUTO_INCREMENT,
-  name VARCHAR(255) NOT NULL,
-  email_address VARCHAR(255) NOT NULL,
-  organisation VARCHAR(255) NOT NULL,
-  PRIMARY KEY (email_id)
-);
-
---------------------------------------------------
-
-CREATE TABLE email_log (
-  email_log_id INT(11) NOT NULL AUTO_INCREMENT,
-  creater_id INT(11) NOT NULL,
-  incident_id INT(11) NOT NULL,
-  send_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  email_id INT(11) NOT NULL,
-  PRIMARY KEY (email_log_id),
-  FOREIGN KEY (incident_id) REFERENCES civil_emergency(incident_id),
-  FOREIGN KEY (creater_id) REFERENCES relations_officer(staff_id),
-  FOREIGN KEY (email_id) REFERENCES email_directory(email_id) 
-);
-
---------------------------------------------------
-
-CREATE TABLE sms_directory (
-  sms_id INT(11) NOT NULL AUTO_INCREMENT,
-  name VARCHAR(255) NOT NULL,
-  number INT(11) NOT NULL,
-  PRIMARY KEY (sms_id)
-);
-
---------------------------------------------------
-
-CREATE TABLE sms_log (
-  sms_log_id INT(11) NOT NULL AUTO_INCREMENT, 
-  creater_id INT(11) NOT NULL,
-  incident_id INT(11) NOT NULL,
-  send_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  sms_id INT(11) NOT NULL,
-  PRIMARY KEY (sms_log_id),
-  FOREIGN KEY (incident_id) REFERENCES civil_emergency(incident_id),
-  FOREIGN KEY (creater_id) REFERENCES relations_officer(staff_id),
-  FOREIGN KEY (sms_id) REFERENCES sms_directory(sms_id) 
-);
-
---------------------------------------------------
-
-CREATE TABLE social_media_log (
-  social_media_log_id INT(11) NOT NULL AUTO_INCREMENT, 
-  send_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  staff_id INT(11) NOT NULL,
-  incident_id INT(11) NOT NULL,
-  PRIMARY KEY (social_media_log_id),
-  FOREIGN KEY (staff_id) REFERENCES relations_officer(staff_id),
-  FOREIGN KEY (incident_id) REFERENCES civil_emergency(incident_id)
-);
-
--------------------------------------------------
-  
