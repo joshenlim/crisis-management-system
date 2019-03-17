@@ -49,7 +49,9 @@ class MySQLDB {
   }
 
   getStaff(username) {
-    const res = this.query("SELECT * FROM users WHERE username = ?", username)
+    const res = this.query(`SELECT staff_id, staff.name, s_rank, password, role.role_id, role.name AS role FROM staff
+      JOIN role ON role.role_id = staff.role_id
+      WHERE username = ?`, username)
       .then(rows => rows)
       .catch(err => {
         console.error("Error from getStaff:", err.sqlMessage);
@@ -58,9 +60,9 @@ class MySQLDB {
     return res;
   }
 
-  createStaff(name, username, password) {
-    const res = this.query(`INSERT INTO users (name, username, password)
-                            VALUES (?, ?, ?)`, [name, username, password])
+  createStaff(name, sRank, username, password, roleId) {
+    const res = this.query(`INSERT INTO staff (name, s_rank, username, password, role_id)
+                            VALUES (?, ?, ?, ?, ?)`, [name, sRank, username, password, roleId])
       .then(rows => rows)
       .catch(err => {
         console.error("Error from createStaff:", err.sqlMessage);
@@ -68,6 +70,17 @@ class MySQLDB {
       });
     return res;
   }
+
+  getPolicies(roleId) {
+    const res = this.query("SELECT policy_id, policy.name FROM role JOIN policy ON role.role_id = policy.role_id WHERE role.role_id = ?", roleId)
+      .then(rows => rows)
+      .catch(err => {
+        console.error("Error from createStaff:", err.sqlMessage);
+        return err.code
+      });
+    return res;
+  }
+
 }
 
 export default MySQLDB;

@@ -56,8 +56,8 @@ class Header extends React.Component {
         <div className={s.nav}>
           <div className={s.userProfile}>
             <div className={s.userInfo}>
-              <div className={s.name}>{user.name}</div>
-              <div className={s.role}>Ops Center Administrator</div>
+              <div className={s.name}>{user.rank} {user.name}</div>
+              <div className={s.role}>{user.role}</div>
             </div>
             <div className={s.image} style={userProfileStyle} />
           </div>

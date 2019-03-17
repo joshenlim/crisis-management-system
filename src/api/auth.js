@@ -14,7 +14,8 @@ router.get('/test', async (req, res) => {
 });
 
 router.post('/register', async(req, res) => {
-    const { name, username, password } = req.body;
+     // eslint-disable-next-line camelcase
+    const { name, s_rank, username, password, role_id } = req.body;
     const user = await database.getStaff(username);
     if (user.length) {
         return res.status(409).send({
@@ -23,7 +24,7 @@ router.post('/register', async(req, res) => {
     }
 
     const hashPassword = bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);
-    await database.createStaff(name, username, hashPassword);
+    await database.createStaff(name, s_rank, username, hashPassword, role_id);
     return res.status(200).send({
         "Success": "User successfully created"
     });
