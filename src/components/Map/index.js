@@ -19,15 +19,13 @@ class Map extends React.Component {
       lat: 1.35,
       lng: 103.82
     },
-    zoom: 11
+    zoom: 11.8
   };
 
   render() {
-    const mapOptions = {
-        styles: mapStyle
-    }
+    const mapOptions = { styles: mapStyle };
     return (
-        <div style={{ height: '500px', width: '100%' }}>
+        <div style={{ height: 'calc(100vh - 240px)', width: '100%' }}>
             <GoogleMapReact
             bootstrapURLKeys={{ key: 'AIzaSyCoWLP6ZKKkLxK0kj9TJP0vt906LxFU3lo' }}
             defaultCenter={this.props.center}

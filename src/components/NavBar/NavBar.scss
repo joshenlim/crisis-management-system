@@ -1,0 +1,30 @@
+@import '../variables.css';
+
+.navBar {
+  height: 70px;
+  display: flex;
+  align-items: center;
+
+  .time {
+    border-right: 1px solid var(--border-black);
+    padding-right: 20px;
+  }
+
+  .temp {
+    border-right: 1px solid var(--border-black);
+    padding-right: 15px;
+    padding-left: 15px;
+  }
+
+  .weather {
+    border-right: 1px solid var(--border-black);
+    padding-right: 15px;
+    padding-left: 15px;
+
+    .icon {
+      width: 30px;
+      position: relative;
+      top: -2px;
+    }
+  }
+}
