@@ -41,7 +41,11 @@ module.exports = {
 
   session: {
     cookieKey: 'crisis',
-    jwtSecret: 'ac2bdc081f9e4719934d4ec04e2fe58b' // make this to env var
+    jwtSecret: process.emitWarning.JWT_SESSION_KEY // make this to env var
+  },
+
+  googleMaps: {
+    apiKey: process.env.GOOGLE_MAPS_KEY,
   },
 
   // Authentication
