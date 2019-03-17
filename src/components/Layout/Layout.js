@@ -13,13 +13,15 @@ import Header from '../Header';
 class Layout extends React.Component {
   static propTypes = {
     children: PropTypes.node.isRequired,
-    hideHeader: PropTypes.bool.isRequired,
-    user: PropTypes.objectOf(
-      PropTypes.shape({
-        id: PropTypes.number.isRequired,
-        name: PropTypes.string.isRequired,
-      })
-    ).isRequired,
+    hideHeader: PropTypes.bool,
+    user: PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      name: PropTypes.string.isRequired,
+    }).isRequired,
+  };
+
+  static defaultProps = {
+    hideHeader: null,
   };
 
   render() {

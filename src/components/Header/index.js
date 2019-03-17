@@ -8,12 +8,10 @@ import logo from '../../assets/images/logo-light.svg';
 
 class Header extends React.Component {
   static propTypes = {
-    user: PropTypes.objectOf(
-      PropTypes.shape({
+    user: PropTypes.shape({
         id: PropTypes.number.isRequired,
         name: PropTypes.string.isRequired,
-      })
-    ).isRequired,
+    }).isRequired,
     onClick: PropTypes.func,
   };
 

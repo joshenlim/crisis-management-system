@@ -5,12 +5,7 @@ import { mapStyle } from './MapStyle';
 
 class Map extends React.Component {
   static propTypes = {
-    center: PropTypes.objectOf(
-        PropTypes.shape({
-            lat: PropTypes.number.isRequired,
-            lng: PropTypes.number.isRequired,
-        })
-    ),
+    center: PropTypes.objectOf(PropTypes.number),
     zoom: PropTypes.number,
   };
 
@@ -25,7 +20,7 @@ class Map extends React.Component {
   render() {
     const mapOptions = { styles: mapStyle };
     return (
-        <div style={{ height: 'calc(100vh - 240px)', width: '100%' }}>
+        <div style={{ height: 'calc(100vh - 230px)', width: '100%' }}>
             <GoogleMapReact
             bootstrapURLKeys={{ key: 'AIzaSyCoWLP6ZKKkLxK0kj9TJP0vt906LxFU3lo' }}
             defaultCenter={this.props.center}
