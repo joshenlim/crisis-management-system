@@ -15,7 +15,14 @@ router.get('/test', async (req, res) => {
 
 router.post('/register', async (req, res) => {
   const { name, username, password } = req.headers;
-  const user = await database.getStaff(username);
+  const user = await database
+    .query('SELECT * FROM users WHERE username = ?', [username])
+    .then(rows => rows)
+    .catch(err => {
+      console.error('Error from getStaff:', err.sqlMessage);
+      return res.status(409).send({ Error: err.code });
+    });
+
   if (user.length) {
     return res.status(409).send({
       Error: 'Username already exists',
@@ -23,7 +30,18 @@ router.post('/register', async (req, res) => {
   }
 
   const hashPassword = bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);
-  await database.createStaff(name, username, hashPassword);
+  await database
+    .query(
+      `INSERT INTO users (name, username, password)
+                          VALUES (?, ?, ?)`,
+      [name, username, hashPassword],
+    )
+    .then(rows => rows)
+    .catch(err => {
+      console.error('Error from createStaff:', err.sqlMessage);
+      return res.status(409).send({ Error: err.code });
+    });
+
   return res.status(200).send({
     Success: 'User successfully created',
   });
