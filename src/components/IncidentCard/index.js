@@ -13,6 +13,7 @@ class IncidentCard extends React.Component {
       address: PropTypes.string.isRequired,
       status: PropTypes.string.isRequired,
     }).isRequired,
+    mountModal: PropTypes.func.isRequired
   };
 
   constructor(props) {

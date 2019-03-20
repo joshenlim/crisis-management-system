@@ -11,7 +11,10 @@ import IncidentDetailsModal from '../../components/IncidentDetailsModal';
 class OpsDashboard extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { mockIncident: {}, showIncidentModal: false };
+    this.state = {
+      mockIncident: {},
+      showIncidentModal: false,
+    };
 
     this.mountModal = this.mountModal.bind(this);
     this.handleClick = this.handleClick.bind(this);
@@ -32,7 +35,9 @@ class OpsDashboard extends React.Component {
   }
 
   mountModal = () => {
-    this.setState({ showIncidentModal: !this.state.showIncidentModal });
+    this.setState({
+      showIncidentModal: !this.state.showIncidentModal
+    });
   };
 
   handleClick = event => {
@@ -52,6 +57,7 @@ class OpsDashboard extends React.Component {
         />
       );
     }
+    return true;
   }
 
   render() {
