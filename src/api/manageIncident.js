@@ -29,62 +29,53 @@ router.get('/get_ongoing', async (req, res) => {
   return res.status(200).send(incidents);
 });
 
-// router.post('/update', async (req, res) => res.status(200).send(incidents));
-router.get('/get_all_station', async (req, res) => {
-  const stations = await database
-    .query('SELECT * FROM fire_station')
+router.get('/get_by_status', async (req, res) => {
+  const { status } = req.query;
+  const incidents = await database
+    .query('SELECT * FROM incidents WHERE status = ?', [status])
     .then(rows => rows)
     .catch(err => {
-      console.error('Error from getAllStation:', err.sqlMessage);
+      console.error('Error from getIncidentByStatus:', err.sqlMessage);
       return res.status(409).send({ Error: err.code });
     });
-  return res.status(200).send(stations);
+  return res.status(200).send(incidents);
 });
 
 router.post('/create', async (req, res) => {
   const {
     postal_code,
     address,
-    created_at,
-    updated_at,
+    call_time,
     completed_at,
-    addi_desc,
     casualty_no,
     category,
     description,
-    status,
-    create_op_id,
-    update_op_id,
+    op_create_id,
+    op_update_id,
   } = req.headers;
-  console.log(req.headers);
+  // console.log(req.headers);
   await database
     .query(
       `INSERT INTO incidents (postal_code, 
-      address, 
-      created_at,
-      updated_at,
-      completed_at,
-      addi_desc,
-      casualty_no,
-      category,
-      description,
-      status,
-      op_create_id,
-      op_update_id)
-                          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-      [
-        postal_code,
         address,
-        created_at,
-        updated_at,
+        call_time,
         completed_at,
-        addi_desc,
         casualty_no,
         category,
         description,
-        status,
-        create_op_id,
-        update_op_id,
+        op_create_id,
+        op_update_id)
+                          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      [
+        postal_code,
+        address,
+        call_time,
+        completed_at,
+        casualty_no,
+        category,
+        description,
+        op_create_id,
+        op_update_id,
       ],
     )
     .then(rows => rows)
@@ -95,6 +86,61 @@ router.post('/create', async (req, res) => {
   return res.status(200).send({
     Success: 'Incident successfully created',
   });
+});
+
+router.post('/update', async (req, res) => {
+  const {
+    postal_code,
+    address,
+    call_time,
+    updated_at,
+    completed_at,
+    casualty_no,
+    category,
+    description,
+    status,
+    op_create_id,
+    op_update_id,
+    incident_id,
+  } = req.headers;
+  // console.log(req.headers);
+  await database
+    .query(
+      `UPDATE incidents SET 'postal_code' = ?, 
+      'address' = ?, 
+      'call_time' = ?,
+      'updated_at' = ?,
+      'completed_at' = ?,
+      'casualty_no' = ?,
+      'category' = ?,
+      'description' = ?,
+      'status' = ?,
+      'op_create_id' = ?,
+      'op_update_id' = ? WHERE incident_id = ?)`,
+      [
+        postal_code,
+        address,
+        call_time,
+        updated_at,
+        completed_at,
+        casualty_no,
+        category,
+        description,
+        status,
+        op_create_id,
+        op_update_id,
+        incident_id,
+      ],
+    )
+    .then(rows => rows)
+    .catch(err => {
+      console.error('Error from updateIncident:', err.sqlMessage);
+      return res.status(409).send({ Error: err.code });
+    });
+  return res.status(200).send({
+    Success: 'Incident successfully created',
+  });
+  // res.status(200).send(incidents);
 });
 
 export default router;
