@@ -6,48 +6,87 @@ import addIcon from '../../assets/images/plus.svg';
 import Map from '../../components/Map';
 import NavBar from '../../components/NavBar';
 import IncidentCard from '../../components/IncidentCard';
+import IncidentDetailsModal from '../../components/IncidentDetailsModal';
 
 class OpsDashboard extends React.Component {
   constructor(props) {
     super(props);
+    this.state = {
+      mockIncident: {},
+      showIncidentModal: false,
+    };
+
+    this.mountModal = this.mountModal.bind(this);
     this.handleClick = this.handleClick.bind(this);
     this.handleOnKeyDown = this.handleOnKeyDown.bind(this);
+    this.renderModal = this.renderModal.bind(this);
   }
 
-  handleClick = event => {
-    console.log("click", event);
+  componentWillMount() {
+    this.state.mockIncident = {
+      id: 'SNB-1045-367X',
+      category: 'Emergency Ambulance',
+      postalCode: 'S820193',
+      address: '#01-231',
+      status: 'DISPATCHED',
+      description:
+        'Traffic accident involving 3 vehicles on the Pan-Island Expressway (PIE) 2 injured but no fatality, consectetur adipiscing elit. Suspendisse metus ipsum, feugiat id nisi non, laoreet facilisis nunc. Cras et pellentesque est, a pulvinar turpis. Quisque laoreet tellus nulla, sit amet varius mauris porta sodales.',
+    };
   }
+
+  mountModal = () => {
+    this.setState({
+      showIncidentModal: !this.state.showIncidentModal
+    });
+  };
+
+  handleClick = event => {
+    console.log('click', event);
+  };
 
   handleOnKeyDown = event => {
     event.preventDefault();
+  };
+
+  renderModal() {
+    if (this.state.showIncidentModal) {
+      return (
+        <IncidentDetailsModal
+          incident={this.state.mockIncident}
+          mountModal={this.mountModal}
+        />
+      );
+    }
+    return true;
   }
 
   render() {
-    const mockIncident = {
-      id: "SNB-1045-367X",
-      category: "Emergency Ambulance",
-      postalCode: "S820193",
-      address: "#01-231",
-      status: "DISPATCHED"
-    }
-
     return (
       <div className={s.container}>
+        {this.renderModal()}
         <div className={s.sideColumn}>
           <p className={s.columnTitle}>Ongoing Incidents</p>
-          <IncidentCard incident={mockIncident} />
-          <IncidentCard incident={mockIncident} />
+          <IncidentCard
+            incident={this.state.mockIncident}
+            mountModal={this.mountModal}
+          />
+          <IncidentCard
+            incident={this.state.mockIncident}
+            mountModal={this.mountModal}
+          />
         </div>
         <div className={s.main}>
           <NavBar />
           <Map />
         </div>
         <div className={s.sideColumn}>
-          <div className={s.createIncidentBtn} 
+          <div
+            className={s.createIncidentBtn}
             onClick={this.handleClick}
             onKeyDown={this.handleOnKeyDown}
             role="button"
-            tabIndex={0}>
+            tabIndex={0}
+          >
             <img src={addIcon} alt="add-icon" />
             Create Incident
           </div>
