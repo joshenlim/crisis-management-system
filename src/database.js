@@ -39,43 +39,86 @@ class MySQLDB {
         if (err) return reject(err);
         console.log('Connection to MySQL Database closed.');
         resolve();
-      } );
-    } );
+      });
+    });
   }
 
   getStaff(username) {
-    const res = this.query(`SELECT staff_id, staff.name, s_rank, password, role.role_id, role.name AS role FROM staff
+    const res = this.query(
+      `SELECT staff_id, staff.name, s_rank, password, role.role_id, role.name AS role FROM staff
       JOIN role ON role.role_id = staff.role_id
-      WHERE username = ?`, username)
+      WHERE username = ?`,
+      [username],
+    )
       .then(rows => rows)
       .catch(err => {
-        console.error("Error from getStaff:", err.sqlMessage);
-        return err.code
+        console.error('Error from getStaff:', err.sqlMessage);
+        return err.code;
       });
     return res;
   }
 
   createStaff(name, sRank, username, password, roleId) {
-    const res = this.query(`INSERT INTO staff (name, s_rank, username, password, role_id)
-                            VALUES (?, ?, ?, ?, ?)`, [name, sRank, username, password, roleId])
+    const res = this.query(
+      `INSERT INTO staff (name, s_rank, username, password, role_id)
+                            VALUES (?, ?, ?, ?, ?)`,
+      [name, sRank, username, password, roleId],
+    )
       .then(rows => rows)
       .catch(err => {
-        console.error("Error from createStaff:", err.sqlMessage);
-        return err.code
+        console.error('Error from createStaff:', err.sqlMessage);
+        return err.code;
       });
+    return res;
+  }
+
+  updateAuthority(role_id, staff_id) {
+    var res;
+    switch (role_id) {
+      case 1:
+        {
+          res = this.query(
+            `INSERT INTO ops_operator (staff_id)
+                                VALUES (?)`,
+            [staff_id],
+          )
+            .then(rows => rows)
+            .catch(err => {
+              console.error('Error from createStaff:', err.sqlMessage);
+              return err.code;
+            });
+        }
+        break;
+      case 2:
+        {
+          res = this.query(
+            `INSERT INTO ops_manager (staff_id)
+                                VALUES (?)`,
+            [staff_id],
+          )
+            .then(rows => rows)
+            .catch(err => {
+              console.error('Error from createStaff:', err.sqlMessage);
+              return err.code;
+            });
+        }
+        break;
+    }
     return res;
   }
 
   getPolicies(roleId) {
-    const res = this.query("SELECT policy_id, policy.name FROM role JOIN policy ON role.role_id = policy.role_id WHERE role.role_id = ?", roleId)
+    const res = this.query(
+      'SELECT policy_id, policy.name FROM role JOIN policy ON role.role_id = policy.role_id WHERE role.role_id = ?',
+      roleId,
+    )
       .then(rows => rows)
       .catch(err => {
-        console.error("Error from createStaff:", err.sqlMessage);
-        return err.code
+        console.error('Error from createStaff:', err.sqlMessage);
+        return err.code;
       });
     return res;
   }
-
 }
 
 export default MySQLDB;

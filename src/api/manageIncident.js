@@ -106,17 +106,17 @@ router.post('/update', async (req, res) => {
   // console.log(req.headers);
   await database
     .query(
-      `UPDATE incidents SET 'postal_code' = ?, 
-      'address' = ?, 
-      'call_time' = ?,
-      'updated_at' = ?,
-      'completed_at' = ?,
-      'casualty_no' = ?,
-      'category' = ?,
-      'description' = ?,
-      'status' = ?,
-      'op_create_id' = ?,
-      'op_update_id' = ? WHERE incident_id = ?)`,
+      `UPDATE incidents SET postal_code = ?, 
+      address = ?, 
+      call_time = ?,
+      updated_at = ?,
+      completed_at = ?,
+      casualty_no = ?,
+      category = ?,
+      description = ?,
+      status = ?,
+      op_create_id = ?,
+      op_update_id = ? WHERE incident_id = ?`,
       [
         postal_code,
         address,
@@ -138,7 +138,7 @@ router.post('/update', async (req, res) => {
       return res.status(409).send({ Error: err.code });
     });
   return res.status(200).send({
-    Success: 'Incident successfully created',
+    Success: 'Incident successfully updated',
   });
   // res.status(200).send(incidents);
 });
