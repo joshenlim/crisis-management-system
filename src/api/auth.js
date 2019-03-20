@@ -32,7 +32,7 @@ router.post('/register', async (req, res) => {
 
 router.post('/updateAuthority', async (req, res) => {
   const { role_id, staff_id } = req.body;
-  await database.updateAuthority(role_id, staff_id);
+  await database.addAuthority(role_id, staff_id);
   return res.status(200).send({
     Success: 'User successfully created',
   });
