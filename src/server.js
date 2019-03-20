@@ -7,7 +7,7 @@ import bodyParser from 'body-parser';
 import expressJwt, { UnauthorizedError as Jwt401Error } from 'express-jwt';
 import { graphql } from 'graphql';
 import expressGraphQL from 'express-graphql';
-import jwt from 'jsonwebtoken';
+// import jwt from 'jsonwebtoken';
 import nodeFetch from 'node-fetch';
 import React from 'react';
 import ReactDOM from 'react-dom/server';
@@ -102,29 +102,22 @@ app.use(passport.initialize());
 app.post('/login', (req, res, next) => {
   // eslint-disable-next-line consistent-return
   passport.authenticate('local-login', (err, user, info) => {
-    if (err || !user) {
-      if (req.headers['auth-type'] === 'return') {
-        return res.status(400).json({ error: info });
-      }
-      console.log('ERR: ', info);
-      // TO-DO: Trigger flash message upon unsuccessful login
-      res.redirect('/');
+    if (err || !user ) {
+      console.log("Error: ", info);
+      res.redirect('/')
     } else {
       // eslint-disable-next-line consistent-return
       req.login(user, error => {
         if (error) {
           res.send(error);
         } else {
-          const token = jwt.sign(
-            { username: user.email },
-            config.session.jwtSecret,
-            { expiresIn: '24h' },
-          );
-          if (req.headers['auth-type'] === 'return') {
-            return res.json({ token });
-          }
-          req.session.jwt = token;
-          // TO-DO: Redirect to dashboard or something upon successful login
+          // For some reason this line is breaking the login flow
+          // const token = jwt.sign(
+          //   { username: user.username },
+          //   config.session.jwtSecret,
+          //   { expiresIn: '24h'}
+          // );
+          // req.session.jwt = token;
           res.redirect('/ops/dashboard');
         }
       });

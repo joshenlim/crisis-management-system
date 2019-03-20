@@ -1,46 +1,56 @@
-/**
- * React Starter Kit (https://www.reactstarterkit.com/)
- *
- * Copyright © 2014-present Kriasoft, LLC. All rights reserved.
- *
- * This source code is licensed under the MIT license found in the
- * LICENSE.txt file in the root directory of this source tree.
- */
-
 import React from 'react';
-import PropTypes from 'prop-types';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import s from './OpsDashboard.scss';
+import addIcon from '../../assets/images/plus.svg';
+
+import Map from '../../components/Map';
+import NavBar from '../../components/NavBar';
+import IncidentCard from '../../components/IncidentCard';
 
 class OpsDashboard extends React.Component {
-  static propTypes = {
-    news: PropTypes.arrayOf(
-      PropTypes.shape({
-        title: PropTypes.string.isRequired,
-        link: PropTypes.string.isRequired,
-        content: PropTypes.string,
-      }),
-    ).isRequired,
-  };
+  constructor(props) {
+    super(props);
+    this.handleClick = this.handleClick.bind(this);
+    this.handleOnKeyDown = this.handleOnKeyDown.bind(this);
+  }
+
+  handleClick = event => {
+    console.log("click", event);
+  }
+
+  handleOnKeyDown = event => {
+    event.preventDefault();
+  }
 
   render() {
+    const mockIncident = {
+      id: "SNB-1045-367X",
+      category: "Emergency Ambulance",
+      postalCode: "S820193",
+      address: "#01-231",
+      status: "DISPATCHED"
+    }
 
     return (
-      <div className={s.root}>
-        <div className={s.container}>
-          <h1>React.js News</h1>
-          {this.props.news.map(item => (
-            <article key={item.link} className={s.newsItem}>
-              <h1 className={s.newsTitle}>
-                <a href={item.link}>{item.title}</a>
-              </h1>
-              <div
-                className={s.newsDesc}
-                // eslint-disable-next-line react/no-danger
-                dangerouslySetInnerHTML={{ __html: item.content }}
-              />
-            </article>
-          ))}
+      <div className={s.container}>
+        <div className={s.sideColumn}>
+          <p className={s.columnTitle}>Ongoing Incidents</p>
+          <IncidentCard incident={mockIncident} />
+          <IncidentCard incident={mockIncident} />
+        </div>
+        <div className={s.main}>
+          <NavBar />
+          <Map />
+        </div>
+        <div className={s.sideColumn}>
+          <div className={s.createIncidentBtn} 
+            onClick={this.handleClick}
+            onKeyDown={this.handleOnKeyDown}
+            role="button"
+            tabIndex={0}>
+            <img src={addIcon} alt="add-icon" />
+            Create Incident
+          </div>
         </div>
       </div>
     );

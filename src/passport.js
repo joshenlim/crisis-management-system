@@ -16,10 +16,14 @@ passport.serializeUser((data, cb) => {
   cb(null, data);
 });
 
-passport.deserializeUser((data, cb) => {
-  // TO-DO: Once RBAC is up, probably need to a create user profile to map the roles and policies
-  // and pass it to the callback function
-  cb(null, data)
+passport.deserializeUser(async(data, cb) => {
+  const policies = await database.getPolicies(data.role_id);
+  const userPolicies = policies.map(policy => policy.name);
+  const userProfile = {
+    ...data,
+    policies: userPolicies
+  }
+  cb(null, userProfile)
 });
 
 // Sign in locally
@@ -38,8 +42,11 @@ passport.use('local-login', new LocalStrategy(
       return done(null, false, 'You\'ve entered a wrong password!');
     }
     return done(null, {
-      id: user[0].id,
-      name: user[0].name
+      id: user[0].staff_id,
+      name: user[0].name,
+      rank: user[0].s_rank,
+      role_id: user[0].role_id,
+      role: user[0].role
     });
   })
 );
