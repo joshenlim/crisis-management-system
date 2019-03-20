@@ -6,22 +6,19 @@ class MySQLDB {
   }
 
   connect() {
-    console.log("Connecting to MYSQL Database...");
+    console.log('Connecting to MYSQL Database...');
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line consistent-return
       this.connection.connect(err => {
-        if (err)
-          return reject(err);
-        console.log("Connection to MySQL Database established!");
+        if (err) return reject(err);
+        console.log('Connection to MySQL Database established!');
         resolve();
       });
-      this.connection.on('error', (err) => {
-        console.error("DB error:", err)
-        if(err.code === 'PROTOCOL_CONNECTION_LOST')
-          this.connect();
-        else
-          throw err;
-      })
+      this.connection.on('error', err => {
+        console.error('DB error:', err);
+        if (err.code === 'PROTOCOL_CONNECTION_LOST') this.connect();
+        else throw err;
+      });
     });
   }
 
@@ -29,20 +26,18 @@ class MySQLDB {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line consistent-return
       this.connection.query(sql, args, (err, rows) => {
-        if (err)
-          return reject(err);
+        if (err) return reject(err);
         resolve(rows);
-      } );
-    } );
+      });
+    });
   }
 
   close() {
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line consistent-return
       this.connection.end(err => {
-        if (err)
-          return reject(err);
-        console.log("Connection to MySQL Database closed.");
+        if (err) return reject(err);
+        console.log('Connection to MySQL Database closed.');
         resolve();
       } );
     } );
