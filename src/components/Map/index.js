@@ -5,6 +5,7 @@ import { mapStyle } from './MapStyle';
 
 import MapMarker from '../MapMarker';
 import MarkerEnum from '../MapMarker/enum';
+import MapLegend from '../MapLegend';
 
 class Map extends React.Component {
   static propTypes = {
@@ -65,6 +66,7 @@ class Map extends React.Component {
             iconType={MarkerEnum.PRIVATE_HOSPITAL}
           />
         </GoogleMapReact>
+        <MapLegend />
       </div>
     );
   }
