@@ -6,14 +6,18 @@ import addIcon from '../../assets/images/plus.svg';
 import Map from '../../components/Map';
 import NavBar from '../../components/NavBar';
 import IncidentCard from '../../components/IncidentCard';
-import IncidentDetailsModal from '../../components/IncidentDetailsModal';
+import ViewDetailsModal from '../../components/ViewDetailsModal';
+
+import Enum from '../../constants/enum';
 
 class OpsDashboard extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       mockIncident: {},
-      showIncidentModal: false,
+      showDetailsModal: false,
+      detailModalId: '',
+      detailModalType: Enum.detailType.INCIDENT,
     };
 
     this.mountModal = this.mountModal.bind(this);
@@ -34,9 +38,11 @@ class OpsDashboard extends React.Component {
     };
   }
 
-  mountModal = () => {
+  mountModal = (type, id) => {
     this.setState({
-      showIncidentModal: !this.state.showIncidentModal
+      detailModalType: type,
+      detailModalId: id,
+      showDetailsModal: !this.state.showDetailsModal,
     });
   };
 
@@ -49,15 +55,16 @@ class OpsDashboard extends React.Component {
   };
 
   renderModal() {
-    if (this.state.showIncidentModal) {
+    //TODO -
+    if (this.state.showDetailsModal) {
       return (
-        <IncidentDetailsModal
-          incident={this.state.mockIncident}
+        <ViewDetailsModal
+          id={this.state.detailModalId}
+          type={this.state.detailModalType}
           mountModal={this.mountModal}
         />
       );
     }
-    return true;
   }
 
   render() {
@@ -77,7 +84,7 @@ class OpsDashboard extends React.Component {
         </div>
         <div className={s.main}>
           <NavBar />
-          <Map />
+          <Map mountModal={this.mountModal} />
         </div>
         <div className={s.sideColumn}>
           <div

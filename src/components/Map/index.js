@@ -4,13 +4,14 @@ import PropTypes from 'prop-types';
 import { mapStyle } from './MapStyle';
 
 import MapMarker from '../MapMarker';
-import MarkerEnum from '../MapMarker/enum';
+import MarkerEnum from '../../constants/enum';
 import MapLegend from '../MapLegend';
 
 class Map extends React.Component {
   static propTypes = {
     center: PropTypes.objectOf(PropTypes.number),
     zoom: PropTypes.number,
+    mountModal: PropTypes.func.isRequired,
   };
 
   static defaultProps = {
@@ -42,28 +43,32 @@ class Map extends React.Component {
             color="blue"
             title="This is a title"
             text="This event etc etc"
-            iconType={MarkerEnum.PUBLIC_HOSPITAL}
+            iconType={MarkerEnum.detailType.PUBLIC_HOSPITAL}
+            mountModal={this.props.mountModal}
           />
           <MapMarker
             lng={103.680564}
             lat={1.383262}
             title="This is a title"
             text="This event etc etc"
-            iconType={MarkerEnum.FIRE_STATION}
+            iconType={MarkerEnum.detailType.FIRE_STATION}
+            mountModal={this.props.mountModal}
           />
           <MapMarker
             lng={103.67}
             lat={1.383162}
             title="This is a title"
             text="This event etc etc"
-            iconType={MarkerEnum.INCIDENT}
+            iconType={MarkerEnum.detailType.INCIDENT}
+            mountModal={this.props.mountModal}
           />
           <MapMarker
             lng={103.69}
             lat={1.388}
             title="This is a title"
             text="This event etc etc"
-            iconType={MarkerEnum.PRIVATE_HOSPITAL}
+            iconType={MarkerEnum.detailType.PRIVATE_HOSPITAL}
+            mountModal={this.props.mountModal}
           />
         </GoogleMapReact>
         <MapLegend />

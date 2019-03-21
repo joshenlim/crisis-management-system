@@ -4,6 +4,8 @@ import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import s from './IncidentCard.scss';
 import expandIcon from '../../assets/images/expand.svg';
 
+import Enum from '../../constants/enum';
+
 class IncidentCard extends React.Component {
   static propTypes = {
     incident: PropTypes.shape({
@@ -13,7 +15,7 @@ class IncidentCard extends React.Component {
       address: PropTypes.string.isRequired,
       status: PropTypes.string.isRequired,
     }).isRequired,
-    mountModal: PropTypes.func.isRequired
+    mountModal: PropTypes.func.isRequired,
   };
 
   constructor(props) {
@@ -22,9 +24,10 @@ class IncidentCard extends React.Component {
     this.handleOnKeyDown = this.handleOnKeyDown.bind(this);
   }
 
+  //TODO - Provide ID for mountModal
   expandIncident = () => {
     console.log('Expand event');
-    this.props.mountModal();
+    this.props.mountModal(Enum.detailType.INCIDENT, '');
   };
 
   handleOnKeyDown = event => {
