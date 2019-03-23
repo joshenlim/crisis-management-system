@@ -7,8 +7,8 @@ import Map from '../../components/Map';
 import NavBar from '../../components/NavBar';
 import IncidentCard from '../../components/IncidentCard';
 import ViewDetailsModal from '../../components/ViewDetailsModal';
-
 import Enum from '../../constants/enum';
+import CreateNewIncidentModal from '../../components/CreateNewIncidentModal';
 
 class OpsDashboard extends React.Component {
   constructor(props) {
@@ -18,12 +18,13 @@ class OpsDashboard extends React.Component {
       showDetailsModal: false,
       detailModalId: '',
       detailModalType: Enum.detailType.INCIDENT,
+      showCreateNewIncidentModal: false,
     };
 
     this.mountModal = this.mountModal.bind(this);
-    this.handleClick = this.handleClick.bind(this);
+    this.mountCreateNewIncidentModal = this.mountCreateNewIncidentModal.bind(this);
+    this.renderCreateNewIncidentModal = this.renderCreateNewIncidentModal.bind(this);
     this.handleOnKeyDown = this.handleOnKeyDown.bind(this);
-    this.renderModal = this.renderModal.bind(this);
   }
 
   componentWillMount() {
@@ -44,24 +45,34 @@ class OpsDashboard extends React.Component {
       detailModalId: id,
       showDetailsModal: !this.state.showDetailsModal,
     });
-  };
-
-  handleClick = event => {
-    console.log('click', event);
-  };
+  }
 
   handleOnKeyDown = event => {
     event.preventDefault();
   };
 
+  mountCreateNewIncidentModal = () => {
+    this.setState({
+      showCreateNewIncidentModal: !this.state.showCreateNewIncidentModal
+    })
+  }
+
   renderModal() {
-    //TODO -
     if (this.state.showDetailsModal) {
       return (
         <ViewDetailsModal
           id={this.state.detailModalId}
           type={this.state.detailModalType}
-          mountModal={this.mountModal}
+          mountModal={this.mountModal} />
+      )
+    }
+  }
+
+  renderCreateNewIncidentModal() {
+    if (this.state.showCreateNewIncidentModal) {
+      return (
+        <CreateNewIncidentModal
+          mountModal={this.mountCreateNewIncidentModal}
         />
       );
     }
@@ -71,6 +82,7 @@ class OpsDashboard extends React.Component {
     return (
       <div className={s.container}>
         {this.renderModal()}
+        {this.renderCreateNewIncidentModal()}
         <div className={s.sideColumn}>
           <p className={s.columnTitle}>Ongoing Incidents</p>
           <IncidentCard
@@ -89,7 +101,7 @@ class OpsDashboard extends React.Component {
         <div className={s.sideColumn}>
           <div
             className={s.createIncidentBtn}
-            onClick={this.handleClick}
+            onClick={this.mountCreateNewIncidentModal}
             onKeyDown={this.handleOnKeyDown}
             role="button"
             tabIndex={0}
