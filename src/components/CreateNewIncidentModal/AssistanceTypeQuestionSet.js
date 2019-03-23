@@ -21,21 +21,21 @@ class AssistanceTypeQuestionSet extends React.Component {
               type="radio"
               id="EA"
               name="assistance_type"
-              value="emergency_ambulance"
+              value="road_traffic"
               onChange={this.updateAssistanceType}
               defaultChecked
             />
-            <label for="EA">Emergency Ambulance</label>
+            <label htmlFor="EA">Road Traffic Accident</label>
           </div>
           <div className={s.radioOption}>
             <input
               type="radio"
-              id="RE"
+              id="ME"
               name="assistance_type"
-              value="rescue_evacuation"
+              value="medical_emergency"
               onChange={this.updateAssistanceType}
             />
-            <label for="RE">Rescue and Evacuation</label>
+            <label htmlFor="ME">Medical Emergency</label>
           </div>
         </div>
         <div className={s.radioColumn}>
@@ -44,10 +44,10 @@ class AssistanceTypeQuestionSet extends React.Component {
               type="radio"
               id="FF"
               name="assistance_type"
-              value="fire_fighting"
+              value="fire_emergency"
               onChange={this.updateAssistanceType}
             />
-            <label for="FF">Fire-Fighting</label>
+            <label htmlFor="FF">Fire Emergency</label>
           </div>
           <div className={s.radioOption}>
             <input
@@ -57,7 +57,7 @@ class AssistanceTypeQuestionSet extends React.Component {
               value="gas_leak"
               onChange={this.updateAssistanceType}
             />
-            <label for="GL">Gas Leak Control</label>
+            <label htmlFor="GL">Gas Leak Control</label>
           </div>
         </div>
       </div>

@@ -9,24 +9,22 @@ class EAQuestionSet extends React.Component {
       <div className={s.questionSet}>
         <div className={s.textQuestion}>
           <div className={s.question}>
-            <p className={s.title}>Vehicle Plate Numbers:</p>
-            <p className={s.subtitle}>Comma Separated For Multiple</p>
+            <p className={s.title}>Vehicle Plate Number:</p>
           </div>
           <input
             className={s.textInput}
-            name="plateNumber"
+            name="vehicle_plate"
             type="text"
           />
         </div>
         <div className={s.textQuestion}>
           <div className={s.question}>
-            <p className={s.title}>Incident Description:</p>
+            <p className={s.title}>Vehicle Type:</p>
           </div>
-          <textarea
+          <input
             className={s.textInput}
-            name="description"            
-            rows={3}
-            cols={30}
+            name="vehicle_type"
+            type="text"
           />
         </div>
       </div>

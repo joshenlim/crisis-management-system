@@ -6,6 +6,8 @@ import closeBtn from '../../assets/images/close.svg';
 
 import AssistanceTypeQuestionSet from './AssistanceTypeQuestionSet';
 import EAQuestionSet from './EAQuestionSet';
+import FFQuestionSet from './FFQuestionSet';
+import MEQuestionSet from './MEQuestionSet';
 import CallerInformationQuestionSet from './CallerInformationQuestionSet';
 import IncidentLocationQuestionSet from './IncidentLocationQuestionSet';
 
@@ -19,12 +21,17 @@ class CreateNewIncidentModal extends React.Component {
     this.state = {
       page: 1,
       selectedType: "EA",
+      escalate: false,
+      incidentPostalCode: "",
     };
 
     this.closeModal = this.closeModal.bind(this);
     this.nextPage = this.nextPage.bind(this);
     this.prevPage = this.prevPage.bind(this);
     this.updateSelectedType = this.updateSelectedType.bind(this);
+    this.updateNumCasualties = this.updateNumCasualties.bind(this);
+    this.updatePostalCode = this.updatePostalCode.bind(this);
+    this.escalateIncident = this.escalateIncident.bind(this);
   }
 
   closeModal(event) {
@@ -37,20 +44,48 @@ class CreateNewIncidentModal extends React.Component {
     })
   }
 
-  nextPage = () => {
+  updateNumCasualties = (event) => {
+    const numberCasualties = event.target.value;
+    if (numberCasualties >= 10 && !this.state.escalate) {
+      this.setState({
+        escalate: true,
+      })
+    } else if (numberCasualties < 10 && this.state.escalate) {
+      this.setState({
+        escalate: false,
+      })
+    }
+  }
+
+  updatePostalCode = (postalCode) => {
     this.setState({
-      page: 2,
+      incidentPostalCode: postalCode,
     })
+  }
+
+  escalateIncident = () => {
+    this.setState({
+      escalate: !this.state.escalate,
+    })
+  }
+
+  nextPage = () => {
+    if (this.state.page < 3) {
+      this.setState({
+        page: this.state.page + 1,
+      })
+    }
   }
 
   prevPage = () => {
-    this.setState({
-      page: 1,
-    })
+    if (this.state.page > 1) {
+      this.setState({
+        page: this.state.page - 1,
+      })
+    }
   }
 
   render() {
-
     return (
       <div className={s.modalBackground}>
         <div className={s.incidentModal}>
@@ -63,26 +98,42 @@ class CreateNewIncidentModal extends React.Component {
             </div>
 
             <hr />
-            
+
             <div className={this.state.page == 1 ? s.showPage : s.hidePage}>
               <p className={s.contentHeader}>Type of assistance requested:</p>
               <div className={s.contentBody}>
-                <AssistanceTypeQuestionSet updateSelectedType={this.updateSelectedType}/>
+                <AssistanceTypeQuestionSet updateSelectedType={this.updateSelectedType} />
               </div>
 
               <p className={s.contentHeader}>Incident Details</p>
               <div className={s.contentBody}>
-                { this.state.selectedType == "EA" && <EAQuestionSet /> }
-              </div>
-
-              <p className={s.contentHeader}>Caller Information</p>
-              <div className={s.contentBody}>
-                <CallerInformationQuestionSet />
-              </div>
-
-              <p className={s.contentHeader}>Incident Location</p>
-              <div className={s.contentBody}>
-                <IncidentLocationQuestionSet />
+                {this.state.selectedType == "EA" && <EAQuestionSet />}
+                {this.state.selectedType == "FF" && <FFQuestionSet />}
+                {this.state.selectedType == "ME" && <MEQuestionSet />}
+                <div className={s.questionSet}>
+                  <div className={s.textQuestion}>
+                    <div className={s.question}>
+                      <p className={s.title}>Number of Casualties:</p>
+                    </div>
+                    <input
+                      className={s.textInput}
+                      name="casualty_num"
+                      type="number"
+                      onChange={this.updateNumCasualties}
+                    />
+                  </div>
+                  <div className={s.textQuestion}>
+                    <div className={s.question}>
+                      <p className={s.title}>Incident Description:</p>
+                    </div>
+                    <textarea
+                      className={s.textInput}
+                      name="description"
+                      rows={3}
+                      cols={30}
+                    />
+                  </div>
+                </div>
               </div>
 
               <div className={s.escalateQuestion}>
@@ -93,6 +144,8 @@ class CreateNewIncidentModal extends React.Component {
                   <input
                     name="escalateToHQ"
                     type="checkbox"
+                    checked={this.state.escalate}
+                    onChange={this.escalateIncident}
                   />
                 </div>
               </div>
@@ -103,9 +156,36 @@ class CreateNewIncidentModal extends React.Component {
                 Next
               </div>
             </div>
-            
+
 
             <div className={this.state.page == 2 ? s.showPage : s.hidePage}>
+              <p className={s.contentHeader}>Caller Information</p>
+              <div className={s.contentBody}>
+                <CallerInformationQuestionSet />
+              </div>
+
+              <p className={s.contentHeader}>Incident Location</p>
+              <div className={s.contentBody}>
+                <IncidentLocationQuestionSet onPostalChange={this.updatePostalCode} />
+              </div>
+
+              <div className={s.btnGrp}>
+                <div
+                  className={s.prevButton}
+                  onClick={this.prevPage}>
+                  Back
+                </div>
+                <div
+                  className={s.nextButton}
+                  style={{margin: 0}}
+                  onClick={this.nextPage}>
+                  Next
+                </div>
+              </div>
+            </div>
+
+            <div className={this.state.page == 3 ? s.showPage : s.hidePage}>
+              <p className={s.contentHeader}>Postal Code: {this.state.incidentPostalCode}</p>
               <div className={s.btnGrp}>
                 <div
                   className={s.prevButton}

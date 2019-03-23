@@ -116,7 +116,21 @@
       }
     }
 
-    input[type='text'] {
+    select {
+      width: 236px;
+      font-weight: 100;
+      background: none;
+      border: 1px solid var(--border-black);
+      transition: all 0.2s ease;
+
+      &:focus {
+        outline: none;
+        border: 1px solid var(--black);
+      }
+    }
+
+    input[type='text'],
+    input[type='number'] {
       border: none;
       border-bottom: 1px solid var(--border-black);
       width: 235px;
@@ -170,13 +184,14 @@
   padding: 8px 0;
   border-radius: 5px;
   cursor: pointer;
-  margin-top: 20px;
+  margin-top: 30px;
 }
 
 .btnGrp {
   display: flex;
   align-items: center;
   justify-content: center;
+  margin-top: 30px;
 
   .prevButton {
     background-color: var(--white);

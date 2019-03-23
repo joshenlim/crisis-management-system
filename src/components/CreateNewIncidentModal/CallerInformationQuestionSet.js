@@ -13,7 +13,7 @@ class CallerInformationQuestionSet extends React.Component {
           </div>
           <input
             className={s.textInput}
-            name="callerName"
+            name="caller_name"
             type="text"
           />
         </div>
@@ -23,7 +23,7 @@ class CallerInformationQuestionSet extends React.Component {
           </div>
           <input
             className={s.textInput}
-            name="callerMobile"
+            name="caller_mobile"
             type="text"
           />
         </div>
