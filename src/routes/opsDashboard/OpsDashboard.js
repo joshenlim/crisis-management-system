@@ -7,19 +7,22 @@ import Map from '../../components/Map';
 import NavBar from '../../components/NavBar';
 import IncidentCard from '../../components/IncidentCard';
 import IncidentDetailsModal from '../../components/IncidentDetailsModal';
+import CreateNewIncidentModal from '../../components/CreateNewIncidentModal';
 
 class OpsDashboard extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       mockIncident: {},
-      showIncidentModal: false,
+      showIncidentDetailModal: false,
+      showCreateNewIncidentModal: false,
     };
 
-    this.mountModal = this.mountModal.bind(this);
-    this.handleClick = this.handleClick.bind(this);
+    this.mountIncidentModal = this.mountIncidentModal.bind(this);
+    this.renderIncidentDetailModal = this.renderIncidentDetailModal.bind(this);
+    this.mountCreateNewIncidentModal = this.mountCreateNewIncidentModal.bind(this);
+    this.renderCreateNewIncidentModal = this.renderCreateNewIncidentModal.bind(this);
     this.handleOnKeyDown = this.handleOnKeyDown.bind(this);
-    this.renderModal = this.renderModal.bind(this);
   }
 
   componentWillMount() {
@@ -34,45 +37,57 @@ class OpsDashboard extends React.Component {
     };
   }
 
-  mountModal = () => {
-    this.setState({
-      showIncidentModal: !this.state.showIncidentModal
-    });
-  };
-
-  handleClick = event => {
-    console.log('click', event);
-  };
-
   handleOnKeyDown = event => {
     event.preventDefault();
   };
 
-  renderModal() {
-    if (this.state.showIncidentModal) {
+  mountIncidentModal = () => {
+    this.setState({
+      showIncidentDetailModal: !this.state.showIncidentDetailModal
+    });
+  };
+
+  mountCreateNewIncidentModal = () => {
+    this.setState({
+      showCreateNewIncidentModal: !this.state.showCreateNewIncidentModal
+    })
+  }
+
+  renderIncidentDetailModal() {
+    if (this.state.showIncidentDetailModal) {
       return (
         <IncidentDetailsModal
           incident={this.state.mockIncident}
-          mountModal={this.mountModal}
+          mountModal={this.mountIncidentModal}
         />
       );
     }
-    return true;
+  }
+
+  renderCreateNewIncidentModal() {
+    if (this.state.showCreateNewIncidentModal) {
+      return (
+        <CreateNewIncidentModal
+          mountModal={this.mountCreateNewIncidentModal}
+        />
+      );
+    }
   }
 
   render() {
     return (
       <div className={s.container}>
-        {this.renderModal()}
+        {this.renderIncidentDetailModal()}
+        {this.renderCreateNewIncidentModal()}
         <div className={s.sideColumn}>
           <p className={s.columnTitle}>Ongoing Incidents</p>
           <IncidentCard
             incident={this.state.mockIncident}
-            mountModal={this.mountModal}
+            mountModal={this.mountIncidentModal}
           />
           <IncidentCard
             incident={this.state.mockIncident}
-            mountModal={this.mountModal}
+            mountModal={this.mountIncidentModal}
           />
         </div>
         <div className={s.main}>
@@ -82,7 +97,7 @@ class OpsDashboard extends React.Component {
         <div className={s.sideColumn}>
           <div
             className={s.createIncidentBtn}
-            onClick={this.handleClick}
+            onClick={this.mountCreateNewIncidentModal}
             onKeyDown={this.handleOnKeyDown}
             role="button"
             tabIndex={0}

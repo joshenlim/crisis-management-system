@@ -13,20 +13,28 @@ router.get('/test', async (req, res) => {
   });
 });
 
-router.post('/register', async(req, res) => {
+router.post('/register', async (req, res) => {
   // eslint-disable-next-line camelcase
   const { name, s_rank, username, password, role_id } = req.body;
   const user = await database.getStaff(username);
   if (user.length) {
-      return res.status(409).send({
-          "Error": "Username already exists"
-      });
+    return res.status(409).send({
+      Error: 'Username already exists',
+    });
   }
 
   const hashPassword = bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);
   await database.createStaff(name, s_rank, username, hashPassword, role_id);
   return res.status(200).send({
-      "Success": "User successfully created"
+    Success: 'User successfully created',
+  });
+});
+
+router.post('/updateAuthority', async (req, res) => {
+  const { role_id, staff_id } = req.body;
+  await database.updateAuthority(role_id, staff_id);
+  return res.status(200).send({
+    Success: 'User successfully created',
   });
 });
 
