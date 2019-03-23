@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import IconType from './enum';
+import Enum from '../../constants/enum';
 
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import s from './MapMarker.scss';
@@ -23,27 +23,28 @@ class MapMarker extends Component {
     super(props);
     this.state = { showBubble: false, svg: {}, iconAlt: '' };
 
+    this.mountBubble = this.mountBubble.bind(this);
     this.mountModal = this.mountModal.bind(this);
   }
 
   componentWillMount() {
     switch (this.props.iconType) {
-      case IconType.FIRE_STATION:
+      case Enum.detailType.FIRE_STATION:
         // this.setState({ svg: FIcon, iconAlt: 'firestation' });
         this.state.svg = FIcon;
         this.state.iconAlt = 'firestation';
         break;
-      case IconType.PUBLIC_HOSPITAL:
+      case Enum.detailType.PUBLIC_HOSPITAL:
         // this.setState({ svg: PubHIcon, iconAlt: 'public hospital' });
         this.state.svg = PubHIcon;
         this.state.iconAlt = "'public hospital";
         break;
-      case IconType.PRIVATE_HOSPITAL:
+      case Enum.detailType.PRIVATE_HOSPITAL:
         // this.setState({ svg: PriHIcon, iconAlt: 'private hospital' });
         this.state.svg = PriHIcon;
         this.state.iconAlt = 'private hospital';
         break;
-      case IconType.INCIDENT:
+      case Enum.detailType.INCIDENT:
         // this.setState({ svg: IIcon, iconAlt: 'incident' });
         this.state.svg = IIcon;
         this.state.iconAlt = 'incident';
@@ -54,13 +55,18 @@ class MapMarker extends Component {
     }
   }
 
-  mountModal(event) {
+  mountBubble(event) {
     if (event.type === 'mouseenter') {
       this.setState({ showBubble: true });
     }
     if (event.type === 'mouseleave') {
       this.setState({ showBubble: false });
     }
+  }
+
+  //TODO - Insert assigned ID for mountModal
+  mountModal() {
+    this.props.mountModal(this.props.iconType, '');
   }
 
   render() {
@@ -73,9 +79,9 @@ class MapMarker extends Component {
         <img
           className={s.icon}
           style={{ fill: this.props.color }}
-          onMouseEnter={this.mountModal}
-          onMouseLeave={this.mountModal}
-          onClick={this.props.mountModal}
+          onMouseEnter={this.mountBubble}
+          onMouseLeave={this.mountBubble}
+          onClick={this.mountModal}
           src={this.state.svg}
           alt={this.state.iconAlt}
         />
