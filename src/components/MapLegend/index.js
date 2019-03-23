@@ -15,14 +15,22 @@ class MapLegend extends Component {
   render() {
     return (
       <div className={s.legend}>
-        <img className={s.icon} src={FSIcon} />
-        Fire Station&emsp;
-        <img className={s.icon} src={PrHIcon} />
-        Private Hospital&emsp;
-        <img className={s.icon} src={PuSIcon} />
-        Public Hospital&emsp;
-        <img className={s.icon} src={IIcon} />
-        Incident&emsp;
+        <div className={s.iconGroup}>
+          <img className={s.icon} src={FSIcon} />
+          Fire Station
+        </div>
+        <div className={s.iconGroup}>
+          <img className={s.icon} src={PrHIcon} />
+          Private Hospital&emsp;
+        </div>
+        <div className={s.iconGroup}>
+          <img className={s.icon} src={PuSIcon} />
+          Public Hospital&emsp;
+        </div>
+        <div className={s.iconGroup}>
+          <img className={s.icon} src={IIcon} />
+          Incident&emsp;
+        </div>
       </div>
     );
   }
