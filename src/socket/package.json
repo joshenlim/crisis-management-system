@@ -1,0 +1,8 @@
+{
+  "name": "crisis",
+  "version": "0.0.1",
+  "description": "Crisis socket server",
+  "dependencies": {
+    "socket.io": "^2.0.4"
+  }
+}
