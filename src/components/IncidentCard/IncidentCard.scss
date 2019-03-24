@@ -1,0 +1,64 @@
+@import '../variables.css';
+
+.incidentCard {
+  border: 1px solid var(--border-black);
+  border-radius: 5px;
+  padding: 10px;
+  margin-bottom: 20px;
+
+  .segment {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .expandBtn {
+    cursor: pointer;
+
+    &:focus {
+      outline: none;
+    }
+  }
+
+  .caseNo {
+    opacity: 0.4;
+    color: var(--black);
+    margin: 0;
+    font-size: 0.7em;
+  }
+
+  .category {
+    margin: 0;
+    margin-top: 5px;
+    font-size: 0.9em;
+  }
+
+  .location {
+    margin: 0;
+    font-size: 0.9em;
+  }
+
+  .status {
+    margin: 0;
+    color: var(--white);
+    border-radius: 20px;
+    width: 110px;
+    font-size: 0.8em;
+    font-weight: 400;
+    text-align: center;
+    margin-top: 10px;
+    padding: 3px 0;
+  }
+}
+
+.dispatched {
+  background-color: var(--blue);
+}
+
+.onsite {
+  background-color: var(--orange);
+}
+
+.enrouteBack {
+  background-color: var(--light-green);
+}

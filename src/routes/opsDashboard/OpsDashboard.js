@@ -1,46 +1,114 @@
-/**
- * React Starter Kit (https://www.reactstarterkit.com/)
- *
- * Copyright © 2014-present Kriasoft, LLC. All rights reserved.
- *
- * This source code is licensed under the MIT license found in the
- * LICENSE.txt file in the root directory of this source tree.
- */
-
 import React from 'react';
-import PropTypes from 'prop-types';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import s from './OpsDashboard.scss';
+import addIcon from '../../assets/images/plus.svg';
+
+import Map from '../../components/Map';
+import NavBar from '../../components/NavBar';
+import IncidentCard from '../../components/IncidentCard';
+import ViewDetailsModal from '../../components/ViewDetailsModal';
+import Enum from '../../constants/enum';
+import CreateNewIncidentModal from '../../components/CreateNewIncidentModal';
 
 class OpsDashboard extends React.Component {
-  static propTypes = {
-    news: PropTypes.arrayOf(
-      PropTypes.shape({
-        title: PropTypes.string.isRequired,
-        link: PropTypes.string.isRequired,
-        content: PropTypes.string,
-      }),
-    ).isRequired,
+  constructor(props) {
+    super(props);
+    this.state = {
+      mockIncident: {},
+      showDetailsModal: false,
+      detailModalId: '',
+      detailModalType: Enum.detailType.INCIDENT,
+      showCreateNewIncidentModal: false,
+    };
+
+    this.mountModal = this.mountModal.bind(this);
+    this.mountCreateNewIncidentModal = this.mountCreateNewIncidentModal.bind(this);
+    this.renderCreateNewIncidentModal = this.renderCreateNewIncidentModal.bind(this);
+    this.handleOnKeyDown = this.handleOnKeyDown.bind(this);
+  }
+
+  componentWillMount() {
+    this.state.mockIncident = {
+      id: 'SNB-1045-367X',
+      category: 'Emergency Ambulance',
+      postalCode: 'S820193',
+      address: '#01-231',
+      status: 'DISPATCHED',
+      description:
+        'Traffic accident involving 3 vehicles on the Pan-Island Expressway (PIE) 2 injured but no fatality, consectetur adipiscing elit. Suspendisse metus ipsum, feugiat id nisi non, laoreet facilisis nunc. Cras et pellentesque est, a pulvinar turpis. Quisque laoreet tellus nulla, sit amet varius mauris porta sodales.',
+    };
+  }
+
+  mountModal = (type, id) => {
+    this.setState({
+      detailModalType: type,
+      detailModalId: id,
+      showDetailsModal: !this.state.showDetailsModal,
+    });
+  }
+
+  handleOnKeyDown = event => {
+    event.preventDefault();
   };
 
-  render() {
+  mountCreateNewIncidentModal = () => {
+    this.setState({
+      showCreateNewIncidentModal: !this.state.showCreateNewIncidentModal
+    })
+  }
 
+  renderModal() {
+    if (this.state.showDetailsModal) {
+      return (
+        <ViewDetailsModal
+          id={this.state.detailModalId}
+          type={this.state.detailModalType}
+          mountModal={this.mountModal} />
+      )
+    }
+  }
+
+  renderCreateNewIncidentModal() {
+    if (this.state.showCreateNewIncidentModal) {
+      return (
+        <CreateNewIncidentModal
+          mountModal={this.mountCreateNewIncidentModal}
+        />
+      );
+    }
+  }
+
+  render() {
     return (
-      <div className={s.root}>
-        <div className={s.container}>
-          <h1>React.js News</h1>
-          {this.props.news.map(item => (
-            <article key={item.link} className={s.newsItem}>
-              <h1 className={s.newsTitle}>
-                <a href={item.link}>{item.title}</a>
-              </h1>
-              <div
-                className={s.newsDesc}
-                // eslint-disable-next-line react/no-danger
-                dangerouslySetInnerHTML={{ __html: item.content }}
-              />
-            </article>
-          ))}
+      <div className={s.container}>
+        {this.renderModal()}
+        {this.renderCreateNewIncidentModal()}
+        <div className={s.sideColumn}>
+          <p className={s.columnTitle}>Ongoing Incidents</p>
+          <IncidentCard
+            incident={this.state.mockIncident}
+            mountModal={this.mountModal}
+          />
+          <IncidentCard
+            incident={this.state.mockIncident}
+            mountModal={this.mountModal}
+          />
+        </div>
+        <div className={s.main}>
+          <NavBar />
+          <Map mountModal={this.mountModal} />
+        </div>
+        <div className={s.sideColumn}>
+          <div
+            className={s.createIncidentBtn}
+            onClick={this.mountCreateNewIncidentModal}
+            onKeyDown={this.handleOnKeyDown}
+            role="button"
+            tabIndex={0}
+          >
+            <img src={addIcon} alt="add-icon" />
+            Create Incident
+          </div>
         </div>
       </div>
     );

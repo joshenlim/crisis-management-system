@@ -24,6 +24,7 @@
     "express": "^4.16.3",
     "express-graphql": "^0.6.12",
     "express-jwt": "^5.3.1",
+    "google-map-react": "^1.1.2",
     "graphql": "^0.13.2",
     "history": "^4.7.2",
     "isomorphic-style-loader": "^4.0.0",
@@ -149,7 +150,6 @@
     ],
     "linters": {
       "*.{js,jsx}": [
-        "eslint --no-ignore --fix",
         "git add --force"
       ],
       "*.{json,md,graphql}": [

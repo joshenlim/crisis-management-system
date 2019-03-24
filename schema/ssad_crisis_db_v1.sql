@@ -1,38 +1,212 @@
--- Dump of Table: users
-------------------------------------------------------------
+CREATE TABLE `role` (
+  role_id INT(11) NOT NULL AUTO_INCREMENT,
+  name VARCHAR(255) NOT NULL,
+  PRIMARY KEY (role_id)
+);
 
-DROP TABLE IF EXISTS `users`;
+CREATE TABLE `policy` (
+  policy_id INT(11) NOT NULL AUTO_INCREMENT,
+  role_id INT(11) NOT NULL,
+  name VARCHAR(255) NOT NULL,
+  PRIMARY KEY (policy_id),
+  FOREIGN KEY (role_id) REFERENCES role(role_id)
+);
 
-CREATE TABLE `users` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `username` varchar(255) NOT NULL,
-  `password` varchar(255) NOT NULL,
-  `name` varchar(255) NOT NULL,
-  `created_at` datetime NOT NULL,
-  `updated_at` datetime NOT NULL,
-  `last_logged_in` datetime DEFAULT NULL,
-  `last_logged_out` datetime DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+CREATE TABLE `staff` (
+  staff_id INT(11) NOT NULL AUTO_INCREMENT,
+  name VARCHAR(255) NOT NULL,
+  s_rank VARCHAR(255) DEFAULT 'REC',
+  password VARCHAR(255) NOT NULL,
+  username VARCHAR(255) NOT NULL,
+  role_id INT(11) NOT NULL,
+  FOREIGN KEY (role_id) REFERENCES role(role_id),
+  PRIMARY KEY (staff_id)
+);
 
--- INSERT INTO users (username, password, name, created_at, updated_at, last_logged_in, last_logged_out) VALUES ('admin', '$2a$08$dFh3GWn9xncbLncL4b2WC.QGf3ScRxvTkY0DQN3saq9bhZVVIgDbS', 'Admin', NOW(), NOW(), NOW(), NOW());
+CREATE TABLE `fire_station` (
+  call_sign VARCHAR(255) NOT NULL,
+  name VARCHAR(255) NOT NULL,
+  postal_code INT(11) NOT NULL,
+  address VARCHAR(255) NOT NULL,
+  PRIMARY KEY (call_sign)
+);
 
+CREATE TABLE `vehicle` (
+  plate_number VARCHAR(255) NOT NULL,
+  call_sign VARCHAR(255) NOT NULL,
+  type VARCHAR(255) NOT NULL,
+  on_off_call BOOLEAN DEFAULT FALSE,
+  PRIMARY KEY (plate_number),
+  FOREIGN KEY (call_sign) REFERENCES fire_station(call_sign)
+);
 
---  Dump of Table: schema_version
-------------------------------------------------------------
+CREATE TABLE `ops_manager` (
+  staff_id INT(11) NOT NULL,
+  PRIMARY KEY (staff_id),
+  FOREIGN KEY (staff_id) REFERENCES staff(staff_id)
+);
 
-DROP TABLE IF EXISTS `schema_version`;
+CREATE TABLE `ops_operator` (
+  staff_id INT(11) NOT NULL,
+  PRIMARY KEY (staff_id),
+  FOREIGN KEY (staff_id) REFERENCES staff(staff_id)
+);
 
-CREATE TABLE `schema_version` (
-  `version` float NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+CREATE TABLE `specialist` (
+  staff_id INT(11) NOT NULL,
+  PRIMARY KEY (staff_id),
+  FOREIGN KEY (staff_id) REFERENCES staff(staff_id)
+);
 
-LOCK TABLES `schema_version` WRITE;
+CREATE TABLE `relations_officer` (
+  staff_id INT(11) NOT NULL,
+  PRIMARY KEY (staff_id),
+  FOREIGN KEY (staff_id) REFERENCES staff(staff_id)
+);
 
-INSERT INTO `schema_version` (`version`)
-VALUES
-	(1.0);
+CREATE TABLE `incidents` (
+  incident_id INT(11) NOT NULL AUTO_INCREMENT,
+  postal_code INT(11) NOT NULL,
+  address VARCHAR(255) NOT NULL,
+  call_time DATETIME NOT NULL,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  completed_at DATETIME DEFAULT NULL,
+  casualty_no INT(11) NOT NULL,
+  category VARCHAR(255) NOT NULL, -- for search by category
+  description VARCHAR(255) NOT NULL,
+  status VARCHAR(255) DEFAULT 'NEW', -- will think of a better starting status
+  op_create_id INT(11) NOT NULL,
+  op_update_id INT(11) DEFAULT NULL,
+  FOREIGN KEY (op_create_id) REFERENCES ops_operator(staff_id),
+  FOREIGN KEY (op_update_id) REFERENCES ops_operator(staff_id),
+  PRIMARY KEY (incident_id)
+);
 
-UNLOCK TABLES;
+CREATE TABLE `ops_GC` (
+  staff_id INT(11) NOT NULL,
+  call_sign VARCHAR(255) NOT NULL,
+  incident_id INT(11) NOT NULL,
+  PRIMARY KEY (staff_id),
+  FOREIGN KEY (staff_id) REFERENCES staff(staff_id),
+  FOREIGN KEY (call_sign) REFERENCES fire_station(call_sign),
+  FOREIGN KEY (incident_id) REFERENCES incidents(incident_id)
+);
 
--- UPDATE `schema_version` SET `version` = 1.1;
+CREATE TABLE `vehicle_incident` (
+  plate_number VARCHAR(255) NOT NULL,
+  incident_id INT(11) NOT NULL,
+  PRIMARY KEY (incident_id, plate_number),
+  FOREIGN KEY (plate_number) REFERENCES vehicle(plate_number),
+  FOREIGN KEY (incident_id) REFERENCES incidents(incident_id)
+);
+
+CREATE TABLE `road_traffic_acc` (
+  incident_id INT(11) NOT NULL,
+  vehicle_type VARCHAR(255) NOT NULL,
+  PRIMARY KEY (incident_id),
+  FOREIGN KEY (incident_id) REFERENCES incidents(incident_id)
+);
+
+CREATE TABLE `fire_emergency` (
+  incident_id INT(11) NOT NULL,
+  fire_spread_rate VARCHAR(255) NOT NULL,
+  PRIMARY KEY (incident_id),
+  FOREIGN KEY (incident_id) REFERENCES incidents(incident_id)
+);
+
+CREATE TABLE `med_emergency` (
+  incident_id INT(11) NOT NULL,
+  cause_description VARCHAR(255) NOT NULL,
+  cause VARCHAR(255) NOT NULL,
+  PRIMARY KEY (incident_id),
+  FOREIGN KEY (incident_id) REFERENCES incidents(incident_id)
+);
+
+CREATE TABLE `civil_emergency` (
+  incident_id INT(11) NOT NULL,
+  supp_doc_dir VARCHAR(255) DEFAULT NULL, -- Link to the uploaded supplement document
+  ce_handle_id INT(11) NOT NULL,
+  ce_upload_id INT(11) NOT NULL,
+  PRIMARY KEY (incident_id),
+  FOREIGN KEY (incident_id) REFERENCES incidents(incident_id),
+  FOREIGN KEY (ce_handle_id) REFERENCES specialist(staff_id),
+  FOREIGN KEY (ce_upload_id) REFERENCES specialist(staff_id)
+);
+
+CREATE TABLE `hospital` (
+  hospital_id INT(11) NOT NULL AUTO_INCREMENT,
+  name VARCHAR(255) NOT NULL,
+  ownership VARCHAR(255) NOT NULL,
+  postal_code INT(11) NOT NULL,
+  address VARCHAR(255) NOT NULL,
+  PRIMARY KEY (hospital_id)
+);
+
+CREATE TABLE `inc_casualty` (
+  nric INT(11) NOT NULL,
+  name VARCHAR(255) NOT NULL,
+  race VARCHAR(255) NOT NULL,
+  gender VARCHAR(255) NOT NULL,
+  curr_condition VARCHAR(255) NOT NULL,
+  allergy VARCHAR(255) NOT NULL,
+  level_of_consc VARCHAR(255) NOT NULL,
+  medical_history VARCHAR(255) NOT NULL,
+  hospital_id INT(11) NOT NULL,
+  incident_id INT(11) NOT NULL,
+  PRIMARY KEY (nric, incident_id, hospital_id),
+  FOREIGN KEY (hospital_id) REFERENCES hospital(hospital_id),
+  FOREIGN KEY (incident_id) REFERENCES incidents(incident_id)
+);
+
+CREATE TABLE `email_directory` (
+  email_id INT(11) NOT NULL AUTO_INCREMENT,
+  name VARCHAR(255) NOT NULL,
+  email_address VARCHAR(255) NOT NULL,
+  organisation VARCHAR(255) NOT NULL,
+  PRIMARY KEY (email_id)
+);
+
+CREATE TABLE `email_log` (
+  email_log_id INT(11) NOT NULL AUTO_INCREMENT,
+  creater_id INT(11) NOT NULL,
+  incident_id INT(11) NOT NULL,
+  send_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  email_id INT(11) NOT NULL,
+  PRIMARY KEY (email_log_id),
+  FOREIGN KEY (incident_id) REFERENCES civil_emergency(incident_id),
+  FOREIGN KEY (creater_id) REFERENCES relations_officer(staff_id),
+  FOREIGN KEY (email_id) REFERENCES email_directory(email_id) 
+);
+
+CREATE TABLE `sms_directory` (
+  sms_id INT(11) NOT NULL AUTO_INCREMENT,
+  name VARCHAR(255) NOT NULL,
+  number INT(11) NOT NULL,
+  PRIMARY KEY (sms_id)
+);
+
+CREATE TABLE `sms_log` (
+  sms_log_id INT(11) NOT NULL AUTO_INCREMENT, 
+  creater_id INT(11) NOT NULL,
+  incident_id INT(11) NOT NULL,
+  send_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  sms_id INT(11) NOT NULL,
+  PRIMARY KEY (sms_log_id),
+  FOREIGN KEY (incident_id) REFERENCES civil_emergency(incident_id),
+  FOREIGN KEY (creater_id) REFERENCES relations_officer(staff_id),
+  FOREIGN KEY (sms_id) REFERENCES sms_directory(sms_id) 
+);
+
+CREATE TABLE `social_media_log` (
+  social_media_log_id INT(11) NOT NULL AUTO_INCREMENT, 
+  send_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  staff_id INT(11) NOT NULL,
+  incident_id INT(11) NOT NULL,
+  PRIMARY KEY (social_media_log_id),
+  FOREIGN KEY (staff_id) REFERENCES relations_officer(staff_id),
+  FOREIGN KEY (incident_id) REFERENCES civil_emergency(incident_id)
+);
+
+INSERT INTO `role` (name) VALUES ('Ops Center Manager');
+INSERT INTO `policy` (role_id, name) VALUES (1, 'CREATE_INCIDENT');

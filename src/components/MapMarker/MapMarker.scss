@@ -1,0 +1,55 @@
+@import '../variables.css';
+
+.icon {
+  cursor: pointer;
+}
+
+/* Tooltip container */
+.bubble {
+  position: relative;
+  display: inline-block;
+}
+
+.bubbleTitle {
+  font-size: 12px;
+}
+
+.bubbleText {
+  font-size: 12px;
+  font-weight: 300;
+}
+
+/* Tooltip text */
+.bubble .bubbleBody {
+  visibility: hidden;
+  width: 200px;
+  bottom: 170%;
+  left: 50%;
+  margin-left: -110px;
+  background-color: white;
+  color: black;
+  padding-left: 10px;
+  padding-right: 10px;
+  border-radius: 5px;
+  border: 1px solid var(--border-black);
+  opacity: 0;
+  transition: opacity 1s;
+  position: absolute;
+  z-index: 1;
+}
+
+.bubble:hover .bubbleBody {
+  visibility: visible;
+  opacity: 1;
+}
+
+.bubble .bubbleBody::after {
+  content: ' ';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -18px;
+  border-width: 18px;
+  border-style: solid;
+  border-color: white transparent transparent transparent;
+}

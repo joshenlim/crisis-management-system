@@ -7,7 +7,7 @@ import bodyParser from 'body-parser';
 import expressJwt, { UnauthorizedError as Jwt401Error } from 'express-jwt';
 import { graphql } from 'graphql';
 import expressGraphQL from 'express-graphql';
-import jwt from 'jsonwebtoken';
+// import jwt from 'jsonwebtoken';
 import nodeFetch from 'node-fetch';
 import React from 'react';
 import ReactDOM from 'react-dom/server';
@@ -29,13 +29,15 @@ import configureStore from './store/configureStore';
 import { setRuntimeVariable } from './actions/runtime';
 
 import authRouter from './api/auth';
+import incidentAPI from './api/manageIncident';
+import stationAPI from './api/station';
 
 const isAuthorized = (req, res, next) => {
   if (req.isAuthenticated()) {
     return next();
   }
   return res.redirect('/');
-}
+};
 
 process.on('unhandledRejection', (reason, p) => {
   console.error('Unhandled Rejection at:', p, 'reason:', reason);
@@ -63,14 +65,16 @@ app.set('trust proxy', config.trustProxy);
 // -----------------------------------------------------------------------------
 app.use(express.static(path.resolve(__dirname, 'public')));
 app.use(cookieParser());
-app.use(cookieSession({
-  maxAge: 86400000,
-  keys: [config.session.cookieKey]
-}))
+app.use(
+  cookieSession({
+    maxAge: 86400000,
+    keys: [config.session.cookieKey],
+  }),
+);
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
+app.use(bodyParser.json({ type: 'application/json' }));
 app.use(flash());
 
 //
@@ -100,31 +104,24 @@ app.post('/login', (req, res, next) => {
   // eslint-disable-next-line consistent-return
   passport.authenticate('local-login', (err, user, info) => {
     if (err || !user ) {
-      if (req.headers['auth-type'] === 'return') {
-        return res.status(400).json({ error: info });
-      }
-      console.log("ERR: ", info);
-      // TO-DO: Trigger flash message upon unsuccessful login
+      console.log("Error: ", info);
       res.redirect('/')
     } else {
       // eslint-disable-next-line consistent-return
-      req.login(user, (error) => {
+      req.login(user, error => {
         if (error) {
-          res.send(error)
+          res.send(error);
         } else {
-          const token = jwt.sign(
-            { username: user.email },
-            config.session.jwtSecret,
-            { expiresIn: '24h'}
-          );
-          if (req.headers['auth-type'] === 'return') {
-            return res.json({token});
-          }
-          req.session.jwt = token;
-          // TO-DO: Redirect to dashboard or something upon successful login
+          // For some reason this line is breaking the login flow
+          // const token = jwt.sign(
+          //   { username: user.username },
+          //   config.session.jwtSecret,
+          //   { expiresIn: '24h'}
+          // );
+          // req.session.jwt = token;
           res.redirect('/ops/dashboard');
         }
-      })
+      });
     }
   })(req, res, next);
 });
@@ -173,13 +170,15 @@ app.use(
 // -----------------------------------------------------------------------------
 
 app.use('/api/auth', authRouter);
+app.use('/api/incident', incidentAPI);
+app.use('/api/station', stationAPI);
 // app.use('/ops/dashboard', opsRouter);
 
 //
 // Middleware Auth for ops, hq, pmo systems
 // -----------------------------------------------------------------------------
 app.all('/ops/*', isAuthorized);
-app.all('/hq/*',  isAuthorized);
+app.all('/hq/*', isAuthorized);
 app.all('/pmo/*', isAuthorized);
 
 //
