@@ -45,8 +45,8 @@ class MySQLDB {
 
   getStaff(username) {
     const res = this.query(
-      `SELECT staff_id, staff.name, s_rank, password, role.role_id, role.name AS role FROM staff
-      JOIN role ON role.role_id = staff.role_id
+      `SELECT staff.id, staff.name, s_rank, password, staff.role_id, role.name AS role FROM staff
+      JOIN role ON role.id = staff.role_id
       WHERE username = ?`,
       [username],
     )
@@ -109,7 +109,7 @@ class MySQLDB {
 
   getPolicies(roleId) {
     const res = this.query(
-      'SELECT policy_id, policy.name FROM role JOIN policy ON role.role_id = policy.role_id WHERE role.role_id = ?',
+      'SELECT policy.id, policy.name FROM role JOIN policy ON role.id = policy.role_id WHERE role.id = ?',
       roleId,
     )
       .then(rows => rows)
