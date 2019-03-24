@@ -72,7 +72,7 @@ class MySQLDB {
     return res;
   }
 
-  updateAuthority(role_id, staff_id) {
+  addAuthority(role_id, staff_id) {
     var res;
     switch (role_id) {
       case 1:
@@ -84,7 +84,7 @@ class MySQLDB {
           )
             .then(rows => rows)
             .catch(err => {
-              console.error('Error from createStaff:', err.sqlMessage);
+              console.error('Error from addAuthority:', err.sqlMessage);
               return err.code;
             });
         }
@@ -98,7 +98,50 @@ class MySQLDB {
           )
             .then(rows => rows)
             .catch(err => {
-              console.error('Error from createStaff:', err.sqlMessage);
+              console.error('Error from addAuthority:', err.sqlMessage);
+              return err.code;
+            });
+        }
+        break;
+      case 3:
+        {
+          //To clarify
+          // res = this.query(
+          //   `INSERT INTO ops_gc (staff_id)
+          //                       VALUES (?)`,
+          //   [staff_id],
+          // )
+          //   .then(rows => rows)
+          //   .catch(err => {
+          //     console.error('Error from addAuthority:', err.sqlMessage);
+          //     return err.code;
+          //   });
+        }
+        break;
+      case 4:
+        {
+          res = this.query(
+            `INSERT INTO specialist (staff_id)
+                                VALUES (?)`,
+            [staff_id],
+          )
+            .then(rows => rows)
+            .catch(err => {
+              console.error('Error from addAuthority:', err.sqlMessage);
+              return err.code;
+            });
+        }
+        break;
+      case 5:
+        {
+          res = this.query(
+            `INSERT INTO relations_officer (staff_id)
+                                VALUES (?)`,
+            [staff_id],
+          )
+            .then(rows => rows)
+            .catch(err => {
+              console.error('Error from addAuthority:', err.sqlMessage);
               return err.code;
             });
         }
