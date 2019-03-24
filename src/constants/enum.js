@@ -10,4 +10,8 @@ export default Object.freeze({
     ON_SITE: 'ON-SITE',
     ENROUTE: 'ENROUTE BACK',
   },
+  socketEvents: {
+    NEW_INCIDENT: 1,
+    ESCALATE_INCIDENT: 2,
+  },
 });
