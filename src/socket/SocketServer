@@ -1,0 +1,24 @@
+// Ensure socket.io module is installed (npm install)
+// Launch socket.io server using "node SocketServer"
+// Connect using "localhost:8080"
+// Change port number to "process.env.PORT" if hosting to heroku
+
+const http = require("http");
+const socketIO = require("socket.io");
+
+const app = http.createServer().listen(8080);
+
+const io = socketIO.listen(app);
+io.sockets.on("connection", (socket) => {
+  // convenience function to log server messages on the client
+  function log() {
+    const array = ["Message from server:"];
+    array.push(...arguments);
+    socket.emit("log", array);
+  }
+
+  socket.on("notify", (message) => {
+    if (message == "hq") io.sockets.emit("hqNotified", "received", socket.id);
+    if (message == "pmo") io.sockets.emit("pmoNotified", "received", socket.id);
+  });
+});
