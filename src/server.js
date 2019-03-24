@@ -31,6 +31,7 @@ import { setRuntimeVariable } from './actions/runtime';
 import authRouter from './api/auth';
 import incidentAPI from './api/manageIncident';
 import stationAPI from './api/station';
+import geocodeAPI from './api/geocode';
 
 const isAuthorized = (req, res, next) => {
   if (req.isAuthenticated()) {
@@ -172,6 +173,7 @@ app.use(
 app.use('/api/auth', authRouter);
 app.use('/api/incident', incidentAPI);
 app.use('/api/station', stationAPI);
+app.use('/api/geocode', geocodeAPI);
 // app.use('/ops/dashboard', opsRouter);
 
 //

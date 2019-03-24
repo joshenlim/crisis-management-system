@@ -66,6 +66,10 @@
       margin-bottom: 20px;
     }
   }
+
+  .dispatchMapStep {
+    width: 800px !important;
+  }
 }
 
 .radioBody {
@@ -223,4 +227,18 @@
 
 .hidePage {
   display: none;
+}
+
+.dispatchUnits {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  .dispatchList {
+    flex: 1;
+  }
+
+  .dispatchMap {
+    flex: 1;
+  }
 }

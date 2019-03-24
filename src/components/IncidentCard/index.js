@@ -62,7 +62,7 @@ class IncidentCard extends React.Component {
             onKeyDown={this.handleOnKeyDown}
             role="button"
             tabIndex={0}
-            incidentId={incident.id}
+            incidentid={incident.id}
           >
             <img src={expandIcon} alt="expand" />
           </div>
