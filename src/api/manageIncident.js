@@ -37,23 +37,31 @@ router.post('/create', async (req, res) => {
   // return res.status(200).send(req.body);
 
   switch (req.body.assistance_type) {
-    case 'road_traffic':
-      console.log('Road_traffic');
-      break;
-    case 'medical_emergency':
-      console.log('Medical_Emergency');
-      break;
-    case 'fire_emergency':
-      console.log('fire_emergency');
-      break;
-    case 'gas_leak':
-      console.log('Gas_Leak');
-      break;
+    case 'road_traffic': {
+      await database.createRoadIncident(req.body);
+      return res.status(200).send({
+        Success: 'Incident successfully created',
+      });
+    }
+    case 'medical_emergency': {
+      await database.createMedicalIncident(req.body);
+      return res.status(200).send({
+        Success: 'Incident successfully created',
+      });
+    }
+    case 'fire_emergency': {
+      await database.createFireIncident(req.body);
+      return res.status(200).send({
+        Success: 'Incident successfully created',
+      });
+    }
+    case 'gas_leak': {
+      await database.createGasIncident(req.body);
+      return res.status(200).send({
+        Success: 'Incident successfully created',
+      });
+    }
   }
-  await database.createIncident(req.body);
-  return res.status(200).send({
-    Success: 'Incident successfully created',
-  });
 });
 
 router.post('/update', async (req, res) => {
