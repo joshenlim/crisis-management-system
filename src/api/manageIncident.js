@@ -44,43 +44,73 @@ router.get('/get_by_status', async (req, res) => {
 
 router.post('/create', async (req, res) => {
   const {
-    postalCode,
+    caller_name,
+    caller_contact,
+    postal_code,
     address,
-    callTime,
-    completedAt,
-    casualtyNo,
+    lat,
+    lng,
+    call_time,
+    casualty_no,
     category,
     description,
-    opCreateId,
-    opUpdateId,
+    status,
+    op_create_id,
+    op_update_id,
+    assistance_type,
   } = req.body;
 
+  console.log(req.body);
+
   // Now just make sure that you have all of the required information
-  return res.status(200).send(req.body);
+  // return res.status(200).send(req.body);
+
+  switch (assistance_type) {
+    case 'road_traffic':
+      console.log('Road_traffic');
+      break;
+    case 'medical_emergency':
+      console.log('Medical_Emergency');
+      break;
+    case 'fire_emergency':
+      console.log('fire_emergency');
+      break;
+    case 'gas_leak':
+      console.log('Gas_Leak');
+      break;
+  }
 
   // await database
   //   .query(
   //     `INSERT INTO incidents (
-  //       postal_code, 
+  //       caller_name,
+  //       caller_contact,
+  //       postal_code,
   //       address,
+  //       lat,
+  //       lng,
   //       call_time,
-  //       completed_at,
   //       casualty_no,
   //       category,
   //       description,
+  //       status,
   //       op_create_id,
-  //       op_update_id
-  //     ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+  //       op_update_id,
+  //     ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
   //     [
-  //       postalCode,
+  //       caller_name,
+  //       caller_contact,
+  //       postal_code,
   //       address,
-  //       callTime,
-  //       completedAt,
-  //       casualtyNo,
+  //       lat,
+  //       lng,
+  //       call_time,
+  //       casualty_no,
   //       category,
   //       description,
-  //       opCreateId,
-  //       opUpdateId,
+  //       status,
+  //       op_create_id,
+  //       op_update_id,
   //     ],
   //   )
   //   .then(rows => rows)
