@@ -12,10 +12,11 @@ import MEQuestionSet from './MEQuestionSet';
 import CallerInformationQuestionSet from './CallerInformationQuestionSet';
 import IncidentLocationQuestionSet from './IncidentLocationQuestionSet';
 import DispatchMap from './DispatchMap';
+import DispatchVehicleList from './DispatchVehicleList';
 
 class CreateNewIncidentModal extends React.Component {
   static propTypes = {
-    mountModal: PropTypes.func.isRequired
+    mountModal: PropTypes.func.isRequired,
   };
 
   constructor(props) {
@@ -25,7 +26,9 @@ class CreateNewIncidentModal extends React.Component {
       selectedType: "EA",
       escalate: false,
       incidentPostalCode: "",
-      incidentLatLng: {},
+      incidentLocation: {},
+      selectedVehicles: [],
+      fireStations: [],
     };
 
     this.closeModal = this.closeModal.bind(this);
@@ -41,35 +44,25 @@ class CreateNewIncidentModal extends React.Component {
     this.props.mountModal();
   }
 
-  updateSelectedType = (type) => {
-    this.setState({
-      selectedType: type,
-    })
-  }
-
   updateNumCasualties = (event) => {
     const numberCasualties = event.target.value;
     if (numberCasualties >= 10 && !this.state.escalate) {
-      this.setState({
-        escalate: true,
-      })
+      this.setState({ escalate: true })
     } else if (numberCasualties < 10 && this.state.escalate) {
-      this.setState({
-        escalate: false,
-      })
+      this.setState({ escalate: false })
     }
   }
 
+  updateSelectedType = (type) => {
+    this.setState({ selectedType: type })
+  }
+
   updatePostalCode = (postalCode) => {
-    this.setState({
-      incidentPostalCode: postalCode,
-    })
+    this.setState({ incidentPostalCode: postalCode })
   }
 
   escalateIncident = () => {
-    this.setState({
-      escalate: !this.state.escalate,
-    })
+    this.setState({ escalate: !this.state.escalate })
   }
 
   nextPage = (event) => {
@@ -79,7 +72,7 @@ class CreateNewIncidentModal extends React.Component {
         axios.get('/api/geocode/address?q=' + this.state.incidentPostalCode)
           .then(function (res) {
             self.setState({
-              incidentLatLng: {
+              incidentLocation: {
                 address: res.data.address,
                 center: {
                   lat: res.data.lat,
@@ -91,21 +84,18 @@ class CreateNewIncidentModal extends React.Component {
       }
     }
     if (this.state.page < 3) {
-      this.setState({
-        page: this.state.page + 1,
-      })
+      this.setState({ page: this.state.page + 1 })
     }
   }
 
   prevPage = () => {
     if (this.state.page > 1) {
-      this.setState({
-        page: this.state.page - 1,
-      })
+      this.setState({ page: this.state.page - 1 })
     }
   }
 
   render() {
+    const { fireStationList } = this.props;
     return (
       <div className={s.modalBackground}>
         <div className={s.incidentModal + " " + (this.state.page == 3 ? s.dispatchMapStep : "")}>
@@ -209,14 +199,15 @@ class CreateNewIncidentModal extends React.Component {
               <p className={s.contentHeader}>Select a department to dispatch the case to - dropdown to view department status details.</p>
 
               <div className={s.dispatchUnits}>
-                {/* Need to pull from db the list of vehicles, all probably from component will mount */}
                 <div className={s.dispatchList}>
-                  <p>Hello</p>
+                  <DispatchVehicleList fireStationList={fireStationList} />
                 </div>
                 <div className={s.dispatchMap}>
-                  {
-                    this.state.incidentLatLng.center && <DispatchMap center={this.state.incidentLatLng.center} zoom={12} address={this.state.incidentLatLng.address} />
-                  }
+                  <DispatchMap
+                    center={this.state.incidentLocation.center}
+                    zoom={12}
+                    address={this.state.incidentLocation.address}
+                  />
                 </div>
               </div>
 
