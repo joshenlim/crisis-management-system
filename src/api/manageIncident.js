@@ -25,12 +25,12 @@ router.get('/get_by_status', async (req, res) => {
 });
 
 router.post('/create', async (req, res) => {
-  // console.log(req.body);
+  console.log(req.body);
 
   // Now just make sure that you have all of the required information
   // return res.status(200).send(req.body);
 
-  switch (assistance_type) {
+  switch (req.body.assistance_type) {
     case 'road_traffic':
       console.log('Road_traffic');
       break;
@@ -120,17 +120,6 @@ router.get('/get_civil_id', async (req, res) => {
     });
   return res.status(200).send(incidents);
 });
-
-// router.get('/get', async (req, res) => {
-//   const incidents = await database
-//     .query("SELECT * FROM incidents WHERE status = 'resolved'")
-//     .then(rows => rows)
-//     .catch(err => {
-//       console.error('Error from getArchivedIncident:', err.sqlMessage);
-//       return res.status(409).send({ Error: err.code });
-//     });
-//   return res.status(200).send(incidents);
-// });
 
 router.put('/put', async (req, res) => {
   const { emergid } = req.query;
