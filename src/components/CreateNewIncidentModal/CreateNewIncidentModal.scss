@@ -69,6 +69,7 @@
 
   .dispatchMapStep {
     width: 800px !important;
+    min-height: 570px;
   }
 }
 
@@ -240,5 +241,74 @@
 
   .dispatchMap {
     flex: 1;
+  }
+}
+
+.openDropdown {
+  .tileHeader {
+    .expandDrop {
+      transform: rotate(180deg);
+    }
+  }
+
+  .vehicleList {
+    margin-top: 5px !important;
+    max-height: 2000px !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+
+    .vehicleOption {
+      max-height: 100px !important;
+      margin-bottom: 5px !important;
+    }
+  }
+}
+
+.stationList {
+  height: 400px;
+  overflow-y: scroll;
+  padding-right: 20px;
+
+  .stationTile {
+    padding: 5px 0;
+
+    .tileHeader {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      .stationName {
+        margin: 0;
+        font-weight: 400;
+      }
+
+      .expandDrop {
+        cursor: pointer;
+        transition: all 0.2s ease;
+        padding: 10px;
+      }
+    }
+
+    .vehicleList {
+      max-height: 0;
+      visibility: hidden;
+      opacity: 0;
+      margin-top: 0;
+      transition: all 0.2s ease;
+
+      .vehicleOption {
+        margin-bottom: 0;
+        max-height: 0;
+        transition: all 0.2s ease;
+
+        input {
+          margin-left: 10px;
+        }
+
+        label {
+          margin-left: 15px;
+        }
+      }
+    }
   }
 }

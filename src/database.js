@@ -162,6 +162,36 @@ class MySQLDB {
       });
     return res;
   }
+
+  getAllStations() {
+    const res = this.query('SELECT * FROM fire_station')
+      .then(rows => rows)
+      .catch(err => {
+        console.error('Error from getAllVehicles:', err.sqlMessage);
+        return err.code;
+      });
+    return res;
+  }
+
+  getStationVehicles(stationId) {
+    const res = this.query('SELECT * FROM vehicle WHERE fire_station_id = ?', [stationId])
+      .then(rows => rows)
+      .catch(err => {
+        console.error('Error from getStationVehicles:', err.sqlMessage);
+        return err.code;
+      });
+    return res;
+  }
+
+  getStationById(stationId) {
+    const res = this.query('SELECT * FROM fire_station WHERE id = ?', [stationid])
+      .then(rows => rows)
+      .catch(err => {
+        console.error('Error from getStationVehicles:', err.sqlMessage);
+        return err.code;
+      });
+    return res;
+  }
 }
 
 export default MySQLDB;

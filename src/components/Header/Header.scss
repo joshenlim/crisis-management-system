@@ -18,6 +18,36 @@
   color: var(--black);
 }
 
+.headerOps {
+  display: flex;
+  flex-direction: horizontal;
+  justify-content: space-between;
+  padding: 20px 30px;
+  box-shadow: 0 2px 3px 2px rgba(0, 0, 0, 0.15);
+  color: var(--black);
+  background-color: var(--white);
+}
+
+.headerHQ {
+  display: flex;
+  flex-direction: horizontal;
+  justify-content: space-between;
+  padding: 20px 30px;
+  box-shadow: 0 2px 3px 2px rgba(0, 0, 0, 0.15);
+  color: var(--white);
+  background-color: var(--black);
+}
+
+.headerPMO {
+  display: flex;
+  flex-direction: horizontal;
+  justify-content: space-between;
+  padding: 20px 30px;
+  box-shadow: 0 2px 3px 2px rgba(0, 0, 0, 0.15);
+  color: var(--white);
+  background-color: var(--black);
+}
+
 .logo {
   img {
     width: 40px;
@@ -30,10 +60,21 @@
   align-items: center;
 }
 
+.userProfileOps {
+  border-right: 1px solid var(--border-black);
+}
+
+.userProfileHQ {
+  border-right: 1px solid var(--white);
+}
+
+.userProfilePMO {
+  border-right: 1px solid var(--white);
+}
+
 .userProfile {
   display: flex;
   padding-right: 30px;
-  border-right: 1px solid var(--border-black);
 
   .userInfo {
     margin-right: 20px;
@@ -61,8 +102,19 @@
   }
 }
 
-.logout {
+.logoutOps {
   border: 1px solid var(--border-black);
+}
+
+.logoutHQ {
+  border: 1px solid var(--white);
+}
+
+.logoutPMO {
+  border: 1px solid var(--white);
+}
+
+.logout {
   padding: 10px 30px;
   border-radius: 5px;
   margin-left: 30px;
