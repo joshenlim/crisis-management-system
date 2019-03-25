@@ -7,9 +7,17 @@ import MarkerEnum from '../../constants/enum';
 
 class DispatchMap extends React.Component {
   static propTypes = {
-    center: PropTypes.objectOf(PropTypes.number).isRequired,
-    zoom: PropTypes.number.isRequired,
+    center: PropTypes.objectOf(PropTypes.number),
+    zoom: PropTypes.number,
     address: PropTypes.string.isRequired
+  };
+
+  static defaultProps = {
+    center: {
+      lat: 1.35,
+      lng: 103.82,
+    },
+    zoom: 10,
   };
 
   render() {
@@ -25,8 +33,8 @@ class DispatchMap extends React.Component {
       <div style={{ height: '400px', width: '100%' }}>
         <GoogleMapReact
           bootstrapURLKeys={{ key: 'AIzaSyCoWLP6ZKKkLxK0kj9TJP0vt906LxFU3lo' }}
-          defaultCenter={this.props.center}
-          defaultZoom={this.props.zoom}
+          center={this.props.center}
+          zoom={this.props.zoom}
           options={mapOptions}
         >
           <MapMarker

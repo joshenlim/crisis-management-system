@@ -85,21 +85,31 @@ class MySQLDB {
     return res;
   }
 
-  getAllStation() {
+  getAllStations() {
     const res = this.query('SELECT * FROM fire_station')
       .then(rows => rows)
       .catch(err => {
-        console.error('Error from getAllStation:', err.sqlMessage);
+        console.error('Error from getAllStations:', err.sqlMessage);
         return err.code;
       });
     return res;
   }
 
-  getStationByID(id) {
+  getStationById(id) {
     const res = this.query('SELECT * FROM fire_station WHERE id = ?', [id])
       .then(rows => rows)
       .catch(err => {
         console.error('Error from getStationCallsign:', err.sqlMessage);
+        return err.code;
+      });
+    return res;
+  }
+
+  getStationVehicles(stationId) {
+    const res = this.query('SELECT * FROM vehicle WHERE fire_station_id = ?', [stationId])
+      .then(rows => rows)
+      .catch(err => {
+        console.error('Error from getStationVehicles:', err.sqlMessage);
         return err.code;
       });
     return res;

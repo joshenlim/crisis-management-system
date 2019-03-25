@@ -1,9 +1,9 @@
 import express from 'express';
-import config from '../config';
 import MySQLDB from '../database';
 import SocketIO from 'socket.io-client';
 import Enum from '../constants/enum';
 import { SOCKIO_HOST } from '../constants/index';
+import config from '../config';
 
 var io = SocketIO(SOCKIO_HOST);
 
