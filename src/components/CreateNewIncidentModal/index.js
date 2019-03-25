@@ -1,4 +1,5 @@
 import React from 'react';
+import axios from 'axios';
 import PropTypes from 'prop-types';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import s from './CreateNewIncidentModal.scss';
@@ -10,6 +11,7 @@ import FFQuestionSet from './FFQuestionSet';
 import MEQuestionSet from './MEQuestionSet';
 import CallerInformationQuestionSet from './CallerInformationQuestionSet';
 import IncidentLocationQuestionSet from './IncidentLocationQuestionSet';
+import DispatchMap from './DispatchMap';
 
 class CreateNewIncidentModal extends React.Component {
   static propTypes = {
@@ -23,6 +25,7 @@ class CreateNewIncidentModal extends React.Component {
       selectedType: "EA",
       escalate: false,
       incidentPostalCode: "",
+      incidentLatLng: {},
     };
 
     this.closeModal = this.closeModal.bind(this);
@@ -69,7 +72,24 @@ class CreateNewIncidentModal extends React.Component {
     })
   }
 
-  nextPage = () => {
+  nextPage = (event) => {
+    const self = this;
+    if (this.state.incidentPostalCode.length && event.target.attributes.tag) {
+      if (event.target.attributes.tag.value == "convertGeocode") {
+        axios.get('/api/geocode/address?q=' + this.state.incidentPostalCode)
+          .then(function (res) {
+            self.setState({
+              incidentLatLng: {
+                address: res.data.address,
+                center: {
+                  lat: res.data.lat,
+                  lng: res.data.lng,
+                },
+              }
+            })
+          });
+      }
+    }
     if (this.state.page < 3) {
       this.setState({
         page: this.state.page + 1,
@@ -88,7 +108,7 @@ class CreateNewIncidentModal extends React.Component {
   render() {
     return (
       <div className={s.modalBackground}>
-        <div className={s.incidentModal}>
+        <div className={s.incidentModal + " " + (this.state.page == 3 ? s.dispatchMapStep : "")}>
           <span className={s.closeBtn} onClick={this.closeModal}>
             <img src={closeBtn} alt="close" />
           </span>
@@ -177,15 +197,29 @@ class CreateNewIncidentModal extends React.Component {
                 </div>
                 <div
                   className={s.nextButton}
-                  style={{margin: 0}}
-                  onClick={this.nextPage}>
+                  style={{ margin: 0 }}
+                  onClick={this.nextPage}
+                  tag="convertGeocode">
                   Next
                 </div>
               </div>
             </div>
 
             <div className={this.state.page == 3 ? s.showPage : s.hidePage}>
-              <p className={s.contentHeader}>Postal Code: {this.state.incidentPostalCode}</p>
+              <p className={s.contentHeader}>Select a department to dispatch the case to - dropdown to view department status details.</p>
+
+              <div className={s.dispatchUnits}>
+                {/* Need to pull from db the list of vehicles, all probably from component will mount */}
+                <div className={s.dispatchList}>
+                  <p>Hello</p>
+                </div>
+                <div className={s.dispatchMap}>
+                  {
+                    this.state.incidentLatLng.center && <DispatchMap center={this.state.incidentLatLng.center} zoom={12} address={this.state.incidentLatLng.address} />
+                  }
+                </div>
+              </div>
+
               <div className={s.btnGrp}>
                 <div
                   className={s.prevButton}

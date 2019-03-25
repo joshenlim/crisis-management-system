@@ -1,6 +1,11 @@
 import express from 'express';
 import config from '../config';
 import MySQLDB from '../database';
+import SocketIO from 'socket.io-client';
+import Enum from '../constants/enum';
+import { SOCKIO_HOST } from '../constants/index';
+
+var io = SocketIO(SOCKIO_HOST);
 
 const router = express.Router({ mergeParams: true });
 
@@ -27,6 +32,7 @@ router.get('/get_by_status', async (req, res) => {
 router.post('/create', async (req, res) => {
   console.log(req.body);
 
+  io.emit('notify', Enum.socketEvents.NEW_INCIDENT);
   // Now just make sure that you have all of the required information
   // return res.status(200).send(req.body);
 

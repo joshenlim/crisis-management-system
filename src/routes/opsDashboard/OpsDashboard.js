@@ -10,6 +10,11 @@ import ViewDetailsModal from '../../components/ViewDetailsModal';
 import Enum from '../../constants/enum';
 import CreateNewIncidentModal from '../../components/CreateNewIncidentModal';
 
+import { SOCKIO_HOST } from '../../constants';
+
+import Socket from 'socket.io-client';
+var io = Socket(SOCKIO_HOST);
+
 class OpsDashboard extends React.Component {
   constructor(props) {
     super(props);
@@ -22,12 +27,25 @@ class OpsDashboard extends React.Component {
     };
 
     this.mountModal = this.mountModal.bind(this);
-    this.mountCreateNewIncidentModal = this.mountCreateNewIncidentModal.bind(this);
-    this.renderCreateNewIncidentModal = this.renderCreateNewIncidentModal.bind(this);
+    this.mountCreateNewIncidentModal = this.mountCreateNewIncidentModal.bind(
+      this,
+    );
+    this.renderCreateNewIncidentModal = this.renderCreateNewIncidentModal.bind(
+      this,
+    );
     this.handleOnKeyDown = this.handleOnKeyDown.bind(this);
   }
 
   componentWillMount() {
+    io.on('fetch', type => {
+      if (Enum.socketEvents.NEW_INCIDENT == type) {
+        //TODO - Perform AJAX to poll for list of ongoing incident to update incident card
+        console.log(
+          'Placeholder Action in OpsDashboard: Refresh incident list',
+        );
+      }
+    });
+
     this.state.mockIncident = {
       id: 'SNB-1045-367X',
       category: 'Emergency Ambulance',
@@ -45,7 +63,7 @@ class OpsDashboard extends React.Component {
       detailModalId: id,
       showDetailsModal: !this.state.showDetailsModal,
     });
-  }
+  };
 
   handleOnKeyDown = event => {
     event.preventDefault();
@@ -53,9 +71,9 @@ class OpsDashboard extends React.Component {
 
   mountCreateNewIncidentModal = () => {
     this.setState({
-      showCreateNewIncidentModal: !this.state.showCreateNewIncidentModal
-    })
-  }
+      showCreateNewIncidentModal: !this.state.showCreateNewIncidentModal,
+    });
+  };
 
   renderModal() {
     if (this.state.showDetailsModal) {
@@ -63,17 +81,16 @@ class OpsDashboard extends React.Component {
         <ViewDetailsModal
           id={this.state.detailModalId}
           type={this.state.detailModalType}
-          mountModal={this.mountModal} />
-      )
+          mountModal={this.mountModal}
+        />
+      );
     }
   }
 
   renderCreateNewIncidentModal() {
     if (this.state.showCreateNewIncidentModal) {
       return (
-        <CreateNewIncidentModal
-          mountModal={this.mountCreateNewIncidentModal}
-        />
+        <CreateNewIncidentModal mountModal={this.mountCreateNewIncidentModal} />
       );
     }
   }
