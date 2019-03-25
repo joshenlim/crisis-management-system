@@ -1,8 +1,8 @@
-if (process.env.BROWSER) {
-  throw new Error(
-    'Do not import `config.js` from inside the client-side code.',
-  );
-}
+// if (process.env.BROWSER) {
+//   throw new Error(
+//     'Do not import `config.js` from inside the client-side code.',
+//   );
+// }
 
 module.exports = {
   // Node.js app
@@ -41,7 +41,7 @@ module.exports = {
 
   session: {
     cookieKey: 'crisis',
-    jwtSecret: process.emitWarning.JWT_SESSION_KEY // make this to env var
+    // jwtSecret: process.emitWarning.JWT_SESSION_KEY // make this to env var
   },
 
   googleMaps: {

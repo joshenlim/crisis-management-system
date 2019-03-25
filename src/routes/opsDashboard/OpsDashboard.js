@@ -35,7 +35,7 @@ class OpsDashboard extends React.Component {
     );
     this.handleOnKeyDown = this.handleOnKeyDown.bind(this);
   }
-
+  
   componentWillMount() {
     io.on('fetch', type => {
       if (Enum.socketEvents.NEW_INCIDENT == type) {
@@ -90,7 +90,7 @@ class OpsDashboard extends React.Component {
   renderCreateNewIncidentModal() {
     if (this.state.showCreateNewIncidentModal) {
       return (
-        <CreateNewIncidentModal mountModal={this.mountCreateNewIncidentModal} />
+        <CreateNewIncidentModal mountModal={this.mountCreateNewIncidentModal} fireStationList={this.props.fireStationList} />
       );
     }
   }
