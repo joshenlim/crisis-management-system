@@ -136,6 +136,61 @@ class MySQLDB {
       });
     return res;
   }
+
+  createIncident(body) {
+    const {
+      caller_name,
+      caller_contact,
+      postal_code,
+      address,
+      lat,
+      lng,
+      call_time,
+      casualty_no,
+      category,
+      description,
+      status,
+      op_create_id,
+      op_update_id,
+    } = body;
+    const res = this.query(
+      `INSERT INTO incidents (
+        caller_name,
+        caller_contact,
+        postal_code,
+        address,
+        lat,
+        lng,
+        call_time,
+        casualty_no,
+        category,
+        description,
+        status,
+        op_create_id,
+        op_update_id
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      [
+        caller_name,
+        caller_contact,
+        postal_code,
+        address,
+        lat,
+        lng,
+        call_time,
+        casualty_no,
+        category,
+        description,
+        status,
+        op_create_id,
+        op_update_id,
+      ],
+    )
+      .then(rows => rows)
+      .catch(err => {
+        console.error('Error from createIncident:', err.sqlMessage);
+        return res.status(409).send({ Error: err.code });
+      });
+  }
 }
 
 export default MySQLDB;

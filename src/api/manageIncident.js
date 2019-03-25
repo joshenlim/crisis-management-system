@@ -25,24 +25,7 @@ router.get('/get_by_status', async (req, res) => {
 });
 
 router.post('/create', async (req, res) => {
-  const {
-    caller_name,
-    caller_contact,
-    postal_code,
-    address,
-    lat,
-    lng,
-    call_time,
-    casualty_no,
-    category,
-    description,
-    status,
-    op_create_id,
-    op_update_id,
-    assistance_type,
-  } = req.body;
-
-  console.log(req.body);
+  // console.log(req.body);
 
   // Now just make sure that you have all of the required information
   // return res.status(200).send(req.body);
@@ -61,51 +44,15 @@ router.post('/create', async (req, res) => {
       console.log('Gas_Leak');
       break;
   }
-
-  // await database
-  //   .query(
-  //     `INSERT INTO incidents (
-  //       caller_name,
-  //       caller_contact,
-  //       postal_code,
-  //       address,
-  //       lat,
-  //       lng,
-  //       call_time,
-  //       casualty_no,
-  //       category,
-  //       description,
-  //       status,
-  //       op_create_id,
-  //       op_update_id,
-  //     ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-  //     [
-  //       caller_name,
-  //       caller_contact,
-  //       postal_code,
-  //       address,
-  //       lat,
-  //       lng,
-  //       call_time,
-  //       casualty_no,
-  //       category,
-  //       description,
-  //       status,
-  //       op_create_id,
-  //       op_update_id,
-  //     ],
-  //   )
-  //   .then(rows => rows)
-  //   .catch(err => {
-  //     console.error('Error from createIncident:', err.sqlMessage);
-  //     return res.status(409).send({ Error: err.code });
-  //   });
-  // return res.status(200).send({
-  //   Success: 'Incident successfully created',
-  // });
+  await database.createIncident(req.body);
+  return res.status(200).send({
+    Success: 'Incident successfully created',
+  });
 });
 
 router.post('/update', async (req, res) => {
+  //TODO fix api and shift query to database.js
+
   const {
     postalCode,
     address,
@@ -159,7 +106,7 @@ router.post('/update', async (req, res) => {
   });
 });
 
-router.get('/get_id', async (req, res) => {
+router.get('/get_civil_id', async (req, res) => {
   const { emergid } = req.query;
   const incidents = await database
     .query(
@@ -174,16 +121,16 @@ router.get('/get_id', async (req, res) => {
   return res.status(200).send(incidents);
 });
 
-router.get('/get', async (req, res) => {
-  const incidents = await database
-    .query("SELECT * FROM incidents WHERE status = 'resolved'")
-    .then(rows => rows)
-    .catch(err => {
-      console.error('Error from getArchivedIncident:', err.sqlMessage);
-      return res.status(409).send({ Error: err.code });
-    });
-  return res.status(200).send(incidents);
-});
+// router.get('/get', async (req, res) => {
+//   const incidents = await database
+//     .query("SELECT * FROM incidents WHERE status = 'resolved'")
+//     .then(rows => rows)
+//     .catch(err => {
+//       console.error('Error from getArchivedIncident:', err.sqlMessage);
+//       return res.status(409).send({ Error: err.code });
+//     });
+//   return res.status(200).send(incidents);
+// });
 
 router.put('/put', async (req, res) => {
   const { emergid } = req.query;
@@ -199,25 +146,25 @@ router.put('/put', async (req, res) => {
   return res.status(201).send(incidents);
 });
 
-router.post('/create', async (req, res) => {
-  const { id, plate_number } = req.headers;
+// router.post('/create', async (req, res) => {
+//   const { id, plate_number } = req.headers;
 
-  await database
-    .query(
-      'UPDATE vehicle SET on_off_call = 1 WHERE plate_number = ?',
-      [plate_number],
-      'INSERT INTO vehicle_incident (id, plate_number) VALUES (?, ?)',
-      [id, plate_number],
-    )
-    .then(rows => rows)
-    .catch(err => {
-      console.error('Error from dispatchAdditionalUnit:', err.sqlMessage);
-      return res.status(409).send({ Error: err.code });
-    });
+//   await database
+//     .query(
+//       'UPDATE vehicle SET on_off_call = 1 WHERE plate_number = ?',
+//       [plate_number],
+//       'INSERT INTO vehicle_incident (id, plate_number) VALUES (?, ?)',
+//       [id, plate_number],
+//     )
+//     .then(rows => rows)
+//     .catch(err => {
+//       console.error('Error from dispatchAdditionalUnit:', err.sqlMessage);
+//       return res.status(409).send({ Error: err.code });
+//     });
 
-  return res.status(200).send({
-    Success: 'Dispatch on additional unit successfully created',
-  });
-});
+//   return res.status(200).send({
+//     Success: 'Dispatch on additional unit successfully created',
+//   });
+// });
 
 export default router;
