@@ -104,6 +104,38 @@ class MySQLDB {
       });
     return res;
   }
+
+  getIncidentByID(incid) {
+    const res = this.query('SELECT * FROM incidents WHERE incident_id = ?', [
+      incid,
+    ])
+      .then(rows => rows)
+      .catch(err => {
+        console.error('Error from getIncidentById:', err.sqlMessage);
+        return res.status(409).send({ Error: err.code });
+      });
+    return res;
+  }
+
+  getOngoingIncident() {
+    const res = this.query("SELECT * FROM incidents WHERE status = 'ongoing'")
+      .then(rows => rows)
+      .catch(err => {
+        console.error('Error from getAllIncident:', err.sqlMessage);
+        return res.status(409).send({ Error: err.code });
+      });
+    return res;
+  }
+
+  getIncidentByStatus(status) {
+    const res = this.query('SELECT * FROM incidents WHERE status = ?', [status])
+      .then(rows => rows)
+      .catch(err => {
+        console.error('Error from getIncidentByStatus:', err.sqlMessage);
+        return res.status(409).send({ Error: err.code });
+      });
+    return res;
+  }
 }
 
 export default MySQLDB;
