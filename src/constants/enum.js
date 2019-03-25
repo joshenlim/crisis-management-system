@@ -14,4 +14,11 @@ export default Object.freeze({
     NEW_INCIDENT: 1,
     ESCALATE_INCIDENT: 2,
   },
+  staffRole: {
+    OPS_MANAGER: 'Ops Center Manager',
+    OPS_OPERATOR: 'Ops Center Operator',
+    OPS_GROUNDCOMM: 'Ops Ground Commander',
+    SPECIALIST: 'Specialist',
+    RELATIONS_OFFICER: 'Relations Officer',
+  },
 });
