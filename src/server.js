@@ -26,6 +26,8 @@ import schema from './data/schema';
 import chunks from './chunk-manifest.json'; // eslint-disable-line import/no-unresolved
 import configureStore from './store/configureStore';
 
+import Enum from './constants/enum';
+
 import { setRuntimeVariable } from './actions/runtime';
 
 import authRouter from './api/auth';
@@ -104,9 +106,9 @@ app.use(passport.initialize());
 app.post('/login', (req, res, next) => {
   // eslint-disable-next-line consistent-return
   passport.authenticate('local-login', (err, user, info) => {
-    if (err || !user ) {
-      console.log("Error: ", info);
-      res.redirect('/')
+    if (err || !user) {
+      console.log('Error: ', info);
+      res.redirect('/');
     } else {
       // eslint-disable-next-line consistent-return
       req.login(user, error => {
@@ -120,7 +122,18 @@ app.post('/login', (req, res, next) => {
           //   { expiresIn: '24h'}
           // );
           // req.session.jwt = token;
-          res.redirect('/ops/dashboard');
+          //res.redirect('/ops/dashboard');
+
+          switch (user.role) {
+            case Enum.staffRole.SPECIALIST:
+              res.redirect('/hqDashboard');
+              break;
+            case Enum.staffRole.RELATIONS_OFFICER:
+              res.redirect('/hqDashboard');
+              break;
+            default:
+              res.redirect('/ops/dashboard');
+          }
         }
       });
     }

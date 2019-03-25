@@ -1,0 +1,42 @@
+@import '../../components/variables.css';
+
+.container {
+  margin: 0 auto;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+
+  .sideColumn {
+    width: 210px;
+    padding: 0 30px;
+    margin-top: 70px;
+
+    .columnTitle {
+      text-align: center;
+      font-weight: 400;
+      margin: 0;
+      margin-bottom: 20px;
+    }
+  }
+
+  .main {
+    width: calc(100vw - 540px);
+  }
+}
+
+.tabIcons {
+  width: 30px;
+  height: 30px;
+  display: flex;
+  margin-bottom: 10px;
+  margin-left: 175px;
+  opacity: 0.5;
+
+  &:active {
+    opacity: 1;
+  }
+
+  &:hover {
+    opacity: 0.7;
+  }
+}
