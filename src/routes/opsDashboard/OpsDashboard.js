@@ -9,8 +9,9 @@ import IncidentCard from '../../components/IncidentCard';
 import ViewDetailsModal from '../../components/ViewDetailsModal';
 import Enum from '../../constants/enum';
 import CreateNewIncidentModal from '../../components/CreateNewIncidentModal';
+import fetch from 'node-fetch';
 
-import { SOCKIO_HOST } from '../../constants';
+import { SOCKIO_HOST, API_HOST } from '../../constants';
 
 import Socket from 'socket.io-client';
 var io = Socket(SOCKIO_HOST);
@@ -19,7 +20,7 @@ class OpsDashboard extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      mockIncident: {},
+      incidents: [],
       showDetailsModal: false,
       detailModalId: '',
       detailModalType: Enum.detailType.INCIDENT,
@@ -34,27 +35,33 @@ class OpsDashboard extends React.Component {
       this,
     );
     this.handleOnKeyDown = this.handleOnKeyDown.bind(this);
+    this.fetchOngoingIncident = this.fetchOngoingIncident.bind(this);
   }
-  
+
   componentWillMount() {
+    this.fetchOngoingIncident();
     io.on('fetch', type => {
       if (Enum.socketEvents.NEW_INCIDENT == type) {
         //TODO - Perform AJAX to poll for list of ongoing incident to update incident card
+        this.fetchOngoingIncident();
         console.log(
           'Placeholder Action in OpsDashboard: Refresh incident list',
         );
       }
     });
+  }
 
-    this.state.mockIncident = {
-      id: 'SNB-1045-367X',
-      category: 'Emergency Ambulance',
-      postalCode: 'S820193',
-      address: '#01-231',
-      status: 'DISPATCHED',
-      description:
-        'Traffic accident involving 3 vehicles on the Pan-Island Expressway (PIE) 2 injured but no fatality, consectetur adipiscing elit. Suspendisse metus ipsum, feugiat id nisi non, laoreet facilisis nunc. Cras et pellentesque est, a pulvinar turpis. Quisque laoreet tellus nulla, sit amet varius mauris porta sodales.',
-    };
+  fetchOngoingIncident() {
+    fetch(API_HOST + 'api/incident/get_ongoing', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      //body: JSON.stringify(req),
+    })
+      .then(res => res.json())
+      .then(data => this.setState({ incidents: data }))
+      .catch(err => console.log(err));
   }
 
   mountModal = (type, id) => {
@@ -90,7 +97,10 @@ class OpsDashboard extends React.Component {
   renderCreateNewIncidentModal() {
     if (this.state.showCreateNewIncidentModal) {
       return (
-        <CreateNewIncidentModal mountModal={this.mountCreateNewIncidentModal} fireStationList={this.props.fireStationList} />
+        <CreateNewIncidentModal
+          mountModal={this.mountCreateNewIncidentModal}
+          fireStationList={this.props.fireStationList}
+        />
       );
     }
   }
@@ -102,14 +112,9 @@ class OpsDashboard extends React.Component {
         {this.renderCreateNewIncidentModal()}
         <div className={s.sideColumn}>
           <p className={s.columnTitle}>Ongoing Incidents</p>
-          <IncidentCard
-            incident={this.state.mockIncident}
-            mountModal={this.mountModal}
-          />
-          <IncidentCard
-            incident={this.state.mockIncident}
-            mountModal={this.mountModal}
-          />
+          {this.state.incidents.map(incident => (
+            <IncidentCard incident={incident} mountModal={this.mountModal} />
+          ))}
         </div>
         <div className={s.main}>
           <NavBar />
