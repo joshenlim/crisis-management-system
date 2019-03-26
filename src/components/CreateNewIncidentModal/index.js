@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import s from './CreateNewIncidentModal.scss';
 import closeBtn from '../../assets/images/close.svg';
+import loading from '../../assets/images/loading-2.svg';
 
 import AssistanceTypeQuestionSet from './AssistanceTypeQuestionSet';
 import RTAQuestionSet from './RTAQuestionSet';
@@ -27,6 +28,7 @@ class CreateNewIncidentModal extends React.Component {
       escalate: false,
       selectedVehicles: [],
       fireStations: [],
+      submittingIncident: false,
 
       // General Incident Information
       category: "road_traffic",
@@ -142,6 +144,10 @@ class CreateNewIncidentModal extends React.Component {
 
   onSubmit = (event) => {
     event.preventDefault();
+    this.setState({
+      page: 0,
+      submittingIncident: true,
+    });
     const postBody = {
       caller_name: this.state.callerName,
       caller_contact: this.state.callerContact,
@@ -161,10 +167,16 @@ class CreateNewIncidentModal extends React.Component {
       suicidal_method: this.state.suicidalMethod,
       fire_spread_rate: this.state.fireSpreadRate,
     }
-    
+
     axios.post('/api/incident/create', postBody)
       .then((res) => {
-        console.log(res);
+        setTimeout(() => {
+          this.setState({ submittingIncident: false });
+        }, 1000)
+    
+        setTimeout(() => {
+          this.closeModal()
+        }, 3000)
       })
       .catch((err) => {
         console.log(err)
@@ -175,16 +187,24 @@ class CreateNewIncidentModal extends React.Component {
     const { fireStationList } = this.props;
     return (
       <div className={s.modalBackground}>
-        <div className={s.incidentModal + " " + (this.state.page == 3 ? s.dispatchMapStep : "")}>
-          <span className={s.closeBtn} onClick={this.closeModal}>
-            <img src={closeBtn} alt="close" />
-          </span>
+        <div className={s.incidentModal + " " + 
+          (this.state.page == 3 ? s.dispatchMapStep : "") + " " +
+          (this.state.page == 0 ? s.submitStep : "")
+        }>
+          {
+            !this.state.page == 0 && <span className={s.closeBtn} onClick={this.closeModal}>
+              <img src={closeBtn} alt="close" />
+            </span>
+          }
 
           <form onSubmit={this.onSubmit}>
-            <div className={s.segment}>
-              <p className={s.category}>Create New Incident</p>
-            </div>
-            <hr />
+            {
+              !this.state.page == 0 && <div className={s.segment}>
+                <p className={s.category}>Create New Incident</p>
+              </div>
+            }
+
+            {!this.state.page == 0 && <hr />}
 
             <div className={this.state.page == 1 ? s.showPage : s.hidePage}>
               <p className={s.contentHeader}>Type of assistance requested:</p>
@@ -316,6 +336,26 @@ class CreateNewIncidentModal extends React.Component {
                   Create Incident
                 </button>
               </div>
+            </div>
+
+            <div className={this.state.page == 0 ? s.showPage : s.hidePage}>
+              {
+                this.state.submittingIncident && <div className={s.loadingWindow}>
+                  <img className={s.loadingIcon} src={loading} alt="loading" />
+                  <p>Creating Incident</p>
+                </div>
+              }
+              {
+                !this.state.submittingIncident && <div className={s.successWindow}>
+                    <div className={s.checkIcon}>
+                    <span className={s.iconLine + " " + s.lineTip}></span>
+                    <span className={s.iconLine + " " + s.lineLong}></span>
+                    <div className={s.iconCircle}></div>
+                    <div className={s.iconFix}></div>
+                  </div>
+                  <p>Incident successfully created!</p>
+                </div>
+              }
             </div>
 
           </form>
