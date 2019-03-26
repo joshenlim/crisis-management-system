@@ -39,28 +39,23 @@ router.post('/create', async (req, res) => {
     op_id: req.user.id,
   }
 
+  const newIncidentId = await database.createIncident(reqBody);
+
   switch (req.body.category) {
     case 'road_traffic': {
-      const newIncidentId = await database.createIncident(reqBody);
       await database.createRoadIncident(newIncidentId, reqBody);
       return res.status(200).send({
         Success: 'Incident successfully created',
       });
     }
     case 'medical_emergency': {
-      await database.createMedicalIncident(reqBody);
+      await database.createMedicalIncident(newIncidentId, reqBody);
       return res.status(200).send({
         Success: 'Incident successfully created',
       });
     }
     case 'fire_emergency': {
-      await database.createFireIncident(reqBody);
-      return res.status(200).send({
-        Success: 'Incident successfully created',
-      });
-    }
-    case 'gas_leak': {
-      await database.createGasIncident(reqBody);
+      await database.createFireIncident(newIncidentId, reqBody);
       return res.status(200).send({
         Success: 'Incident successfully created',
       });

@@ -31,7 +31,7 @@ class MEQuestionSet extends React.Component {
           </div>
           <input
             className={s.textInput}
-            name="med_condition"
+            name="curr_condition"
             type="text"
           />
         </div>
