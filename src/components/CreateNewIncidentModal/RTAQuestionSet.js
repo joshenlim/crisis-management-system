@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import s from './CreateNewIncidentModal.scss';
 
-class EAQuestionSet extends React.Component {
+class RTAQuestionSet extends React.Component {
   render() {
     return (
       <div className={s.questionSet}>
@@ -32,4 +32,4 @@ class EAQuestionSet extends React.Component {
   }
 }
 
-export default withStyles(s)(EAQuestionSet);
+export default withStyles(s)(RTAQuestionSet);

@@ -31,6 +31,8 @@ class DispatchMap extends React.Component {
     };
     return (
       <div style={{ height: '400px', width: '100%' }}>
+        <input style={{display: 'none'}} type="number" name="lat" value={this.props.center.lat} />
+        <input style={{display: 'none'}} type="number" name="lng" value={this.props.center.lng} />
         <GoogleMapReact
           bootstrapURLKeys={{ key: 'AIzaSyCoWLP6ZKKkLxK0kj9TJP0vt906LxFU3lo' }}
           center={this.props.center}

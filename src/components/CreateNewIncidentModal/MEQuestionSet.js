@@ -8,14 +8,18 @@ class MEQuestionSet extends React.Component {
     super(props);
     this.state = {
       committed_suicide: false,
+      selected_consciousness: "alert",
     };
     this.selectCommittedSuicide = this.selectCommittedSuicide.bind(this);
+    this.updateSelectedConsciousness = this.updateSelectedConsciousness.bind(this);
   }
 
   selectCommittedSuicide = () => {
-    this.setState({
-      committed_suicide: !this.state.committed_suicide,
-    })
+    this.setState({ committed_suicide: !this.state.committed_suicide })
+  }
+
+  updateSelectedConsciousness = (event) => {
+    this.setState({ selected_consciousness: event.target.value })
   }
 
   render() {
@@ -27,7 +31,7 @@ class MEQuestionSet extends React.Component {
           </div>
           <input
             className={s.textInput}
-            name="med_condition"
+            name="curr_condition"
             type="text"
           />
         </div>
@@ -36,12 +40,13 @@ class MEQuestionSet extends React.Component {
           <div className={s.question}>
             <p className={s.title}>Level of Consciousness:</p>
           </div>
-          <select>
-            <option name="level_consciousness" value="alert">Alert (GSC 15)</option>
-            <option name="level_consciousness" value="confused">Confused (GSC 13)</option>
-            <option name="level_consciousness" value="drowzy">Drowzy (GSC 10)</option>
-            <option name="level_consciousness" value="unconscious">Unconscious (GSC 6)</option>
+          <select value={this.state.selected_consciousness} onChange={this.updateSelectedConsciousness}>
+            <option value="alert">Alert (GSC 15)</option>
+            <option value="confused">Confused (GSC 13)</option>
+            <option value="drowzy">Drowzy (GSC 10)</option>
+            <option value="unconscious">Unconscious (GSC 6)</option>
           </select>
+          <input style={{display: 'none'}} type="text" name="level_consciousness" value={this.state.selected_consciousness} />
         </div>
 
         <div className={s.textQuestion}>
@@ -76,7 +81,7 @@ class MEQuestionSet extends React.Component {
             </div>
             <input
               className={s.textInput}
-              name="suicide_method"
+              name="suicide_equipment"
               type="text"
             />
           </div>

@@ -105,6 +105,7 @@
   .textQuestion {
     display: flex;
     margin-bottom: 20px;
+    align-items: center;
 
     .question {
       width: 200px;
@@ -160,6 +161,10 @@
         border: 1px solid var(--black);
       }
     }
+  }
+
+  .textArea {
+    align-items: flex-start;
   }
 }
 
