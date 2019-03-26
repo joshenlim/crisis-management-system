@@ -1,4 +1,5 @@
 import mysql from 'mysql';
+import Enum from './constants/enum';
 
 class MySQLDB {
   constructor(config) {
@@ -106,7 +107,9 @@ class MySQLDB {
   }
 
   getStationVehicles(stationId) {
-    const res = this.query('SELECT * FROM vehicle WHERE fire_station_id = ?', [stationId])
+    const res = this.query('SELECT * FROM vehicle WHERE fire_station_id = ?', [
+      stationId,
+    ])
       .then(rows => rows)
       .catch(err => {
         console.error('Error from getStationVehicles:', err.sqlMessage);
@@ -128,7 +131,9 @@ class MySQLDB {
   }
 
   getOngoingIncident() {
-    const res = this.query("SELECT * FROM incidents WHERE status = 'ongoing'")
+    const res = this.query('SELECT * FROM incidents WHERE status <> ?', [
+      Enum.incidentStatus.CLOSED,
+    ])
       .then(rows => rows)
       .catch(err => {
         console.error('Error from getAllIncident:', err.sqlMessage);
