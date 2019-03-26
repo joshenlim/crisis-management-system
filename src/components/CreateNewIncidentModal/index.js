@@ -6,7 +6,7 @@ import s from './CreateNewIncidentModal.scss';
 import closeBtn from '../../assets/images/close.svg';
 
 import AssistanceTypeQuestionSet from './AssistanceTypeQuestionSet';
-import EAQuestionSet from './EAQuestionSet';
+import RTAQuestionSet from './RTAQuestionSet';
 import FFQuestionSet from './FFQuestionSet';
 import MEQuestionSet from './MEQuestionSet';
 import CallerInformationQuestionSet from './CallerInformationQuestionSet';
@@ -103,6 +103,7 @@ class CreateNewIncidentModal extends React.Component {
             <img src={closeBtn} alt="close" />
           </span>
           <form action="/api/incident/create" method="post">
+
             <div className={s.segment}>
               <p className={s.category}>Create New Incident</p>
             </div>
@@ -117,7 +118,7 @@ class CreateNewIncidentModal extends React.Component {
 
               <p className={s.contentHeader}>Incident Details</p>
               <div className={s.contentBody}>
-                {this.state.selectedType == "EA" && <EAQuestionSet />}
+                {this.state.selectedType == "EA" && <RTAQuestionSet />}
                 {this.state.selectedType == "FF" && <FFQuestionSet />}
                 {this.state.selectedType == "ME" && <MEQuestionSet />}
                 <div className={s.questionSet}>
@@ -127,7 +128,7 @@ class CreateNewIncidentModal extends React.Component {
                     </div>
                     <input
                       className={s.textInput}
-                      name="casualty_num"
+                      name="casualty_no"
                       type="number"
                       onChange={this.updateNumCasualties}
                     />

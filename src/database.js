@@ -147,134 +147,81 @@ class MySQLDB {
     return res;
   }
 
-  createRoadIncident(body) {
+  createIncident(body) {
     const {
-      vehicle_type,
-      caller_name,
-      caller_contact,
-      postal_code,
-      address,
-      lat,
-      lng,
-      call_time,
-      casualty_no,
-      category,
-      description,
-      status,
-      op_create_id,
-      op_update_id,
+      caller_name, caller_contact, op_id,
+      postal_code, address, lat, lng,
+      casualty_no, category, description,
     } = body;
     const res = this.query(
       `INSERT INTO incidents (
-        caller_name,
-        caller_contact,
-        postal_code,
-        address,
-        lat,
-        lng,
-        call_time,
-        casualty_no,
-        category,
-        description,
-        status,
-        op_create_id,
-        op_update_id
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+        caller_name, caller_contact,
+        postal_code, address, lat, lng,
+        casualty_no, category, description,
+        op_create_id, op_update_id
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       [
-        caller_name,
-        caller_contact,
-        postal_code,
-        address,
-        lat,
-        lng,
-        call_time,
-        casualty_no,
-        category,
-        description,
-        status,
-        op_create_id,
-        op_update_id,
+        caller_name, caller_contact,
+        postal_code, address, lat, lng,
+        casualty_no, category, description,
+        op_id, op_id,
       ],
     )
-      .then(rows => {
-        const res2 = this.query(
-          `INSERT INTO road_traffic_acc (
-          incident_id,
-          vehicle_type
-        ) VALUES (?, ?)`,
-          [rows.id, vehicle_type],
-        )
-          .then(rows1 => rows1)
-          .catch(err1 => {
-            console.error('Error from createIncident:', err1.sqlMessage);
-            return res2.status(409).send({ Error: err1.code });
-          });
-      })
+      .then(res => res)
       .catch(err => {
         console.error('Error from createIncident:', err.sqlMessage);
         return res.status(409).send({ Error: err.code });
       });
+    return res.id;
   }
+
+  createRoadIncident(incident_id, body) {
+    const { vehicle_plate, vehicle_type } = body;
+    const res = this.query(
+      `INSERT INTO road_traffic_acc (
+      incident_id, vehicle_type, vehicle_plate
+    ) VALUES (?, ?, ?)`,
+      [ incident_id, vehicle_type, vehicle_plate ],
+    )
+      .then(rows => rows)
+      .catch(err => {
+        console.error('Error from inserting into road_traffic_acc:', err.sqlMessage);
+        return res.status(409).send({ Error: err.code });
+      });
+    return res;
+  }
+
   createFireIncident(body) {
     const {
-      fire_spread_rate,
-      caller_name,
-      caller_contact,
-      postal_code,
-      address,
-      lat,
-      lng,
-      call_time,
-      casualty_no,
-      category,
-      description,
-      status,
-      op_create_id,
-      op_update_id,
+      caller_name, caller_contact,
+      postal_code, address, lat, lng,
+      casualty_no, category, description,
+      op_id, fire_spread_rate,
     } = body;
     const res = this.query(
       `INSERT INTO incidents (
-        caller_name,
-        caller_contact,
-        postal_code,
-        address,
-        lat,
-        lng,
-        call_time,
-        casualty_no,
-        category,
-        description,
-        status,
-        op_create_id,
-        op_update_id
+        caller_name, caller_contact,
+        postal_code, address, lat, lng,
+        casualty_no, category, description,
+        op_create_id, op_update_id
       ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       [
-        caller_name,
-        caller_contact,
-        postal_code,
-        address,
-        lat,
-        lng,
-        call_time,
-        casualty_no,
-        category,
-        description,
-        status,
-        op_create_id,
-        op_update_id,
+        caller_name, caller_contact,
+        postal_code, address, lat, lng,
+        casualty_no, category, description,
+        op_id, op_id,
       ],
     )
       .then(rows => {
         const res2 = this.query(
           `INSERT INTO fire_emergency (
-          incident_id,
-          fire_spread_rate
+          incident_id, fire_spread_rate
         ) VALUES (?, ?)`,
           [rows.id, fire_spread_rate],
         )
           .then(rows1 => rows1)
           .catch(err1 => {
-            console.error('Error from createIncident:', err1.sqlMessage);
+            console.error('Error from inserting into fire_emergency:', err1.sqlMessage);
             return res2.status(409).send({ Error: err1.code });
           });
       })
@@ -283,129 +230,73 @@ class MySQLDB {
         return res.status(409).send({ Error: err.code });
       });
   }
+
   createMedicalIncident(body) {
     const {
-      cause_description,
-      cause,
-      caller_name,
-      caller_contact,
-      postal_code,
-      address,
-      lat,
-      lng,
-      call_time,
-      casualty_no,
-      category,
-      description,
-      status,
-      op_create_id,
-      op_update_id,
+      caller_name, caller_contact,
+      postal_code, address, lat, lng,
+      casualty_no, category, description,
+      med_condition, level_consciousness,
+      committed_suicide, suicide_method, 
+      suicide_equipment, op_id
     } = body;
-    const res = this.query(
-      `INSERT INTO incidents (
-        caller_name,
-        caller_contact,
-        postal_code,
-        address,
-        lat,
-        lng,
-        call_time,
-        casualty_no,
-        category,
-        description,
-        status,
-        op_create_id,
-        op_update_id
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-      [
-        caller_name,
-        caller_contact,
-        postal_code,
-        address,
-        lat,
-        lng,
-        call_time,
-        casualty_no,
-        category,
-        description,
-        status,
-        op_create_id,
-        op_update_id,
-      ],
-    )
-      .then(rows => {
-        const res2 = this.query(
-          `INSERT INTO med_emergency (
-          incident_id,
-          cause_description,
-          cause,
-        ) VALUES (?, ?, ?)`,
-          [rows.id, cause_description, cause],
-        )
-          .then(rows1 => rows1)
-          .catch(err1 => {
-            console.error('Error from createIncident:', err1.sqlMessage);
-            return res2.status(409).send({ Error: err1.code });
-          });
-      })
-      .catch(err => {
-        console.error('Error from createIncident:', err.sqlMessage);
-        return res.status(409).send({ Error: err.code });
-      });
+    // const res = this.query(
+    //   `INSERT INTO incidents (
+    //     caller_name, caller_contact,
+    //     postal_code, address, lat, lng,
+    //     casualty_no, category,
+    //     description, op_create_id, op_update_id
+    //   ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+    //   [ caller_name, caller_contact,
+    //     postal_code, address, lat, lng,
+    //     casualty_no, category,
+    //     description, op_id, op_id ])
+    //   .then(newIncident => {
+    //     const res2 = this.query(
+    //       `INSERT INTO med_emergency (
+    //         incident_id, med_condition, level_consciousness,
+    //         committed_suicide, suicide_method, suicide_equipment
+    //       ) VALUES (?, ?, ?, ?, ?, ?)`,
+    //       [ newIncident.id, med_condition, level_consciousness,
+    //         committed_suicide, suicide_method, suicide_equipment])
+    //       .then(newMedEmergency => newMedEmergency)
+    //       .catch(err1 => {
+    //         console.error('Error from inserting into med_emergency:', err1.sqlMessage);
+    //         return res2.status(409).send({ Error: err1.code });
+    //       });
+    //   })
+    //   .catch(err => {
+    //     console.error('Error from createIncident:', err.sqlMessage);
+    //     return res.status(409).send({ Error: err.code });
+    //   });
   }
+
   createGasIncident(body) {
     const {
-      caller_name,
-      caller_contact,
-      postal_code,
-      address,
-      lat,
-      lng,
-      call_time,
-      casualty_no,
-      category,
-      description,
-      status,
-      op_create_id,
-      op_update_id,
+      caller_name, caller_contact,
+      postal_code, address, lat, lng,
+      casualty_no, category, description, 
+      op_id,
     } = body;
-    const res = this.query(
-      `INSERT INTO incidents (
-        caller_name,
-        caller_contact,
-        postal_code,
-        address,
-        lat,
-        lng,
-        call_time,
-        casualty_no,
-        category,
-        description,
-        status,
-        op_create_id,
-        op_update_id
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-      [
-        caller_name,
-        caller_contact,
-        postal_code,
-        address,
-        lat,
-        lng,
-        call_time,
-        casualty_no,
-        category,
-        description,
-        status,
-        op_create_id,
-        op_update_id,
-      ],
-    )
-      .then(rows => rows)
-      .catch(err => {
-        console.error('Error from createIncident:', err.sqlMessage);
-        return res.status(409).send({ Error: err.code });
-      });
+    // const res = this.query(
+    //   `INSERT INTO incidents (
+    //     caller_name, caller_contact,
+    //     postal_code, address, lat, lng,
+    //     casualty_no, category, description,
+    //     op_create_id, op_update_id
+    //   ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+    //   [
+    //     caller_name, caller_contact,
+    //     postal_code, address, lat, lng,
+    //     casualty_no, category, description,
+    //     op_id, op_id,
+    //   ],
+    // )
+    //   .then(rows => rows)
+    //   .catch(err => {
+    //     console.error('Error from createIncident:', err.sqlMessage);
+    //     return res.status(409).send({ Error: err.code });
+    //   });
   }
 }
 

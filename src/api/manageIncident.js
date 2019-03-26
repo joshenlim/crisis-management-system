@@ -30,33 +30,37 @@ router.get('/get_by_status', async (req, res) => {
 });
 
 router.post('/create', async (req, res) => {
-  console.log(req.body);
-
   io.emit('notify', Enum.socketEvents.NEW_INCIDENT);
   // Now just make sure that you have all of the required information
   // return res.status(200).send(req.body);
 
-  switch (req.body.assistance_type) {
+  const reqBody = {
+    ...req.body,
+    op_id: req.user.id,
+  }
+
+  switch (req.body.category) {
     case 'road_traffic': {
-      await database.createRoadIncident(req.body);
+      const newIncidentId = await database.createIncident(reqBody);
+      await database.createRoadIncident(newIncidentId, reqBody);
       return res.status(200).send({
         Success: 'Incident successfully created',
       });
     }
     case 'medical_emergency': {
-      await database.createMedicalIncident(req.body);
+      await database.createMedicalIncident(reqBody);
       return res.status(200).send({
         Success: 'Incident successfully created',
       });
     }
     case 'fire_emergency': {
-      await database.createFireIncident(req.body);
+      await database.createFireIncident(reqBody);
       return res.status(200).send({
         Success: 'Incident successfully created',
       });
     }
     case 'gas_leak': {
-      await database.createGasIncident(req.body);
+      await database.createGasIncident(reqBody);
       return res.status(200).send({
         Success: 'Incident successfully created',
       });

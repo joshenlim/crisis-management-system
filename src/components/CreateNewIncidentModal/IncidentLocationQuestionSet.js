@@ -19,7 +19,7 @@ class IncidentLocationSet extends React.Component {
           <input
             className={s.textInput}
             name="postal_code"
-            type="text"
+            type="number"
             onChange={this.onPostalCodeChange}
           />
         </div>
@@ -30,7 +30,7 @@ class IncidentLocationSet extends React.Component {
           </div>
           <input
             className={s.textInput}
-            name="unit_number"
+            name="address"
             type="text"
           />
         </div>
