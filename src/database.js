@@ -215,13 +215,14 @@ class MySQLDB {
       committed_suicide, suicide_method, 
       suicide_equipment
     } = body;
+    const if_suicide = committed_suicide ? 1 : 0;
     const res = this.query(
       `INSERT INTO med_emergency (
         incident_id, curr_condition, level_of_consc,
         if_suicide, suicidal_method, suicidal_equipment
       ) VALUES (?, ?, ?, ?, ?, ?)`,
       [ incident_id, curr_condition, level_consciousness,
-        committed_suicide, suicide_method, suicide_equipment])
+        if_suicide, suicide_method, suicide_equipment])
       .then(newMedEmergency => newMedEmergency)
       .catch(err => {
         console.error('Error from inserting into med_emergency:', err.sqlMessage);

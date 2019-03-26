@@ -133,7 +133,7 @@ class CreateNewIncidentModal extends React.Component {
                       onChange={this.updateNumCasualties}
                     />
                   </div>
-                  <div className={s.textQuestion}>
+                  <div className={s.textQuestion + " " + s.textArea}>
                     <div className={s.question}>
                       <p className={s.title}>Incident Description:</p>
                     </div>
