@@ -21,7 +21,6 @@ class DispatchVehicleList extends React.Component {
 
   render() {
     const { fireStationList } = this.props;
-    console.log(fireStationList);
     return (
       <div className={s.stationList}>
         {
