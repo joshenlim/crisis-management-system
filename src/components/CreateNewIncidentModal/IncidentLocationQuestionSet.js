@@ -4,9 +4,17 @@ import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import s from './CreateNewIncidentModal.scss';
 
 class IncidentLocationSet extends React.Component {
+  static propTypes = {
+    onPostalChange: PropTypes.func.isRequired,
+    onAddressChange: PropTypes.func.isRequired
+  };
 
   onPostalCodeChange = (event) => {
     this.props.onPostalChange(event.target.value);
+  }
+
+  onAddressChange = (event) => {
+    this.props.onAddressChange(event.target.value);
   }
 
   render() {
@@ -32,6 +40,7 @@ class IncidentLocationSet extends React.Component {
             className={s.textInput}
             name="address"
             type="text"
+            onChange={this.onAddressChange}
           />
         </div>
       </div>

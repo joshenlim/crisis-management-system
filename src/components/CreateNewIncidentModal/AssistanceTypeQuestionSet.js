@@ -9,7 +9,7 @@ class AssistanceTypeQuestionSet extends React.Component {
   };
 
   updateAssistanceType = (event) => {
-    this.props.updateSelectedType(event.target.id);
+    this.props.updateSelectedType(event.target.id, event.target.value);
   };
 
   render() {
