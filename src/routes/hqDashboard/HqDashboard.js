@@ -8,6 +8,8 @@ import iconArchived from '../../assets/images/hqicon-archived.svg';
 import iconReport from '../../assets/images/hqicon-reports.svg';
 import iconStatistics from '../../assets/images/hqicon-statistics.svg';
 
+import AlertedIncidentList from '../../components/AlertedIncidentList';
+
 import { SOCKIO_HOST } from '../../constants';
 
 import Socket from 'socket.io-client';
@@ -19,12 +21,19 @@ class HqDashboard extends React.Component {
     this.state = { activeTab: 0 };
 
     this.changeTab = this.changeTab.bind(this);
+    this.render = this.render.bind(this);
   }
 
   changeTab(e) {
     this.setState({ activeTab: e.target.name });
 
     let icons = document.getElementsByClassName(s.tabIcons);
+  }
+
+  renderTab() {
+    if (activeTab == 0) {
+      return <AlertedIncidentList />;
+    }
   }
 
   render() {
@@ -60,6 +69,7 @@ class HqDashboard extends React.Component {
         </div>
         <div className={s.main}>
           <NavBar />
+          {this.renderTab()}
         </div>
         <div className={s.sideColumn} />
       </div>
