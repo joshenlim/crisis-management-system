@@ -14,18 +14,9 @@ database.connect();
 
 router.get('/get', async (req, res) => {
   const { id, emergency } = req.query;
-  const incidents;
+  var incidents;
   if (emergency) {
-    incidents = await database
-      .query(
-        'SELECT i.* FROM incidents i,civil_emergency e WHERE e.incident_id = ? AND i.incident_id=e.incident_id',
-        [id],
-      )
-      .then(rows => rows)
-      .catch(err => {
-        console.error('Error from getEmergencyIncidentById:', err.sqlMessage);
-        return res.status(409).send({ Error: err.code });
-      });
+    incidents = await database.getEmergencyIncidentByID(id);
   } else {
     incidents = await database.getIncidentByID(id);
   }
@@ -51,7 +42,7 @@ router.post('/create', async (req, res) => {
   const reqBody = {
     ...req.body,
     op_id: req.user.id,
-  }
+  };
 
   const newIncidentId = await database.createIncident(reqBody);
 
@@ -84,7 +75,7 @@ router.post('/update', async (req, res) => {
   const reqBody = {
     ...req.body,
     op_id: req.user.id,
-  }
+  };
   await database.updateIncident(reqBody);
   return res.status(200).send({
     Success: 'Incident successfully updated',

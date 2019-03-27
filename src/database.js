@@ -117,13 +117,26 @@ class MySQLDB {
     return res;
   }
 
-  getIncidentByID(incid) {
+  getIncidentByID(id) {
     const res = this.query('SELECT * FROM incidents WHERE incident_id = ?', [
-      incid,
+      id,
     ])
       .then(rows => rows)
       .catch(err => {
         console.error('Error from getIncidentById:', err.sqlMessage);
+        return res.status(409).send({ Error: err.code });
+      });
+    return res;
+  }
+
+  getEmergencyIncidentByID(id) {
+    const res = this.query(
+      'SELECT i.* FROM incidents i,civil_emergency e WHERE e.incident_id = ? AND i.incident_id=e.incident_id',
+      [id],
+    )
+      .then(rows => rows)
+      .catch(err => {
+        console.error('Error from getEmergencyIncidentById:', err.sqlMessage);
         return res.status(409).send({ Error: err.code });
       });
     return res;
