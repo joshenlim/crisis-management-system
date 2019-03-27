@@ -81,40 +81,29 @@ router.post('/create', async (req, res) => {
 });
 
 router.post('/update', async (req, res) => {
-  await database.updateIncident(req);
+  const reqBody = {
+    ...req.body,
+    op_id: req.user.id,
+  }
+  await database.updateIncident(reqBody);
   return res.status(200).send({
     Success: 'Incident successfully updated',
   });
 });
 
-router.get('/get_civil_id', async (req, res) => {
-  const { emergid } = req.query;
-  const incidents = await database
-    .query(
-      'SELECT i.* FROM incidents i,civil_emergency e WHERE e.incident_id = ? AND i.incident_id=e.incident_id',
-      [emergid],
-    )
-    .then(rows => rows)
-    .catch(err => {
-      console.error('Error from getEmergencyIncidentById:', err.sqlMessage);
-      return res.status(409).send({ Error: err.code });
-    });
-  return res.status(200).send(incidents);
-});
-
-router.put('/put', async (req, res) => {
-  const { emergid } = req.query;
-  const incidents = await database
-    .query('UPDATE incidents SET status = resolved WHERE incident_id = ?', [
-      emergid,
-    ])
-    .then(rows => rows)
-    .catch(err => {
-      console.error('Error from putResolvedIncident:', err.sqlMessage);
-      return res.status(409).send({ Error: err.code });
-    });
-  return res.status(201).send(incidents);
-});
+// router.put('/put', async (req, res) => {
+//   const { emergid } = req.query;
+//   const incidents = await database
+//     .query('UPDATE incidents SET status = resolved WHERE incident_id = ?', [
+//       emergid,
+//     ])
+//     .then(rows => rows)
+//     .catch(err => {
+//       console.error('Error from putResolvedIncident:', err.sqlMessage);
+//       return res.status(409).send({ Error: err.code });
+//     });
+//   return res.status(201).send(incidents);
+// });
 
 // router.post('/create', async (req, res) => {
 //   const { id, plate_number } = req.headers;

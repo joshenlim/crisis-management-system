@@ -149,6 +149,59 @@ class MySQLDB {
     return res;
   }
 
+  updateIncident(body) {
+    const {
+      id,
+      caller_name,
+      caller_contact,
+      postal_code,
+      address,
+      lat,
+      lng,
+      updated_at,
+      completed_at,
+      casualty_no,
+      description,
+      status,
+      op_id,
+    } = body;
+    const res = this.query(
+      `UPDATE incidents SET 
+      caller_name = ?, 
+      caller_contact = ?, 
+      postal_code = ?, 
+      address = ?, 
+      lat = ?, 
+      lng = ?, 
+      updated_at = ?, 
+      completed_at = ?, 
+      casualty_no = ?, 
+      description = ?, 
+      status = ?, 
+      op_update_id = ? WHERE id = ?`,
+      [
+        caller_name,
+        caller_contact,
+        postal_code,
+        address,
+        lat,
+        lng,
+        updated_at,
+        completed_at,
+        casualty_no,
+        description,
+        status,
+        op_id,
+        id,
+      ],
+    )
+      .then(rows => rows)
+      .catch(err => {
+        console.error('Error from updateIncident:', err.sqlMessage);
+        return res.status(409).send({ Error: err.code });
+      });
+  }
+
   createIncident(body) {
     const {
       caller_name,
