@@ -131,7 +131,7 @@ class MySQLDB {
 
   getEmergencyIncidentByID(id) {
     const res = this.query(
-      'SELECT i.* FROM incidents i,civil_emergency e WHERE e.incident_id = ? AND i.incident_id=e.incident_id',
+      'SELECT incidents.* FROM incidents JOIN civil_emergency ON incidents.id = civil_emergency.incident_id WHERE civil_emergency.incident_id = ?',
       [id],
     )
       .then(rows => rows)
