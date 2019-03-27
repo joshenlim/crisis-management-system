@@ -4,18 +4,40 @@ import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import s from './CreateNewIncidentModal.scss';
 
 class MEQuestionSet extends React.Component {
+  static propTypes = {
+    onCurrConditionChange: PropTypes.func.isRequired,
+    onLevelConscChange: PropTypes.func.isRequired,
+    onSuicideChange: PropTypes.func.isRequired,
+    onSuicidalEquipmentChange: PropTypes.func.isRequired,
+    onSuicidalMethodChange: PropTypes.func.isRequired,
+  };
+
   constructor(props) {
     super(props);
     this.state = {
       committed_suicide: false,
     };
-    this.selectCommittedSuicide = this.selectCommittedSuicide.bind(this);
   }
 
   selectCommittedSuicide = () => {
-    this.setState({
-      committed_suicide: !this.state.committed_suicide,
-    })
+    this.setState({ committed_suicide: !this.state.committed_suicide })
+    this.props.onSuicideChange(!this.state.committed_suicide);
+  }
+
+  updateSelectedConsciousness = (event) => {
+    this.props.onLevelConscChange(event.target.value)
+  }
+
+  onCurrConditionChange = (event) => {
+    this.props.onCurrConditionChange(event.target.value)
+  }
+
+  onSuicidalEquipmentChange = (event) => {
+    this.props.onSuicidalEquipmentChange(event.target.value)
+  }
+
+  onSuicidalMethodChange = (event) => {
+    this.props.onSuicidalMethodChange(event.target.value)
   }
 
   render() {
@@ -27,8 +49,9 @@ class MEQuestionSet extends React.Component {
           </div>
           <input
             className={s.textInput}
-            name="med_condition"
+            name="curr_condition"
             type="text"
+            onChange={this.onCurrConditionChange}
           />
         </div>
 
@@ -36,11 +59,11 @@ class MEQuestionSet extends React.Component {
           <div className={s.question}>
             <p className={s.title}>Level of Consciousness:</p>
           </div>
-          <select>
-            <option name="level_consciousness" value="alert">Alert (GSC 15)</option>
-            <option name="level_consciousness" value="confused">Confused (GSC 13)</option>
-            <option name="level_consciousness" value="drowzy">Drowzy (GSC 10)</option>
-            <option name="level_consciousness" value="unconscious">Unconscious (GSC 6)</option>
+          <select onChange={this.updateSelectedConsciousness}>
+            <option value="alert">Alert (GSC 15)</option>
+            <option value="confused">Confused (GSC 13)</option>
+            <option value="drowzy">Drowzy (GSC 10)</option>
+            <option value="unconscious">Unconscious (GSC 6)</option>
           </select>
         </div>
 
@@ -50,8 +73,8 @@ class MEQuestionSet extends React.Component {
           </div>
           <input
             name="committed_suicide"
-            onChange={this.selectCommittedSuicide}
             type="checkbox"
+            onChange={this.selectCommittedSuicide}
           />
         </div>
 
@@ -64,6 +87,7 @@ class MEQuestionSet extends React.Component {
               className={s.textInput}
               name="suicide_method"
               type="text"
+              onChange={this.onSuicidalMethodChange}
             />
           </div>
         }
@@ -76,8 +100,9 @@ class MEQuestionSet extends React.Component {
             </div>
             <input
               className={s.textInput}
-              name="suicide_method"
+              name="suicide_equipment"
               type="text"
+              onChange={this.onSuicidalEquipmentChange}
             />
           </div>
         }

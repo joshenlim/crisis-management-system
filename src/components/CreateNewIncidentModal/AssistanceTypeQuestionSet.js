@@ -9,7 +9,7 @@ class AssistanceTypeQuestionSet extends React.Component {
   };
 
   updateAssistanceType = (event) => {
-    this.props.updateSelectedType(event.target.id);
+    this.props.updateSelectedType(event.target.id, event.target.value);
   };
 
   render() {
@@ -20,7 +20,7 @@ class AssistanceTypeQuestionSet extends React.Component {
             <input
               type="radio"
               id="EA"
-              name="assistance_type"
+              name="category"
               value="road_traffic"
               onChange={this.updateAssistanceType}
               defaultChecked
@@ -31,7 +31,7 @@ class AssistanceTypeQuestionSet extends React.Component {
             <input
               type="radio"
               id="ME"
-              name="assistance_type"
+              name="category"
               value="medical_emergency"
               onChange={this.updateAssistanceType}
             />
@@ -43,7 +43,7 @@ class AssistanceTypeQuestionSet extends React.Component {
             <input
               type="radio"
               id="FF"
-              name="assistance_type"
+              name="category"
               value="fire_emergency"
               onChange={this.updateAssistanceType}
             />
@@ -53,7 +53,7 @@ class AssistanceTypeQuestionSet extends React.Component {
             <input
               type="radio"
               id="GL"
-              name="assistance_type"
+              name="category"
               value="gas_leak"
               onChange={this.updateAssistanceType}
             />
