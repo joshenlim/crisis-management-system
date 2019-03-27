@@ -42,11 +42,7 @@ class OpsDashboard extends React.Component {
     this.fetchOngoingIncident();
     io.on('fetch', type => {
       if (Enum.socketEvents.NEW_INCIDENT == type) {
-        //TODO - Perform AJAX to poll for list of ongoing incident to update incident card
         this.fetchOngoingIncident();
-        console.log(
-          'Placeholder Action in OpsDashboard: Refresh incident list',
-        );
       }
     });
   }
@@ -57,7 +53,6 @@ class OpsDashboard extends React.Component {
       headers: {
         'Content-Type': 'application/json',
       },
-      //body: JSON.stringify(req),
     })
       .then(res => res.json())
       .then(data => this.setState({ incidents: data.reverse() }))

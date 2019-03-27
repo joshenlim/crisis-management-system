@@ -1,11 +1,6 @@
 import express from 'express';
 import MySQLDB from '../database';
-import Socket from 'socket.io-client';
-import Enum from '../constants/enum';
-import { SOCKIO_HOST } from '../constants/index';
 import config from '../config';
-
-var io = Socket(SOCKIO_HOST);
 
 const router = express.Router({ mergeParams: true });
 
@@ -41,17 +36,11 @@ router.get('/get_by_status', async (req, res) => {
 });
 
 router.post('/create', async (req, res) => {
-  
-  // Now just make sure that you have all of the required information
-  // return res.status(200).send(req.body);
-
   const reqBody = {
     ...req.body,
     op_id: req.user.id,
   };
-
   const newIncidentId = await database.createIncident(reqBody);
-  io.emit('notify', Enum.socketEvents.NEW_INCIDENT);
 
   switch (req.body.category) {
     case 'road_traffic': {

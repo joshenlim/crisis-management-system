@@ -2,9 +2,13 @@ import React from 'react';
 import axios from 'axios';
 import PropTypes from 'prop-types';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
+import Socket from 'socket.io-client';
+
 import s from './CreateNewIncidentModal.scss';
 import closeBtn from '../../assets/images/close.svg';
 import loading from '../../assets/images/loading-2.svg';
+import { SOCKIO_HOST } from '../../constants';
+import Enum from '../../constants/enum';
 
 import AssistanceTypeQuestionSet from './AssistanceTypeQuestionSet';
 import RTAQuestionSet from './RTAQuestionSet';
@@ -14,6 +18,8 @@ import CallerInformationQuestionSet from './CallerInformationQuestionSet';
 import IncidentLocationQuestionSet from './IncidentLocationQuestionSet';
 import DispatchMap from './DispatchMap';
 import DispatchVehicleList from './DispatchVehicleList';
+
+const io = Socket(SOCKIO_HOST);
 
 class CreateNewIncidentModal extends React.Component {
   static propTypes = {
@@ -172,6 +178,7 @@ class CreateNewIncidentModal extends React.Component {
       .then((res) => {
         setTimeout(() => {
           this.setState({ submittingIncident: false });
+          io.emit('notify', Enum.socketEvents.NEW_INCIDENT);
         }, 1000)
     
         setTimeout(() => {
