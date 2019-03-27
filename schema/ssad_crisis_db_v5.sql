@@ -10,6 +10,7 @@ CREATE TABLE `alert_log` (
   id INT(11) NOT NULL AUTO_INCREMENT,
   ce_id INT(11) NOT NULL,
   ext_svc_id INT (11) NOT NULL,
+  if_alerted BOOLEAN DEFAULT FALSE,
   FOREIGN KEY (ce_id) REFERENCES civil_emergency(incident_id),
   FOREIGN KEY (ext_svc_id) REFERENCES external_service(id),
   PRIMARY KEY (id)
