@@ -7,8 +7,11 @@ export default Object.freeze({
   },
   incidentStatus: {
     DISPATCHED: 'DISPATCHED',
+    ON_THE_WAY: 'ON-THE-WAY',
     ON_SITE: 'ON-SITE',
     ENROUTE: 'ENROUTE BACK',
+    RESOLVED: 'RESOLVED',
+    CLOSED: 'CLOSED',
   },
   socketEvents: {
     NEW_INCIDENT: 1,

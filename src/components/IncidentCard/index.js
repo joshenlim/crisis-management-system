@@ -20,6 +20,9 @@ class IncidentCard extends React.Component {
 
   constructor(props) {
     super(props);
+
+    this.state = { incident: [] };
+
     this.expandIncident = this.expandIncident.bind(this);
     this.handleOnKeyDown = this.handleOnKeyDown.bind(this);
   }
@@ -69,7 +72,7 @@ class IncidentCard extends React.Component {
         </div>
         <p className={s.category}>{incident.category}</p>
         <p className={s.location}>
-          {incident.postalCode}, {incident.address}
+          {incident.postal_code}, {incident.address}
         </p>
         <div className={`${s.status} ${statusClass}`}>{incident.status}</div>
       </div>
