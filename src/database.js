@@ -106,7 +106,9 @@ class MySQLDB {
   }
 
   getStationVehicles(stationId) {
-    const res = this.query('SELECT * FROM vehicle WHERE fire_station_id = ?', [stationId])
+    const res = this.query('SELECT * FROM vehicle WHERE fire_station_id = ?', [
+      stationId,
+    ])
       .then(rows => rows)
       .catch(err => {
         console.error('Error from getStationVehicles:', err.sqlMessage);
@@ -147,7 +149,60 @@ class MySQLDB {
     return res;
   }
 
-  createRoadIncident(body) {
+  updateIncident(req) {
+    const {
+      caller_name,
+      caller_contact,
+      postal_code,
+      address,
+      lat,
+      lng,
+      updated_at,
+      completed_at,
+      casualty_no,
+      description,
+      status,
+      id,
+    } = req.body;
+    const op_update_id = req.session.passport.user.id;
+    const res = this.query(
+      `UPDATE incidents SET
+        caller_name = ?, 
+        caller_contact = ?, 
+        postal_code = ?,
+        address = ?,
+        lat = ?,
+        lng = ?,
+        updated_at = ?,
+        completed_at = ?,
+        casualty_no = ?,
+        description = ?,
+        status = ?,
+        op_update_id = ? WHERE id = ?`,
+      [
+        caller_name,
+        caller_contact,
+        postal_code,
+        address,
+        lat,
+        lng,
+        updated_at,
+        completed_at,
+        casualty_no,
+        description,
+        status,
+        op_update_id,
+        id,
+      ],
+    )
+      .then(rows => rows)
+      .catch(err => {
+        console.error('Error from updateIncident:', err.sqlMessage);
+        return res.status(409).send({ Error: err.code });
+      });
+  }
+
+  createRoadIncident(req) {
     const {
       vehicle_type,
       caller_name,
@@ -161,9 +216,10 @@ class MySQLDB {
       category,
       description,
       status,
-      op_create_id,
-      op_update_id,
-    } = body;
+    } = req.body;
+    const op_create_id = req.session.passport.user.id;
+    const op_update_id = req.session.passport.user.id;
+    console.log(op_create_id + ' ' + op_update_id);
     const res = this.query(
       `INSERT INTO incidents (
         caller_name,
@@ -215,7 +271,7 @@ class MySQLDB {
         return res.status(409).send({ Error: err.code });
       });
   }
-  createFireIncident(body) {
+  createFireIncident(req) {
     const {
       fire_spread_rate,
       caller_name,
@@ -229,9 +285,9 @@ class MySQLDB {
       category,
       description,
       status,
-      op_create_id,
-      op_update_id,
-    } = body;
+    } = req.body;
+    const op_create_id = req.session.passport.user.id;
+    const op_update_id = req.session.passport.user.id;
     const res = this.query(
       `INSERT INTO incidents (
         caller_name,
@@ -283,7 +339,7 @@ class MySQLDB {
         return res.status(409).send({ Error: err.code });
       });
   }
-  createMedicalIncident(body) {
+  createMedicalIncident(req) {
     const {
       cause_description,
       cause,
@@ -298,9 +354,9 @@ class MySQLDB {
       category,
       description,
       status,
-      op_create_id,
-      op_update_id,
-    } = body;
+    } = req.body;
+    const op_create_id = req.session.passport.user.id;
+    const op_update_id = req.session.passport.user.id;
     const res = this.query(
       `INSERT INTO incidents (
         caller_name,
@@ -353,7 +409,7 @@ class MySQLDB {
         return res.status(409).send({ Error: err.code });
       });
   }
-  createGasIncident(body) {
+  createGasIncident(req) {
     const {
       caller_name,
       caller_contact,
@@ -366,9 +422,9 @@ class MySQLDB {
       category,
       description,
       status,
-      op_create_id,
-      op_update_id,
-    } = body;
+    } = req.body;
+    const op_create_id = req.session.passport.user.id;
+    const op_update_id = req.session.passport.user.id;
     const res = this.query(
       `INSERT INTO incidents (
         caller_name,

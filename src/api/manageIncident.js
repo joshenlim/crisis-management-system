@@ -13,8 +13,22 @@ const database = new MySQLDB(config.mysql_config);
 database.connect();
 
 router.get('/get', async (req, res) => {
-  const { incid } = req.query;
-  const incidents = await database.getIncidentByID(incid);
+  const { id, emergency } = req.query;
+  const incidents;
+  if (emergency) {
+    incidents = await database
+      .query(
+        'SELECT i.* FROM incidents i,civil_emergency e WHERE e.incident_id = ? AND i.incident_id=e.incident_id',
+        [id],
+      )
+      .then(rows => rows)
+      .catch(err => {
+        console.error('Error from getEmergencyIncidentById:', err.sqlMessage);
+        return res.status(409).send({ Error: err.code });
+      });
+  } else {
+    incidents = await database.getIncidentByID(id);
+  }
   return res.status(200).send(incidents);
 });
 
@@ -38,25 +52,25 @@ router.post('/create', async (req, res) => {
 
   switch (req.body.assistance_type) {
     case 'road_traffic': {
-      await database.createRoadIncident(req.body);
+      await database.createRoadIncident(req);
       return res.status(200).send({
         Success: 'Incident successfully created',
       });
     }
     case 'medical_emergency': {
-      await database.createMedicalIncident(req.body);
+      await database.createMedicalIncident(req);
       return res.status(200).send({
         Success: 'Incident successfully created',
       });
     }
     case 'fire_emergency': {
-      await database.createFireIncident(req.body);
+      await database.createFireIncident(req);
       return res.status(200).send({
         Success: 'Incident successfully created',
       });
     }
     case 'gas_leak': {
-      await database.createGasIncident(req.body);
+      await database.createGasIncident(req);
       return res.status(200).send({
         Success: 'Incident successfully created',
       });
@@ -65,56 +79,7 @@ router.post('/create', async (req, res) => {
 });
 
 router.post('/update', async (req, res) => {
-  //TODO fix api and shift query to database.js
-
-  const {
-    postalCode,
-    address,
-    callTime,
-    updatedAt,
-    completedAt,
-    casualtyNo,
-    category,
-    description,
-    status,
-    opCreateId,
-    opUpdateId,
-    incidentId,
-  } = req.headers;
-  // console.log(req.headers);
-  await database
-    .query(
-      `UPDATE incidents SET postal_code = ?, 
-      address = ?, 
-      call_time = ?,
-      updated_at = ?,
-      completed_at = ?,
-      casualty_no = ?,
-      category = ?,
-      description = ?,
-      status = ?,
-      op_create_id = ?,
-      op_update_id = ? WHERE incident_id = ?`,
-      [
-        postalCode,
-        address,
-        callTime,
-        updatedAt,
-        completedAt,
-        casualtyNo,
-        category,
-        description,
-        status,
-        opCreateId,
-        opUpdateId,
-        incidentId,
-      ],
-    )
-    .then(rows => rows)
-    .catch(err => {
-      console.error('Error from updateIncident:', err.sqlMessage);
-      return res.status(409).send({ Error: err.code });
-    });
+  await database.updateIncident(req);
   return res.status(200).send({
     Success: 'Incident successfully updated',
   });
