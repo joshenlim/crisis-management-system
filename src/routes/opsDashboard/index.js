@@ -1,30 +1,29 @@
-/**
- * React Starter Kit (https://www.reactstarterkit.com/)
- *
- * Copyright © 2014-present Kriasoft, LLC. All rights reserved.
- *
- * This source code is licensed under the MIT license found in the
- * LICENSE.txt file in the root directory of this source tree.
- */
-
 import React from 'react';
 import OpsDashboard from './OpsDashboard';
 import Layout from '../../components/Layout';
+import { format } from 'path';
+
+const localAPI = 'http://localhost:3000/api';
 
 async function action({ fetch }) {
-  const resp = await fetch('/graphql', {
-    body: JSON.stringify({
-      query: '{news{title,link,content}}',
-    }),
-  });
-  const { data } = await resp.json();
-  if (!data || !data.news) throw new Error('Failed to load the news feed.');
+  const fireStationList = await fetch(localAPI + '/station/get_all_station')
+    .then(res => res.json())
+    .then(data => data)
+
+  for (const station of fireStationList) {
+    const fetchVehicleList = await fetch(localAPI + '/station/get_station_vehicles?id=' + station.id)
+      .then(res => res.json())
+      .then(data => {
+        station.vehicles = data;
+      });
+  }
+
   return {
     title: 'Dashboard',
     chunks: ['opsDashboard'],
     component: (
       <Layout>
-        <OpsDashboard news={data.news} />
+        <OpsDashboard fireStationList={fireStationList} />
       </Layout>
     ),
   };

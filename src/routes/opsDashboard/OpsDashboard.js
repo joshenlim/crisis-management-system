@@ -6,23 +6,46 @@ import addIcon from '../../assets/images/plus.svg';
 import Map from '../../components/Map';
 import NavBar from '../../components/NavBar';
 import IncidentCard from '../../components/IncidentCard';
-import IncidentDetailsModal from '../../components/IncidentDetailsModal';
+import ViewDetailsModal from '../../components/ViewDetailsModal';
+import Enum from '../../constants/enum';
+import CreateNewIncidentModal from '../../components/CreateNewIncidentModal';
+
+import { SOCKIO_HOST } from '../../constants';
+
+import Socket from 'socket.io-client';
+var io = Socket(SOCKIO_HOST);
 
 class OpsDashboard extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       mockIncident: {},
-      showIncidentModal: false,
+      showDetailsModal: false,
+      detailModalId: '',
+      detailModalType: Enum.detailType.INCIDENT,
+      showCreateNewIncidentModal: false,
     };
 
     this.mountModal = this.mountModal.bind(this);
-    this.handleClick = this.handleClick.bind(this);
+    this.mountCreateNewIncidentModal = this.mountCreateNewIncidentModal.bind(
+      this,
+    );
+    this.renderCreateNewIncidentModal = this.renderCreateNewIncidentModal.bind(
+      this,
+    );
     this.handleOnKeyDown = this.handleOnKeyDown.bind(this);
-    this.renderModal = this.renderModal.bind(this);
   }
-
+  
   componentWillMount() {
+    io.on('fetch', type => {
+      if (Enum.socketEvents.NEW_INCIDENT == type) {
+        //TODO - Perform AJAX to poll for list of ongoing incident to update incident card
+        console.log(
+          'Placeholder Action in OpsDashboard: Refresh incident list',
+        );
+      }
+    });
+
     this.state.mockIncident = {
       id: 'SNB-1045-367X',
       category: 'Emergency Ambulance',
@@ -34,36 +57,49 @@ class OpsDashboard extends React.Component {
     };
   }
 
-  mountModal = () => {
+  mountModal = (type, id) => {
     this.setState({
-      showIncidentModal: !this.state.showIncidentModal
+      detailModalType: type,
+      detailModalId: id,
+      showDetailsModal: !this.state.showDetailsModal,
     });
-  };
-
-  handleClick = event => {
-    console.log('click', event);
   };
 
   handleOnKeyDown = event => {
     event.preventDefault();
   };
 
+  mountCreateNewIncidentModal = () => {
+    this.setState({
+      showCreateNewIncidentModal: !this.state.showCreateNewIncidentModal,
+    });
+  };
+
   renderModal() {
-    if (this.state.showIncidentModal) {
+    if (this.state.showDetailsModal) {
       return (
-        <IncidentDetailsModal
-          incident={this.state.mockIncident}
+        <ViewDetailsModal
+          id={this.state.detailModalId}
+          type={this.state.detailModalType}
           mountModal={this.mountModal}
         />
       );
     }
-    return true;
+  }
+
+  renderCreateNewIncidentModal() {
+    if (this.state.showCreateNewIncidentModal) {
+      return (
+        <CreateNewIncidentModal mountModal={this.mountCreateNewIncidentModal} fireStationList={this.props.fireStationList} />
+      );
+    }
   }
 
   render() {
     return (
       <div className={s.container}>
         {this.renderModal()}
+        {this.renderCreateNewIncidentModal()}
         <div className={s.sideColumn}>
           <p className={s.columnTitle}>Ongoing Incidents</p>
           <IncidentCard
@@ -77,12 +113,12 @@ class OpsDashboard extends React.Component {
         </div>
         <div className={s.main}>
           <NavBar />
-          <Map />
+          <Map mountModal={this.mountModal} />
         </div>
         <div className={s.sideColumn}>
           <div
             className={s.createIncidentBtn}
-            onClick={this.handleClick}
+            onClick={this.mountCreateNewIncidentModal}
             onKeyDown={this.handleOnKeyDown}
             role="button"
             tabIndex={0}
