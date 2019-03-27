@@ -60,7 +60,7 @@ class OpsDashboard extends React.Component {
       //body: JSON.stringify(req),
     })
       .then(res => res.json())
-      .then(data => this.setState({ incidents: data }))
+      .then(data => this.setState({ incidents: data.reverse() }))
       .catch(err => console.log(err));
   }
 
@@ -112,9 +112,13 @@ class OpsDashboard extends React.Component {
         {this.renderCreateNewIncidentModal()}
         <div className={s.sideColumn}>
           <p className={s.columnTitle}>Ongoing Incidents</p>
-          {this.state.incidents.map(incident => (
-            <IncidentCard incident={incident} mountModal={this.mountModal} />
-          ))}
+          <div className={s.incidentList}>
+            {
+              this.state.incidents.map(incident => (
+                <IncidentCard incident={incident} mountModal={this.mountModal} />
+              ))
+            }
+          </div>
         </div>
         <div className={s.main}>
           <NavBar />
