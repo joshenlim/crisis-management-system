@@ -218,6 +218,19 @@ class MySQLDB {
       });
   }
 
+  updateStatus(body) {
+    const { id, status, updated_at, op_id } = body;
+    const res = this.query(
+      'UPDATE incidents SET status = ?, updated_at = ?, op_update_id = ? WHERE id = ?',
+      [status, updated_at, op_id, id],
+    )
+      .then(rows => rows)
+      .catch(err => {
+        console.error('Error from updateIncidentToResolved:', err.sqlMessage);
+        return res.status(409).send({ Error: err.code });
+      });
+  }
+
   createIncident(body) {
     const {
       caller_name,

@@ -24,13 +24,7 @@ router.get('/get', async (req, res) => {
 });
 
 router.get('/get_ongoing', async (req, res) => {
-  const incidents = await database
-    .query("SELECT * FROM incidents WHERE NOT status = 'RESOLVED' OR status = 'CLOSED'")
-    .then(rows => rows)
-    .catch(err => {
-      console.error('Error from getAllIncident:', err.sqlMessage);
-      return res.status(409).send({ Error: err.code });
-    });
+  const incidents = await database.getOngoingIncident();
   return res.status(200).send(incidents);
 });
 
@@ -88,88 +82,34 @@ router.post('/update', async (req, res) => {
   });
 });
 
-router.get('/get_id', async (req, res) => {
-  const { emergid } = req.query;
-  const incidents = await database
-      .query('SELECT incidents.* FROM incidents JOIN civil_emergency ON incidents.id = civil_emergency.incident_id WHERE civil_emergency.incident_id = ?', [
-      emergid]
-    )
-      .then(rows => rows)
-      .catch(err => {
-        console.error('Error from getEmergencyIncidentById:', err.sqlMessage);
-        return res.status(409).send({ Error: err.code });
-      });
-  return res.status(201).send(incidents);
-});
-
-router.get('/get_by_archived', async (req, res) => {
-  const incidents = await database
-    .query("SELECT * FROM incidents WHERE status = 'CLOSED'")
-    .then(rows => rows)
-    .catch(err => {
-      console.error('Error from getArchivedIncident:', err.sqlMessage);
-      return res.status(409).send({ Error: err.code });
-    });
-  return res.status(201).send(incidents);
-});
-
-router.post('/update_resolved', async (req, res) => {
-  const { emergid } = req.query;
-  const incidents = await database
-      .query('UPDATE incidents SET status = "RESOLVED" WHERE id = ?', [emergid])
-      .then(rows => rows)
-      .catch(err => {
-        console.error('Error from updateIncidentToResolved:', err.sqlMessage);
-        return res.status(409).send({ Error: err.code });
-      });
+router.post('/update_status', async (req, res) => {
+  const reqBody = {
+    ...req.body,
+    op_id: req.user.id,
+  };
+  await database.updateStatus(reqBody);
   return res.status(201).send({
-    Success: 'Incident successfully updated'
+    Success: 'Incident successfully updated',
   });
 });
 
 router.post('/dispatch', async (req, res) => {
-  const {
-    id,
-    plate_number,
-  } = req.headers;
+  const { id, plate_number } = req.body;
 
- await database
-    .query('UPDATE vehicle SET on_off_call = 1 WHERE plate_number = ?; INSERT INTO vehicle_incident (incident_id, plate_number, veh_status) VALUES (?, ?, "ON THE WAY")',
-      [
-        plate_number,
-        id,
-        plate_number,
-      ],
+  await database
+    .query(
+      'UPDATE vehicle SET on_off_call = 1 WHERE plate_number = ?; INSERT INTO vehicle_incident (incident_id, plate_number, veh_status) VALUES (?, ?, "ON THE WAY")',
+      [plate_number, id, plate_number],
     )
     .then(rows => rows)
     .catch(err => {
       console.error('Error from dispatchAdditionalUnit:', err.sqlMessage);
       return res.status(409).send({ Error: err.code });
     });
-  
-    return res.status(201).send({
+
+  return res.status(201).send({
     Success: 'Dispatch additional units successfully',
   });
 });
-
-// **when update to close, automatically call the generate report api
-router.post('/update_closed', async (req, res) => {
-  const { emergid } = req.query;
-  const incidents = await database
-      .query('UPDATE incidents, civil_emergency SET incidents.status = "CLOSED" WHERE incidents.id = civil_emergency.incident_id AND civil_emergency.incident_id = ?', [emergid])
-      .then(rows => rows)
-      .catch(err => {
-        console.error('Error from updateIncidentToClosed:', err.sqlMessage);
-        return res.status(409).send({ Error: err.code });
-      });
-  return res.status(201).send({
-    Success: 'Incident successfully updated'
-  });
-});
-
-//   return res.status(200).send({
-//     Success: 'Dispatch on additional unit successfully created',
-//   });
-// });
 
 export default router;
