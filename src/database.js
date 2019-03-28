@@ -144,9 +144,23 @@ class MySQLDB {
   }
 
   getOngoingIncident() {
-    const res = this.query('SELECT * FROM incidents WHERE status <> ?', [
-      Enum.incidentStatus.CLOSED,
-    ])
+    const res = this.query(
+      'SELECT * FROM incidents WHERE status <> ? AND status <> ?',
+      [Enum.incidentStatus.CLOSED, Enum.incidentStatus.RESOLVED],
+    )
+      .then(rows => rows)
+      .catch(err => {
+        console.error('Error from getAllIncident:', err.sqlMessage);
+        return res.status(409).send({ Error: err.code });
+      });
+    return res;
+  }
+
+  getEscalatedIncident() {
+    const res = this.query(
+      'SELECT * FROM incidents WHERE status <> ? AND status <> ? AND if_escalate_hq=TRUE',
+      [Enum.incidentStatus.CLOSED, Enum.incidentStatus.RESOLVED],
+    )
       .then(rows => rows)
       .catch(err => {
         console.error('Error from getAllIncident:', err.sqlMessage);
