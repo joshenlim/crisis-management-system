@@ -7,17 +7,6 @@ import expandIcon from '../../assets/images/expand.svg';
 import Enum from '../../constants/enum';
 
 class IncidentCard extends React.Component {
-  static propTypes = {
-    incident: PropTypes.shape({
-      id: PropTypes.string.isRequired,
-      category: PropTypes.string.isRequired,
-      postalCode: PropTypes.string.isRequired,
-      address: PropTypes.string.isRequired,
-      status: PropTypes.string.isRequired,
-    }).isRequired,
-    mountModal: PropTypes.func.isRequired,
-  };
-
   constructor(props) {
     super(props);
 

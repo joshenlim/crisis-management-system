@@ -38,6 +38,9 @@ class ArchivedIncidents extends React.Component {
               <IncidentCard incident={incident} mountModal={this.mountModal} />
             ))
           }
+          {
+            this.state.incidents.length == 0 && <p className={s.noIncidents}>There are no archived incidents</p>
+          }
         </div>
       </div>
     );

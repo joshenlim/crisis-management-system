@@ -23,6 +23,7 @@ class Map extends React.Component {
   };
 
   render() {
+    const { fireStationList } = this.props;
     const mapOptions = { styles: mapStyle };
     return (
       <div style={{ height: 'calc(100vh - 230px)', width: '100%' }}>
@@ -32,11 +33,18 @@ class Map extends React.Component {
           defaultZoom={this.props.zoom}
           options={mapOptions}
         >
-          {/* <AnyReactComponent
-                lat={59.955413}
-                lng={30.337844}
-                text="My Marker"
-            /> */}
+          {
+            fireStationList.map((station) => {
+              return <MapMarker
+                lng={station.lng}
+                lat={station.lat}
+                title={station.name}
+                text={station.address}
+                iconType={MarkerEnum.detailType.FIRE_STATION}
+                mountModal={this.props.mountModal}
+              />
+            })
+          }
           <MapMarker
             lng={103.689564}
             lat={1.381662}
@@ -44,14 +52,6 @@ class Map extends React.Component {
             title="This is a title"
             text="This event etc etc"
             iconType={MarkerEnum.detailType.PUBLIC_HOSPITAL}
-            mountModal={this.props.mountModal}
-          />
-          <MapMarker
-            lng={103.680564}
-            lat={1.383262}
-            title="This is a title"
-            text="This event etc etc"
-            iconType={MarkerEnum.detailType.FIRE_STATION}
             mountModal={this.props.mountModal}
           />
           <MapMarker

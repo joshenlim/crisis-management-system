@@ -137,7 +137,12 @@ class OpsDashboard extends React.Component {
               onClick={this.changeTab}
             />
           </div>
-          { this.state.activeTab == 0 && <Map mountModal={this.mountModal} /> }
+          { 
+            this.state.activeTab == 0 && <Map
+              mountModal={this.mountModal}
+              fireStationList={this.props.fireStationList}
+            />
+          }
           { this.state.activeTab == 1 && <ArchivedIncidents /> }
         </div>
         <div className={s.sideColumn} style={{ marginTop: '70px' }}>
