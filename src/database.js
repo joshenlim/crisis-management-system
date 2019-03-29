@@ -119,7 +119,7 @@ class MySQLDB {
   }
 
   getIncidentByID(id) {
-    const res = this.query('SELECT * FROM incidents WHERE incident_id = ?', [
+    const res = this.query('SELECT * FROM incidents WHERE id = ?', [
       id,
     ])
       .then(rows => rows)
@@ -346,6 +346,48 @@ class MySQLDB {
       });
     return res;
   }
+
+  getIncidentByCurrentDate() {
+    var moment = require('moment');         // including the moment module
+    var datetime = moment().format('YYYY-MM-DD');
+    //var sampledatetime = "2019-03-26 18:55:01"; --> completed_at datetime same as this
+
+    const res = this.query('SELECT * FROM incidents WHERE DATE(completed_at) = ?', [
+      datetime,
+    ])
+      .then(rows => rows)
+      .catch(err => {
+        console.error('Error from getIncidentByCurrentDate:', err.sqlMessage);
+        return res.status(409).send({ Error: err.code });
+      });
+    return res;
+  }
+
+  getIncidentBySixDaysBeforeCurrentDate() {
+    var moment = require('moment');         // including the moment module
+
+    // get 6 days from current day (weekly)
+    var oneweek = moment().subtract(6, 'days');
+    var oneweek2 = oneweek.startOf('day');
+    var olddate = oneweek2.format('YYYY-MM-DD');
+
+    // get current date
+    var date = moment().endOf('day');
+    var currentdate = date.format('YYYY-MM-DD');
+
+    //var sampledate1 = "2019-03-26";
+    //var sampledate2 = "2019-03-30";
+
+    const res = this.query('SELECT * FROM incidents WHERE DATE(completed_at) >= ? AND DATE(completed_at) <= ?', 
+    [olddate, currentdate],)
+      .then(rows => rows)
+      .catch(err => {
+        console.error('Error from getIncidentBySixDaysBeforeCurrentDate:', err.sqlMessage);
+        return res.status(409).send({ Error: err.code });
+      });
+    return res;
+  }
+
 }
 
 export default MySQLDB;
