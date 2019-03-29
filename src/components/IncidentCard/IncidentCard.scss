@@ -1,11 +1,16 @@
 @import '../variables.css';
 
+.addMargin {
+  margin-right: 20px;
+  width: 210px !important;
+}
+
 .incidentCard {
   border: 1px solid var(--border-black);
   border-radius: 5px;
   padding: 10px;
   margin-bottom: 20px;
-  width: 90%;
+  width: 200px;
 
   .segment {
     display: flex;
@@ -30,8 +35,10 @@
 
   .category {
     margin: 0;
-    margin-top: 5px;
+    margin-top: 3px;
+    margin-bottom: 2px;
     font-size: 0.9em;
+    font-weight: 400;
   }
 
   .location {
@@ -49,6 +56,20 @@
     text-align: center;
     margin-top: 10px;
     padding: 3px 0;
+  }
+
+  .timeInfo {
+    margin-top: 5px;
+    font-size: 0.9em;
+
+    .start {
+      opacity: 0.4;
+      margin-bottom: 2px;
+    }
+
+    .end {
+      opacity: 0.4;
+    }
   }
 }
 

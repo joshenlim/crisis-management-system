@@ -143,13 +143,23 @@ class MySQLDB {
     return res;
   }
 
-  getOngoingIncident() {
+  getOngoingIncidents() {
     const res = this.query('SELECT * FROM incidents WHERE status <> ?', [
       Enum.incidentStatus.CLOSED,
     ])
       .then(rows => rows)
       .catch(err => {
         console.error('Error from getAllIncident:', err.sqlMessage);
+        return res.status(409).send({ Error: err.code });
+      });
+    return res;
+  }
+
+  getArchivedIncidents() {
+    const res = this.query("SELECT * FROM incidents WHERE status = 'CLOSED'")
+      .then(rows => rows)
+      .catch(err => {
+        console.error('Error from getArchivedIncident:', err.sqlMessage);
         return res.status(409).send({ Error: err.code });
       });
     return res;
@@ -332,6 +342,24 @@ class MySQLDB {
         return res.status(409).send({ Error: err.code });
       });
     return res;
+  }
+
+  dispatchToIncident(incident_id, plate_number) {
+    const res = this.query(
+      `UPDATE vehicle SET on_off_call = 1 WHERE plate_number = ?;
+       INSERT INTO vehicle_incident (incident_id, plate_number, veh_status)
+       VALUES (?, ?, "OUT")`,
+      [ plate_number, incident_id, plate_number]
+    )
+    .then(rows => rows)
+    .catch(err => {
+      console.error('Error from dispatch units to incidents:', err.sqlMessage);
+      return res.status(409).send({ Error: err.code });
+    });
+
+    return res.status(200).send({
+      Success: 'Dispatch units successfully',
+    });
   }
 }
 

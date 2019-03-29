@@ -37,6 +37,38 @@ class IncidentCard extends React.Component {
     event.preventDefault();
   };
 
+  formatCategoryName = (category) => {
+    return category.split("_").map((str) => {
+      return str[0].toUpperCase() + str.substring(1, str.length)
+    }).join(" ")
+  }
+
+  formatAbbrev = (category) => {
+    return category.split("_").map((str) => {
+      return str.charAt(0).toUpperCase()
+    }).join("")
+  }
+
+  formatDate = (datetimeStr) => {
+    const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+    const datetime = datetimeStr.split("T")
+    const date = datetime[0];
+    const time = datetime[1];
+  
+    const splitDate = date.split("-")
+    const year = splitDate[0]
+    const month = splitDate[1]
+    const dateNum = splitDate[2]
+  
+    const splitTime = time.split(":")
+    const hour = splitTime[0]
+    const minute = splitTime[1]
+    const second = splitTime[2].substring(0, 2);
+  
+    const jsDate = new Date(year, month, dateNum, hour, minute, second)
+    return `${dateNum} ${months[parseInt(month) - 1]} ${year}, ${hour}:${minute}:${second}`
+  }
+
   render() {
     const { incident } = this.props;
     let statusClass;
@@ -56,9 +88,9 @@ class IncidentCard extends React.Component {
     }
 
     return (
-      <div className={s.incidentCard}>
+      <div className={s.incidentCard + " " + (incident.status == "CLOSED" && s.addMargin)}>
         <div className={s.segment}>
-          <p className={s.caseNo}>Case No: {incident.id}</p>
+          <p className={s.caseNo}>Case No: {this.formatAbbrev(incident.category)}-{incident.id}</p>
           <div
             className={s.expandBtn}
             onClick={this.expandIncident}
@@ -70,11 +102,19 @@ class IncidentCard extends React.Component {
             <img src={expandIcon} alt="expand" />
           </div>
         </div>
-        <p className={s.category}>{incident.category}</p>
+        <p className={s.category}>{this.formatCategoryName(incident.category)}</p>
         <p className={s.location}>
-          {incident.postal_code}, {incident.address}
+          S{incident.postal_code}, {incident.address}
         </p>
-        <div className={`${s.status} ${statusClass}`}>{incident.status}</div>
+        {
+          incident.status != "CLOSED" && <div className={`${s.status} ${statusClass}`}>{incident.status}</div>
+        }
+        {
+          incident.status == "CLOSED" && <div className={s.timeInfo}>
+            <div className={s.start}>Opened: {this.formatDate(incident.created_at)}</div>
+            <div className={s.end}>Closed: {this.formatDate(incident.completed_at)}</div>
+          </div>
+        }
       </div>
     );
   }

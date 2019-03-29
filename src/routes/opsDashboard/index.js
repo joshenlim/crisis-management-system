@@ -1,7 +1,6 @@
 import React from 'react';
 import OpsDashboard from './OpsDashboard';
 import Layout from '../../components/Layout';
-import { format } from 'path';
 
 const localAPI = 'http://localhost:3000/api';
 
@@ -18,12 +17,16 @@ async function action({ fetch }) {
       });
   }
 
+  const ongoingIncidents = await fetch(localAPI + '/incident/get_ongoing')
+    .then(res => res.json())
+    .then(data => data.reverse())
+
   return {
     title: 'Dashboard',
     chunks: ['opsDashboard'],
     component: (
       <Layout>
-        <OpsDashboard fireStationList={fireStationList} />
+        <OpsDashboard fireStationList={fireStationList} ongoingIncidents={ongoingIncidents} />
       </Layout>
     ),
   };
