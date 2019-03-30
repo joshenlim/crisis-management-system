@@ -2,9 +2,12 @@ import React from 'react';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import s from './OpsDashboard.scss';
 import addIcon from '../../assets/images/plus.svg';
+import mapIcon from '../../assets/images/map.svg';
+import archivedIcon from '../../assets/images/archived.svg';
 
 import Map from '../../components/Map';
-import NavBar from '../../components/NavBar';
+import ArchivedIncidents from '../../components/ArchivedIncidents';
+import TimeWeatherTemp from '../../components/TimeWeatherTemp';
 import IncidentCard from '../../components/IncidentCard';
 import ViewDetailsModal from '../../components/ViewDetailsModal';
 import Enum from '../../constants/enum';
@@ -20,26 +23,17 @@ class OpsDashboard extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      incidents: [],
+      activeTab: 0,
+      incidents: this.props.ongoingIncidents,
       showDetailsModal: false,
       detailModalId: '',
       detailModalType: Enum.detailType.INCIDENT,
       showCreateNewIncidentModal: false,
     };
 
-    this.mountModal = this.mountModal.bind(this);
-    this.mountCreateNewIncidentModal = this.mountCreateNewIncidentModal.bind(
-      this,
-    );
-    this.renderCreateNewIncidentModal = this.renderCreateNewIncidentModal.bind(
-      this,
-    );
-    this.handleOnKeyDown = this.handleOnKeyDown.bind(this);
-    this.fetchOngoingIncident = this.fetchOngoingIncident.bind(this);
   }
 
   componentWillMount() {
-    this.fetchOngoingIncident();
     io.on('fetch', type => {
       if (Enum.socketEvents.NEW_INCIDENT == type) {
         this.fetchOngoingIncident();
@@ -47,7 +41,14 @@ class OpsDashboard extends React.Component {
     });
   }
 
-  fetchOngoingIncident() {
+
+  changeTab = (e) => {
+    this.setState({
+      activeTab: e.target.name
+    });
+  }
+
+  fetchOngoingIncident = () => {
     fetch(API_HOST + 'api/incident/get_ongoing', {
       method: 'GET',
       headers: {
@@ -67,7 +68,7 @@ class OpsDashboard extends React.Component {
     });
   };
 
-  handleOnKeyDown = event => {
+  handleOnKeyDown = (event) => {
     event.preventDefault();
   };
 
@@ -89,7 +90,7 @@ class OpsDashboard extends React.Component {
     }
   }
 
-  renderCreateNewIncidentModal() {
+  renderCreateNewIncidentModal = () => {
     if (this.state.showCreateNewIncidentModal) {
       return (
         <CreateNewIncidentModal
@@ -106,18 +107,48 @@ class OpsDashboard extends React.Component {
         {this.renderModal()}
         {this.renderCreateNewIncidentModal()}
         <div className={s.sideColumn}>
+          <TimeWeatherTemp />
           <p className={s.columnTitle}>Ongoing Incidents</p>
           <div className={s.incidentList}>
-            {this.state.incidents.map(incident => (
-              <IncidentCard incident={incident} mountModal={this.mountModal} />
-            ))}
+            {
+              this.state.incidents.length > 0 && this.state.incidents.map(incident => (
+                <IncidentCard incident={incident} mountModal={this.mountModal} />
+              ))
+            }
+            {
+              this.state.incidents.length == 0 && <p className={s.noIncidents}>There are currently no<br/>ongoing incidents</p>
+            }
           </div>
         </div>
         <div className={s.main}>
-          <NavBar />
-          <Map mountModal={this.mountModal} />
+
+          <div className={s.nav + " " + (this.state.activeScreen == "map" ? s.activeMap : s.active)}>
+            <img
+              className={s.navBtn}
+              style={this.state.activeTab == 0 ? { opacity: 1 } : {}}
+              src={mapIcon}
+              alt="mapIcon"
+              name={0}
+              onClick={this.changeTab}
+            />
+            <img
+              className={s.navBtn}
+              style={this.state.activeTab == 1 ? { opacity: 1 } : {}}
+              src={archivedIcon}
+              alt="archivedIcon"
+              name={1}
+              onClick={this.changeTab}
+            />
+          </div>
+          { 
+            this.state.activeTab == 0 && <Map
+              mountModal={this.mountModal}
+              fireStationList={this.props.fireStationList}
+            />
+          }
+          { this.state.activeTab == 1 && <ArchivedIncidents /> }
         </div>
-        <div className={s.sideColumn}>
+        <div className={s.sideColumn} style={{ marginTop: '70px' }}>
           <div
             className={s.createIncidentBtn}
             onClick={this.mountCreateNewIncidentModal}

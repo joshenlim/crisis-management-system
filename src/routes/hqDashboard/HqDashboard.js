@@ -2,7 +2,7 @@ import React from 'react';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import s from './HqDashboard.scss';
 
-import NavBar from '../../components/NavBar';
+import TimeWeatherTemp from '../../components/TimeWeatherTemp';
 
 import iconArchived from '../../assets/images/hqicon-archived.svg';
 import iconReport from '../../assets/images/hqicon-reports.svg';
@@ -68,7 +68,7 @@ class HqDashboard extends React.Component {
           />
         </div>
         <div className={s.main}>
-          <NavBar />
+          <TimeWeatherTemp />
           {this.renderTab()}
         </div>
         <div className={s.sideColumn} />
