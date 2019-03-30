@@ -1,11 +1,26 @@
-@import '../variables.css';
+@import '../../variables.css';
 
 .incidentCard {
+  cursor: pointer;
+  display: flex;
   border: 1px solid var(--border-black);
   border-radius: 5px;
   padding: 10px;
   margin-bottom: 20px;
-  width: 90%;
+  min-width: 500px;
+
+  .incidentCardContent {
+    display: flex;
+  }
+
+  .icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100px;
+    margin-right: 10px;
+    border-right: 1px solid var(--border-black);
+  }
 
   .segment {
     display: flex;
@@ -21,11 +36,11 @@
     }
   }
 
-  .caseNo {
+  .nonEmphasis {
     opacity: 0.4;
     color: var(--black);
-    margin: 0;
-    font-size: 0.7em;
+    margin: 10px 0 5px 0;
+    font-size: 0.8em;
   }
 
   .category {
@@ -49,6 +64,18 @@
     text-align: center;
     margin-top: 10px;
     padding: 3px 0;
+  }
+
+  .statusDate {
+    display: flex;
+    white-space: nowrap;
+  }
+
+  .nextBtn {
+    width: 100%;
+    display: flex;
+    padding: 50px 10px 50px 10px;
+    justify-content: flex-end;
   }
 }
 

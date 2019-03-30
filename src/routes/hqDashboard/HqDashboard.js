@@ -8,7 +8,7 @@ import iconArchived from '../../assets/images/hqicon-archived.svg';
 import iconReport from '../../assets/images/hqicon-reports.svg';
 import iconStatistics from '../../assets/images/hqicon-statistics.svg';
 
-import AlertedIncidentList from '../../components/AlertedIncidentList';
+import AlertedIncidentPage from '../../components/AlertedIncidentPage';
 
 import { SOCKIO_HOST } from '../../constants';
 
@@ -31,8 +31,8 @@ class HqDashboard extends React.Component {
   }
 
   renderTab() {
-    if (activeTab == 0) {
-      return <AlertedIncidentList />;
+    if (this.state.activeTab == 0) {
+      return <AlertedIncidentPage />;
     }
   }
 
