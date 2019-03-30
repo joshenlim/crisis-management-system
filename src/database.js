@@ -119,9 +119,7 @@ class MySQLDB {
   }
 
   getIncidentByID(id) {
-    const res = this.query('SELECT * FROM incidents WHERE id = ?', [
-      id,
-    ])
+    const res = this.query('SELECT * FROM incidents WHERE id = ?', [id])
       .then(rows => rows)
       .catch(err => {
         console.error('Error from getIncidentById:', err.sqlMessage);
@@ -348,13 +346,14 @@ class MySQLDB {
   }
 
   getIncidentByCurrentDate() {
-    var moment = require('moment');         // including the moment module
+    var moment = require('moment'); // including the moment module
     var datetime = moment().format('YYYY-MM-DD');
     //var sampledatetime = "2019-03-26 18:55:01"; --> completed_at datetime same as this
 
-    const res = this.query('SELECT * FROM incidents WHERE DATE(completed_at) = ?', [
-      datetime,
-    ])
+    const res = this.query(
+      'SELECT * FROM incidents WHERE DATE(completed_at) = ?',
+      [datetime],
+    )
       .then(rows => rows)
       .catch(err => {
         console.error('Error from getIncidentByCurrentDate:', err.sqlMessage);
@@ -364,7 +363,7 @@ class MySQLDB {
   }
 
   getIncidentBySixDaysBeforeCurrentDate() {
-    var moment = require('moment');         // including the moment module
+    var moment = require('moment'); // including the moment module
 
     // get 6 days from current day (weekly)
     var oneweek = moment().subtract(6, 'days');
@@ -378,16 +377,33 @@ class MySQLDB {
     //var sampledate1 = "2019-03-26";
     //var sampledate2 = "2019-03-30";
 
-    const res = this.query('SELECT * FROM incidents WHERE DATE(completed_at) >= ? AND DATE(completed_at) <= ?', 
-    [olddate, currentdate],)
+    const res = this.query(
+      'SELECT * FROM incidents WHERE DATE(completed_at) >= ? AND DATE(completed_at) <= ?',
+      [olddate, currentdate],
+    )
       .then(rows => rows)
       .catch(err => {
-        console.error('Error from getIncidentBySixDaysBeforeCurrentDate:', err.sqlMessage);
+        console.error(
+          'Error from getIncidentBySixDaysBeforeCurrentDate:',
+          err.sqlMessage,
+        );
         return res.status(409).send({ Error: err.code });
       });
     return res;
   }
 
+  dispatchVehicle(body) {
+    const { id, plate_number } = body;
+    const res = this.query(
+      'UPDATE vehicle SET on_off_call = 1 WHERE plate_number = ?; INSERT INTO vehicle_incident (incident_id, plate_number, veh_status) VALUES (?, ?, "ON THE WAY")',
+      [plate_number, id, plate_number],
+    )
+      .then(rows => rows)
+      .catch(err => {
+        console.error('Error from dispatchAdditionalUnit:', err.sqlMessage);
+        return res.status(409).send({ Error: err.code });
+      });
+  }
 }
 
 export default MySQLDB;
