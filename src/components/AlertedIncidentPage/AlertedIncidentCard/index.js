@@ -45,6 +45,10 @@ class AlertedIncidentCard extends Component {
     }
   }
 
+  displayDetail = () => {
+    this.props.displayDetail(this.props.incident.id);
+  };
+
   render() {
     const { incident } = this.props;
     let statusClass;
@@ -64,7 +68,7 @@ class AlertedIncidentCard extends Component {
     }
 
     return (
-      <div className={s.incidentCard}>
+      <div className={s.incidentCard} onClick={this.displayDetail}>
         <div className={s.incidentCardContent}>
           <div className={s.icon}>
             <img src={this.renderLogo()} />

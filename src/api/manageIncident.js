@@ -112,10 +112,12 @@ router.get('/get_by_archived', async (req, res) => {
 });
 
 router.post('/update_resolved', async (req, res) => {
-  const { emergid } = req.query;
+  const { emergid } = req.body;
   const incidents = await database
     .query('UPDATE incidents SET status = "RESOLVED" WHERE id = ?', [emergid])
-    .then(rows => rows)
+    .then(rows => {
+      rows;
+    })
     .catch(err => {
       console.error('Error from updateIncidentToResolved:', err.sqlMessage);
       return res.status(409).send({ Error: err.code });
@@ -146,7 +148,7 @@ router.post('/dispatch', async (req, res) => {
 
 // **when update to close, automatically call the generate report api
 router.post('/update_closed', async (req, res) => {
-  const { emergid } = req.query;
+  const { emergid } = req.body;
   const incidents = await database
     .query(
       'UPDATE incidents, civil_emergency SET incidents.status = "CLOSED" WHERE incidents.id = civil_emergency.incident_id AND civil_emergency.incident_id = ?',

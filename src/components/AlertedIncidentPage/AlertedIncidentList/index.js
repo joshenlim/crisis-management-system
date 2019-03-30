@@ -13,7 +13,6 @@ class AlertedIncidentList extends Component {
     this.state = { incidents: [] };
   }
 
-  //TODO - Make ajax call to fetch escalated incidents
   componentWillMount() {
     this.fetchEscalatedIncident();
   }
@@ -34,7 +33,10 @@ class AlertedIncidentList extends Component {
     return (
       <div className={s.list}>
         {this.state.incidents.map(incident => (
-          <AlertedIncidentCard incident={incident} />
+          <AlertedIncidentCard
+            displayDetail={this.props.displayDetail}
+            incident={incident}
+          />
         ))}
       </div>
     );
