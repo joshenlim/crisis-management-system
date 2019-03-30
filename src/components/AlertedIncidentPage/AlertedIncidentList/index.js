@@ -4,6 +4,9 @@ import AlertedIncidentCard from '../AlertedIncidentCard';
 import fetch from 'node-fetch';
 import { API_HOST } from '../../../constants';
 
+import s from './AlertedIncidentList.scss';
+import withStyles from 'isomorphic-style-loader/lib/withStyles';
+
 class AlertedIncidentList extends Component {
   constructor(props) {
     super(props);
@@ -29,7 +32,7 @@ class AlertedIncidentList extends Component {
 
   render() {
     return (
-      <div>
+      <div className={s.list}>
         {this.state.incidents.map(incident => (
           <AlertedIncidentCard incident={incident} />
         ))}
@@ -38,4 +41,4 @@ class AlertedIncidentList extends Component {
   }
 }
 
-export default AlertedIncidentList;
+export default withStyles(s)(AlertedIncidentList);
