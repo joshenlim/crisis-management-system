@@ -8,24 +8,48 @@ import iconArchived from '../../assets/images/hqicon-archived.svg';
 import iconReport from '../../assets/images/hqicon-reports.svg';
 import iconStatistics from '../../assets/images/hqicon-statistics.svg';
 
+import AlertedIncidentPage from '../../components/AlertedIncidentPage';
+
 import { SOCKIO_HOST } from '../../constants';
 
 import Socket from 'socket.io-client';
+import DispatchVehicleList from '../../components/AlertedIncidentPage/DispatchVehicleList';
 var io = Socket(SOCKIO_HOST);
 
 class HqDashboard extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { activeTab: 0 };
+    this.state = { activeTab: 0, sideTab: 0 };
 
     this.changeTab = this.changeTab.bind(this);
+    this.render = this.render.bind(this);
   }
 
   changeTab(e) {
+    this.changeSideTab();
     this.setState({ activeTab: e.target.name });
 
     let icons = document.getElementsByClassName(s.tabIcons);
   }
+
+  changeSideTab = type => {
+    this.setState({ sideTab: type });
+  };
+
+  renderTab() {
+    if (this.state.activeTab == 0) {
+      return <AlertedIncidentPage displaySidebar={this.changeSideTab} />;
+    }
+  }
+
+  renderSidebar = () => {
+    switch (this.state.sideTab) {
+      case 1:
+        return <DispatchVehicleList />;
+      default:
+        return <span />;
+    }
+  };
 
   render() {
     return (
@@ -60,8 +84,9 @@ class HqDashboard extends React.Component {
         </div>
         <div className={s.main}>
           <TimeWeatherTemp />
+          {this.renderTab()}
         </div>
-        <div className={s.sideColumn} />
+        <div className={s.sideColumn}>{this.renderSidebar()}</div>
       </div>
     );
   }

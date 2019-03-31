@@ -126,10 +126,10 @@ app.post('/login', (req, res, next) => {
 
           switch (user.role) {
             case Enum.staffRole.SPECIALIST:
-              res.redirect('/hqDashboard');
+              res.redirect('/hq/dashboard');
               break;
             case Enum.staffRole.RELATIONS_OFFICER:
-              res.redirect('/hqDashboard');
+              res.redirect('/hq/dashboard');
               break;
             default:
               res.redirect('/ops/dashboard');
