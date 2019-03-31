@@ -23,7 +23,7 @@ class Map extends React.Component {
   };
 
   render() {
-    const { fireStationList } = this.props;
+    const { fireStationList, publicHospitalList, privateHospitalList } = this.props;
     const mapOptions = { styles: mapStyle };
     return (
       <div style={{ height: 'calc(100vh - 230px)', width: '100%' }}>
@@ -45,15 +45,18 @@ class Map extends React.Component {
               />
             })
           }
-          <MapMarker
-            lng={103.689564}
-            lat={1.381662}
-            color="blue"
-            title="This is a title"
-            text="This event etc etc"
-            iconType={MarkerEnum.detailType.PUBLIC_HOSPITAL}
-            mountModal={this.props.mountModal}
-          />
+          {
+            publicHospitalList.map((publicHospital) => {
+              return <MapMarker
+                lng={publicHospital.lng}
+                lat={publicHospital.lat}
+                title={publicHospital.name}
+                text={publicHospital.address}
+                iconType={MarkerEnum.detailType.PUBLIC_HOSPITAL}
+                mountModal={this.props.mountModal}
+              />
+            })
+          }
           <MapMarker
             lng={103.67}
             lat={1.383162}
@@ -62,14 +65,19 @@ class Map extends React.Component {
             iconType={MarkerEnum.detailType.INCIDENT}
             mountModal={this.props.mountModal}
           />
-          <MapMarker
-            lng={103.69}
-            lat={1.388}
-            title="This is a title"
-            text="This event etc etc"
-            iconType={MarkerEnum.detailType.PRIVATE_HOSPITAL}
-            mountModal={this.props.mountModal}
-          />
+          {
+            privateHospitalList.map((privateHospital) => {
+              return <MapMarker
+                lng={privateHospital.lng}
+                lat={privateHospital.lat}
+                title={privateHospital.name}
+                text={privateHospital.address}
+                iconType={MarkerEnum.detailType.PRIVATE_HOSPITAL}
+                mountModal={this.props.mountModal}
+              />
+            })
+          }
+          
         </GoogleMapReact>
         <MapLegend />
       </div>

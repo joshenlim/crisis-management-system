@@ -86,6 +86,36 @@ class MySQLDB {
     return res;
   }
 
+  getAllHospitals() {
+    const res = this.query('SELECT * FROM hospital')
+      .then(rows => rows)
+      .catch(err => {
+        console.error('Error from getAllHospitals:', err.sqlMessage);
+        return err.code;
+      });
+    return res;
+  }
+
+  getPublicHospitals() {
+    const res = this.query("SELECT * FROM hospital WHERE ownership = 'public'")
+      .then(rows => rows)
+      .catch(err => {
+        console.error('Error from getPublicHospitals:', err.sqlMessage);
+        return err.code;
+      });
+    return res;
+  }
+
+  getPrivateHospitals() {
+    const res = this.query("SELECT * FROM hospital WHERE ownership = 'private'")
+      .then(rows => rows)
+      .catch(err => {
+        console.error('Error from getPrivateHospitals:', err.sqlMessage);
+        return err.code;
+      });
+    return res;
+  }
+
   getAllStations() {
     const res = this.query('SELECT * FROM fire_station')
       .then(rows => rows)

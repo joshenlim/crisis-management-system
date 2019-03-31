@@ -94,6 +94,8 @@ class OpsDashboard extends React.Component {
         <CreateNewIncidentModal
           mountModal={this.mountCreateNewIncidentModal}
           fireStationList={this.props.fireStationList}
+          publicHospitalList={this.props.publicHospitalList}
+          privateHospitalList={this.props.privateHospitalList}
         />
       );
     }
@@ -141,6 +143,8 @@ class OpsDashboard extends React.Component {
             this.state.activeTab == 0 && <Map
               mountModal={this.mountModal}
               fireStationList={this.props.fireStationList}
+              publicHospitalList={this.props.publicHospitalList}
+              privateHospitalList={this.props.privateHospitalList}
             />
           }
           { this.state.activeTab == 1 && <ArchivedIncidents /> }
