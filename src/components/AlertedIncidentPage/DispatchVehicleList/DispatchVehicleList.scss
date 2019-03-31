@@ -1,0 +1,48 @@
+.stationList {
+  height: 400px;
+  overflow-y: scroll;
+  padding-right: 20px;
+
+  .stationTile {
+    padding: 5px 0;
+
+    .tileHeader {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      .stationName {
+        margin: 0;
+        font-weight: 400;
+      }
+
+      .expandDrop {
+        cursor: pointer;
+        transition: all 0.2s ease;
+        padding: 10px;
+      }
+    }
+
+    .vehicleList {
+      max-height: 0;
+      visibility: hidden;
+      opacity: 0;
+      margin-top: 0;
+      transition: all 0.2s ease;
+
+      .vehicleOption {
+        margin-bottom: 0;
+        max-height: 0;
+        transition: all 0.2s ease;
+
+        input {
+          margin-left: 10px;
+        }
+
+        label {
+          margin-left: 15px;
+        }
+      }
+    }
+  }
+}

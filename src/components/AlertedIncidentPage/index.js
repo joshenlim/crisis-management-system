@@ -13,10 +13,12 @@ class AlertedIncidentPage extends Component {
 
   displayDetail(id) {
     this.setState({ page: 1, incidentId: id });
+    this.props.displaySidebar(1);
   }
 
   displayList() {
     this.setState({ page: 0, incidentId: 0 });
+    this.props.displaySidebar();
   }
 
   render() {
