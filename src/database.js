@@ -404,6 +404,33 @@ class MySQLDB {
         return res.status(409).send({ Error: err.code });
       });
   }
+
+  updateCivilEmergencyIncident(body) {
+    const {
+      incident_id,
+      supp_doc_dir,
+      ce_handle_id,
+      ce_upload_id,
+    } = body;
+    const res = this.query(
+      `UPDATE civil_emergency SET 
+      supp_doc_dir = ?, 
+      ce_handle_id = ?, 
+      ce_upload_id = ? WHERE incident_id = ?`,
+      [
+        supp_doc_dir,
+        ce_handle_id,
+        ce_upload_id,
+        incident_id,
+      ],
+    )
+      .then(rows => rows)
+      .catch(err => {
+        console.error('Error from updateCivilEmergencyIncident:', err.sqlMessage);
+        return res.status(409).send({ Error: err.code });
+      });
+  }
+
 }
 
 export default MySQLDB;
