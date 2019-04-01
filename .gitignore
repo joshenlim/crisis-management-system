@@ -3,6 +3,9 @@
 # Dependencies
 node_modules/
 
+# reports directory
+reports/
+
 # Compiled output
 build
 

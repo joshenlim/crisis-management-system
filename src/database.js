@@ -119,7 +119,6 @@ class MySQLDB {
   }
 
   getIncidentByID(id) {
-
     const res = this.query('SELECT * FROM incidents WHERE id = ?', [id])
       .then(rows => rows)
       .catch(err => {
@@ -154,30 +153,7 @@ class MySQLDB {
       });
     return res;
   }
-
-  getEscalatedIncident() {
-    const res = this.query(
-      'SELECT * FROM incidents WHERE status <> ? AND status <> ? AND if_escalate_hq=TRUE',
-      [Enum.incidentStatus.CLOSED, Enum.incidentStatus.RESOLVED],
-    )
-      .then(rows => rows)
-      .catch(err => {
-        console.error('Error from getAllIncident:', err.sqlMessage);
-        return res.status(409).send({ Error: err.code });
-      });
-    return res;
-  }
-
-  getArchivedIncidents() {
-    const res = this.query("SELECT * FROM incidents WHERE status = 'CLOSED'")
-      .then(rows => rows)
-      .catch(err => {
-        console.error('Error from getArchivedIncident:', err.sqlMessage);
-        return res.status(409).send({ Error: err.code });
-      });
-    return res;
-  }
-
+  
   getIncidentByStatus(status) {
     const res = this.query('SELECT * FROM incidents WHERE status = ?', [status])
       .then(rows => rows)
@@ -237,6 +213,19 @@ class MySQLDB {
       .then(rows => rows)
       .catch(err => {
         console.error('Error from updateIncident:', err.sqlMessage);
+        return res.status(409).send({ Error: err.code });
+      });
+  }
+
+  updateStatus(body) {
+    const { id, status, updated_at, op_id } = body;
+    const res = this.query(
+      'UPDATE incidents SET status = ?, updated_at = ?, op_update_id = ? WHERE id = ?',
+      [status, updated_at, op_id, id],
+    )
+      .then(rows => rows)
+      .catch(err => {
+        console.error('Error from updateIncidentToResolved:', err.sqlMessage);
         return res.status(409).send({ Error: err.code });
       });
   }
@@ -357,6 +346,65 @@ class MySQLDB {
     return res;
   }
 
+  getIncidentByCurrentDate() {
+    var moment = require('moment'); // including the moment module
+    var datetime = moment().format('YYYY-MM-DD');
+    //var sampledatetime = "2019-03-26 18:55:01"; --> completed_at datetime same as this
+
+    const res = this.query(
+      'SELECT * FROM incidents WHERE DATE(completed_at) = ?',
+      [datetime],
+    )
+      .then(rows => rows)
+      .catch(err => {
+        console.error('Error from getIncidentByCurrentDate:', err.sqlMessage);
+        return res.status(409).send({ Error: err.code });
+      });
+    return res;
+  }
+
+  getIncidentBySixDaysBeforeCurrentDate() {
+    var moment = require('moment'); // including the moment module
+
+    // get 6 days from current day (weekly)
+    var oneweek = moment().subtract(6, 'days');
+    var oneweek2 = oneweek.startOf('day');
+    var olddate = oneweek2.format('YYYY-MM-DD');
+
+    // get current date
+    var date = moment().endOf('day');
+    var currentdate = date.format('YYYY-MM-DD');
+
+    //var sampledate1 = "2019-03-26";
+    //var sampledate2 = "2019-03-30";
+
+    const res = this.query(
+      'SELECT * FROM incidents WHERE DATE(completed_at) >= ? AND DATE(completed_at) <= ?',
+      [olddate, currentdate],
+    )
+      .then(rows => rows)
+      .catch(err => {
+        console.error(
+          'Error from getIncidentBySixDaysBeforeCurrentDate:',
+          err.sqlMessage,
+        );
+        return res.status(409).send({ Error: err.code });
+      });
+    return res;
+  }
+
+  dispatchVehicle(body) {
+    const { id, plate_number } = body;
+    const res = this.query(
+      'UPDATE vehicle SET on_off_call = 1 WHERE plate_number = ?; INSERT INTO vehicle_incident (incident_id, plate_number, veh_status) VALUES (?, ?, "ON THE WAY")',
+      [plate_number, id, plate_number],
+    )
+      .then(rows => rows)
+      .catch(err => {
+        console.error('Error from dispatchAdditionalUnit:', err.sqlMessage);
+        return res.status(409).send({ Error: err.code });
+      });
+  }
   dispatchToIncident(incident_id, plate_number) {
     const res = this.query(
       `UPDATE vehicle SET on_off_call = 1 WHERE plate_number = ?;
@@ -373,7 +421,6 @@ class MySQLDB {
     return res.status(200).send({
       Success: 'Dispatch units successfully',
     });
-  }
-}
+ }
 
 export default MySQLDB;
