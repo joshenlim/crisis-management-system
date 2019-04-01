@@ -1,11 +1,6 @@
 import express from 'express';
 import MySQLDB from '../database';
-import SocketIO from 'socket.io-client';
-import Enum from '../constants/enum';
-import { SOCKIO_HOST } from '../constants/index';
 import config from '../config';
-
-var io = SocketIO(SOCKIO_HOST);
 
 const router = express.Router({ mergeParams: true });
 
@@ -24,7 +19,7 @@ router.get('/get', async (req, res) => {
 });
 
 router.get('/get_ongoing', async (req, res) => {
-  const incidents = await database.getOngoingIncident();
+  const incidents = await database.getOngoingIncidents()
   return res.status(200).send(incidents);
 });
 
@@ -35,15 +30,10 @@ router.get('/get_by_status', async (req, res) => {
 });
 
 router.post('/create', async (req, res) => {
-  io.emit('notify', Enum.socketEvents.NEW_INCIDENT);
-  // Now just make sure that you have all of the required information
-  // return res.status(200).send(req.body);
-
   const reqBody = {
     ...req.body,
     op_id: req.user.id,
   };
-
   const newIncidentId = await database.createIncident(reqBody);
 
   switch (req.body.category) {
@@ -63,6 +53,12 @@ router.post('/create', async (req, res) => {
     }
     case 'fire_emergency': {
       await database.createFireIncident(newIncidentId, reqBody);
+      return res.status(200).send({
+        Success: 'Incident successfully created',
+      });
+      break;
+    }
+    case 'gas_leak': {
       return res.status(200).send({
         Success: 'Incident successfully created',
       });
@@ -102,7 +98,7 @@ router.post('/dispatch', async (req, res) => {
 });
 
 // on click of generate report button (by today or this week)
-// call this api
+// call t
 // get data from the incidents table by current date or 7 days before and plus current date
 // create content for each incident one page at a time
 // each line represent different information

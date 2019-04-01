@@ -25,7 +25,7 @@ const routes = {
         import(/* webpackChunkName: 'opsDashboard' */ './opsDashboard'),
     },
     {
-      path: '/hqDashboard',
+      path: '/hq/dashboard',
       load: () => import(/* webpackChunkName: 'hqDashboard' */ './hqDashboard'),
     },
     // These are all left here for reference, will remove all of them eventually prior to deployment

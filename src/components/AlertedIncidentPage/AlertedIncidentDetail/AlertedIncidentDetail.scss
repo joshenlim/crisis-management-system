@@ -1,0 +1,91 @@
+@import '../../variables.css';
+
+.content {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+
+  div {
+    margin: 3px;
+  }
+
+  .leftCol {
+    width: 100%;
+
+    .back {
+      cursor: pointer;
+    }
+
+    .backText {
+      opacity: 0.4;
+      color: var(--black);
+      font-size: 0.9em;
+      margin: 0 10px 0 10px;
+    }
+
+    .caseNumStatus {
+      display: flex;
+      white-space: nowrap;
+    }
+
+    .header {
+      margin: 0;
+      font-size: 1.2em;
+      font-weight: bolder;
+    }
+
+    .header2 {
+      margin: 0;
+      font-size: 1em;
+      font-weight: bolder;
+    }
+
+    .caseNo {
+      opacity: 0.4;
+      color: var(--black);
+      margin: 0;
+      font-size: 0.9em;
+    }
+
+    .status {
+      margin: 0;
+      color: var(--white);
+      border-radius: 20px;
+      width: 110px;
+      font-size: 0.8em;
+      font-weight: 400;
+      text-align: center;
+      padding: 3px 0;
+    }
+
+    .dispatched {
+      background-color: var(--blue);
+    }
+
+    .onsite {
+      background-color: var(--orange);
+    }
+
+    .enrouteBack {
+      background-color: var(--light-green);
+    }
+
+    .buttonPanel {
+      display: flex;
+      justify-content: center;
+      align-content: center;
+
+      .resolveBtn {
+        cursor: pointer;
+        width: 250px;
+        background-color: #ef5350;
+        color: var(--white);
+        border-radius: 5px;
+        font-size: 1em;
+        font-weight: bolder;
+        text-align: center;
+        padding: 10px 5px 10px 5px;
+      }
+    }
+  }
+}

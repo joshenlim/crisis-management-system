@@ -4,6 +4,7 @@
   height: 70px;
   display: flex;
   align-items: center;
+  justify-content: center;
 
   .time {
     border-right: 1px solid var(--border-black);
@@ -17,8 +18,7 @@
   }
 
   .weather {
-    border-right: 1px solid var(--border-black);
-    padding-right: 15px;
+    // padding-right: 15px;
     padding-left: 15px;
 
     .icon {

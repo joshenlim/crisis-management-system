@@ -24,4 +24,10 @@ export default Object.freeze({
     SPECIALIST: 'Specialist',
     RELATIONS_OFFICER: 'Relations Officer',
   },
+  incidentCategory: {
+    TRAFFIC: 'Road Traffic Accident',
+    FIRE: 'Fire Emergency',
+    MEDICAL: 'Medical Emergency',
+    GAS: 'Gas Leak',
+  },
 });

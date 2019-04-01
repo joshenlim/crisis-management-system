@@ -1,6 +1,6 @@
 import React from 'react';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
-import s from './NavBar.scss';
+import s from './TimeWeatherTemp.scss';
 import weatherIcon from '../../assets/images/weather-clear.svg';
 
 class NavBar extends React.Component {

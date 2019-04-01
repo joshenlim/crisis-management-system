@@ -21,7 +21,7 @@ class AssistanceTypeQuestionSet extends React.Component {
               type="radio"
               id="EA"
               name="category"
-              value="road_traffic"
+              value="road_traffic_accident"
               onChange={this.updateAssistanceType}
               defaultChecked
             />

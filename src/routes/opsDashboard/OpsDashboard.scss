@@ -1,5 +1,9 @@
 @import '../../components/variables.css';
 
+::-webkit-scrollbar {
+  display: none;
+}
+
 .container {
   margin: 0 auto;
   display: flex;
@@ -7,9 +11,21 @@
   justify-content: center;
 
   .sideColumn {
-    width: 210px;
-    padding: 0 30px;
-    margin-top: 70px;
+    width: 230px;
+    padding: 0 25px;
+
+    .incidentList {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      height: calc(100vh - 225px);
+      overflow-y: scroll;
+
+      .noIncidents {
+        opacity: 0.3;
+        text-align: center;
+      }
+    }
 
     .columnTitle {
       text-align: center;
@@ -21,6 +37,24 @@
 
   .main {
     width: calc(100vw - 540px);
+
+    .nav {
+      height: 70px;
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+
+      .navBtn {
+        margin-right: 25px;
+        cursor: pointer;
+        opacity: 0.3;
+        transition: all 0.2s ease;
+
+        &:hover {
+          opacity: 1;
+        }
+      }
+    }
   }
 }
 
