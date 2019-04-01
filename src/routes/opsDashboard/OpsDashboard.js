@@ -24,7 +24,7 @@ class OpsDashboard extends React.Component {
     super(props);
     this.state = {
       activeTab: 0,
-      incidents: this.props.ongoingIncidents,
+      incidents: this.props.ongoingIncidentList,
       showDetailsModal: false,
       detailModalId: '',
       detailModalType: Enum.detailType.INCIDENT,
@@ -96,6 +96,7 @@ class OpsDashboard extends React.Component {
           fireStationList={this.props.fireStationList}
           publicHospitalList={this.props.publicHospitalList}
           privateHospitalList={this.props.privateHospitalList}
+          ongoingIncidentList={this.props.ongoingIncidentList}
         />
       );
     }
@@ -111,7 +112,7 @@ class OpsDashboard extends React.Component {
           <p className={s.columnTitle}>Ongoing Incidents</p>
           <div className={s.incidentList}>
             {
-              this.state.incidents.length > 0 && this.state.incidents.map(incident => (
+              this.state.incidents.length > 0 && this.state.incidents.map(incidents => (
                 <IncidentCard incident={incident} mountModal={this.mountModal} />
               ))
             }
@@ -145,6 +146,7 @@ class OpsDashboard extends React.Component {
               fireStationList={this.props.fireStationList}
               publicHospitalList={this.props.publicHospitalList}
               privateHospitalList={this.props.privateHospitalList}
+              ongoingIncidentList={this.props.ongoingIncidentList}
             />
           }
           { this.state.activeTab == 1 && <ArchivedIncidents /> }

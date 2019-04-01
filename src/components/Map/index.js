@@ -57,6 +57,18 @@ class Map extends React.Component {
               />
             })
           }
+          {
+            ongoingIncidentList.map((ongoingIncidents) => {
+              return <MapMarker
+                lng={ongoingIncidents.lng}
+                lat={ongoingIncidents.lat}
+                title={ongoingIncidents.name}
+                text={ongoingIncidents.address}
+                iconType={MarkerEnum.detailType.INCIDENT}
+                mountModal={this.props.mountModal}
+              />
+            })
+          }
           <MapMarker
             lng={103.67}
             lat={1.383162}

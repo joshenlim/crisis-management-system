@@ -179,7 +179,7 @@ class MySQLDB {
     ])
       .then(rows => rows)
       .catch(err => {
-        console.error('Error from getAllIncident:', err.sqlMessage);
+        console.error('Error from getOngoingIncidents:', err.sqlMessage);
         return res.status(409).send({ Error: err.code });
       });
     return res;

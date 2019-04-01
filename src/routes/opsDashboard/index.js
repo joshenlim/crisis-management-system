@@ -17,9 +17,9 @@ async function action({ fetch }) {
       });
   }
 
-  const ongoingIncidents = await fetch(localAPI + '/incident/get_ongoing')
+  const ongoingIncidentList = await fetch(localAPI + '/incident/get_ongoing')
     .then(res => res.json())
-    .then(data => data.reverse())
+    .then(data => data)
 
   const publicHospitalList = await fetch(localAPI + '/hospitals/get_public_hospital')
     .then(res => res.json())
@@ -34,8 +34,7 @@ async function action({ fetch }) {
     chunks: ['opsDashboard'],
     component: (
       <Layout>
-        <OpsDashboard fireStationList={fireStationList} ongoingIncidents={ongoingIncidents} 
-        publicHospitalList={publicHospitalList} privateHospitalList={privateHospitalList} />
+        <OpsDashboard fireStationList={fireStationList} ongoingIncidentList={ongoingIncidentList} publicHospitalList={publicHospitalList} privateHospitalList={privateHospitalList}/>
       </Layout>
     ),
   };
