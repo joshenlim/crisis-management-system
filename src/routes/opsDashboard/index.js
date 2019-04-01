@@ -19,7 +19,7 @@ async function action({ fetch }) {
 
   const ongoingIncidentList = await fetch(localAPI + '/incident/get_ongoing')
     .then(res => res.json())
-    .then(data => data)
+    .then(data => data.reverse())
 
   const publicHospitalList = await fetch(localAPI + '/hospitals/get_public_hospital')
     .then(res => res.json())

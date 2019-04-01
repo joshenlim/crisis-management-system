@@ -23,7 +23,7 @@ class Map extends React.Component {
   };
 
   render() {
-    const { fireStationList, publicHospitalList, privateHospitalList } = this.props;
+    const { fireStationList, publicHospitalList, privateHospitalList, ongoingIncidentList } = this.props;
     const mapOptions = { styles: mapStyle };
     return (
       <div style={{ height: 'calc(100vh - 230px)', width: '100%' }}>
@@ -62,21 +62,13 @@ class Map extends React.Component {
               return <MapMarker
                 lng={ongoingIncidents.lng}
                 lat={ongoingIncidents.lat}
-                title={ongoingIncidents.name}
+                title={ongoingIncidents.description}
                 text={ongoingIncidents.address}
                 iconType={MarkerEnum.detailType.INCIDENT}
                 mountModal={this.props.mountModal}
               />
             })
           }
-          <MapMarker
-            lng={103.67}
-            lat={1.383162}
-            title="This is a title"
-            text="This event etc etc"
-            iconType={MarkerEnum.detailType.INCIDENT}
-            mountModal={this.props.mountModal}
-          />
           {
             privateHospitalList.map((privateHospital) => {
               return <MapMarker
