@@ -34,13 +34,11 @@ class PublicHospitalModal extends Component {
 
   componentDidMount() {
     //TODO - AJAX to API for selecting hospital details with this.props.id
-    console.log("testing mount");
     this.fetchPublicHospital();
-    console.log("id is: " + this.props.id);
 
-      this.state.name = this.state.hospitals.name;
-      this.state.postal_code = this.state.hospitals.postal_code;
-      this.state.address = this.state.hospitals.address;
+    this.state.name = this.state.hospitals.name;
+    this.state.postal_code = this.state.hospitals.postal_code;
+    this.state.address = this.state.hospitals.address;
   }
   
   render() {

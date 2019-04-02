@@ -36,6 +36,7 @@ class Map extends React.Component {
           {
             fireStationList.map((station) => {
               return <MapMarker
+                id={station.id}
                 lng={station.lng}
                 lat={station.lat}
                 title={station.name}
@@ -61,6 +62,7 @@ class Map extends React.Component {
           {
             ongoingIncidentList.map((ongoingIncidents) => {
               return <MapMarker
+                id={ongoingIncidents.id}
                 lng={ongoingIncidents.lng}
                 lat={ongoingIncidents.lat}
                 title={ongoingIncidents.description}
@@ -73,6 +75,7 @@ class Map extends React.Component {
           {
             privateHospitalList.map((privateHospital) => {
               return <MapMarker
+                id={privateHospital.id}
                 lng={privateHospital.lng}
                 lat={privateHospital.lat}
                 title={privateHospital.name}
