@@ -153,7 +153,7 @@ class MySQLDB {
       });
     return res;
   }
-  
+
   getIncidentByStatus(status) {
     const res = this.query('SELECT * FROM incidents WHERE status = ?', [status])
       .then(rows => rows)
@@ -410,17 +410,20 @@ class MySQLDB {
       `UPDATE vehicle SET on_off_call = 1 WHERE plate_number = ?;
        INSERT INTO vehicle_incident (incident_id, plate_number, veh_status)
        VALUES (?, ?, "OUT")`,
-      [ plate_number, incident_id, plate_number]
+      [plate_number, incident_id, plate_number],
     )
-    .then(rows => rows)
-    .catch(err => {
-      console.error('Error from dispatch units to incidents:', err.sqlMessage);
-      return res.status(409).send({ Error: err.code });
-    });
+      .then(rows => rows)
+      .catch(err => {
+        console.error(
+          'Error from dispatch units to incidents:',
+          err.sqlMessage,
+        );
+        return res.status(409).send({ Error: err.code });
+      });
 
     return res.status(200).send({
       Success: 'Dispatch units successfully',
     });
- }
-
+  }
+}
 export default MySQLDB;
