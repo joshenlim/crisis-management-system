@@ -164,6 +164,16 @@ class MySQLDB {
     return res;
   }
 
+  getEscalated() {
+    const res = this.query(`SELECT * FROM incidents WHERE if_escalate_hq = '1'`)
+      .then(rows => rows)
+      .catch(err => {
+        console.error('Error from getEscalated:', err.sqlMessage);
+        return res.status(409).send({ Error: err.code });
+      });
+    return res;
+  }
+
   updateIncident(body) {
     const {
       id,
