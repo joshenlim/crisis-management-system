@@ -422,5 +422,6 @@ class MySQLDB {
       Success: 'Dispatch units successfully',
     });
  }
+}
 
 export default MySQLDB;
