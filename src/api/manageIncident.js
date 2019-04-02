@@ -94,6 +94,17 @@ router.post('/update_status', async (req, res) => {
   });
 });
 
+router.post('/update_escalation', async (req, res) => {
+  const reqBody = {
+    ...req.body,
+    op_id: req.user.id,
+  };
+  await database.updateEscalation(reqBody);
+  return res.status(201).send({
+    Success: 'Incident escalation successfully updated',
+  });
+});
+
 router.post('/dispatch', async (req, res) => {
   await database.dispatchVehicle(req.body);
 

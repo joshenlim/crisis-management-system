@@ -80,7 +80,7 @@ class MySQLDB {
     )
       .then(rows => rows)
       .catch(err => {
-        console.error('Error from createStaff:', err.sqlMessage);
+        console.error('Error from getPolicies:', err.sqlMessage);
         return err.code;
       });
     return res;
@@ -100,7 +100,7 @@ class MySQLDB {
     const res = this.query('SELECT * FROM fire_station WHERE id = ?', [id])
       .then(rows => rows)
       .catch(err => {
-        console.error('Error from getStationCallsign:', err.sqlMessage);
+        console.error('Error from getStationById:', err.sqlMessage);
         return err.code;
       });
     return res;
@@ -148,7 +148,7 @@ class MySQLDB {
     )
       .then(rows => rows)
       .catch(err => {
-        console.error('Error from getAllIncident:', err.sqlMessage);
+        console.error('Error from getOngoingIncidents:', err.sqlMessage);
         return res.status(409).send({ Error: err.code });
       });
     return res;
@@ -183,13 +183,14 @@ class MySQLDB {
       address,
       lat,
       lng,
-      updated_at,
       completed_at,
       casualty_no,
       description,
       status,
       op_id,
     } = body;
+    var moment = require('moment'); // including the moment module
+    var updated_at = moment().format('YYYY-MM-DD HH:mm:ss');
     const res = this.query(
       `UPDATE incidents SET 
       caller_name = ?, 
@@ -228,14 +229,31 @@ class MySQLDB {
   }
 
   updateStatus(body) {
-    const { id, status, updated_at, op_id } = body;
+    const { id, status, op_id } = body;
+    var moment = require('moment'); // including the moment module
+    var updated_at = moment().format('YYYY-MM-DD HH:mm:ss');
     const res = this.query(
       'UPDATE incidents SET status = ?, updated_at = ?, op_update_id = ? WHERE id = ?',
       [status, updated_at, op_id, id],
     )
       .then(rows => rows)
       .catch(err => {
-        console.error('Error from updateIncidentToResolved:', err.sqlMessage);
+        console.error('Error from updateStatus:', err.sqlMessage);
+        return res.status(409).send({ Error: err.code });
+      });
+  }
+
+  updateEscalation(body) {
+    const { id, if_escalate_hq, op_id } = body;
+    var moment = require('moment'); // including the moment module
+    var updated_at = moment().format('YYYY-MM-DD HH:mm:ss');
+    const res = this.query(
+      'UPDATE incidents SET if_escalate_hq = ?, updated_at = ?, op_update_id = ? WHERE id = ?',
+      [if_escalate_hq, updated_at, op_id, id],
+    )
+      .then(rows => rows)
+      .catch(err => {
+        console.error('Error from updateEscalation:', err.sqlMessage);
         return res.status(409).send({ Error: err.code });
       });
   }
