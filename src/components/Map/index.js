@@ -48,6 +48,7 @@ class Map extends React.Component {
           {
             publicHospitalList.map((publicHospital) => {
               return <MapMarker
+                id ={publicHospital.id}
                 lng={publicHospital.lng}
                 lat={publicHospital.lat}
                 title={publicHospital.name}

@@ -96,6 +96,16 @@ class MySQLDB {
     return res;
   }
 
+  getAllHospitalsById(id) {
+    const res = this.query('SELECT * FROM hospital WHERE id = ?',[id])
+      .then(rows => rows)
+      .catch(err => {
+        console.error('Error from getAllHospitals:', err.sqlMessage);
+        return err.code;
+      });
+    return res;
+  }
+
   getPublicHospitals() {
     const res = this.query("SELECT * FROM hospital WHERE ownership = 'public'")
       .then(rows => rows)

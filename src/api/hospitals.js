@@ -11,6 +11,12 @@ router.get('/get_all_hospital', async (req, res) => {
   return res.status(200).send(hospitals);
 });
 
+router.get('/get_hospital_id', async (req, res) => {
+  const { id } = req.query;
+  const privateHospital = await database.getAllHospitalsById(id);
+  return res.status(200).send(privateHospital);
+});
+
 router.get('/get_public_hospital', async (req, res) => {
   const publicHospital = await database.getPublicHospitals();
   return res.status(200).send(publicHospital);
