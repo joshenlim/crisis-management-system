@@ -65,15 +65,12 @@ class PublicHospitalModal extends Component {
         <table>
           <thead>
             <tr>
-              <td className={s.contentHeader}></td>
+              <td className={s.contentHeader}>{this.state.name}</td>
             </tr>
           </thead>
           <tbody>
             <tr>
-            <td className={s.contentHeader}></td>
-              <td />
-              <td />
-              <td />
+            <td className={s.contentHeader}>{this.state.postal_code}{this.state.address}</td>
             </tr>
           </tbody>
         </table>

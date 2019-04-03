@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import s from '../ViewDetailsModal.scss';
 import Enum from '../../../constants/enum';
+import { API_HOST } from '../../../constants';
 
 class IncidentModal extends Component {
   static propTypes = {
@@ -15,26 +16,61 @@ class IncidentModal extends Component {
     super(props);
     this.state = {
       id: '',
+      caller_name: '',
+      caller_contact: '',
       category: '',
-      postalCode: '',
+      postal_code: '',
       address: '',
       status: '',
       description: '',
+      created_at: '',
+      plate_number: '',
+      veh_status: '',
+      incidents: [],
+      vehicle_incidents: [],
     };
   }
 
-  componentWillMount() {
+  fetchIncident = () => {
+    fetch(API_HOST + 'api/incident/get?id='+this.props.id, {
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json' },
+    })
+      .then(res => res.json())
+      .then(data => this.setState({ incidents: data }))
+      .catch(err => console.log(err));
+  }
+
+  fetchVehicleIncident = () => {
+    fetch(API_HOST + 'api/incident/get_vehicleIncident?id='+this.props.id, {
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json' },
+    })
+      .then(res => res.json())
+      .then(data => this.setState({ vehicle_incidents: data }))
+      .catch(err => console.log(err));
+  }
+
+  componentDidMount() {
     //TODO - AJAX to API for selecting incident with this.props.id
-    this.state.id = 'SNB-1045-367X';
-    this.state.category = 'Emergency Ambulance';
-    this.state.postalCode = 'S820193';
-    this.state.address = '#01-231';
-    this.state.status = 'DISPATCHED';
-    this.state.description =
-      'Traffic accident involving 3 vehicles on the Pan-Island Expressway (PIE) 2 injured but no fatality, consectetur adipiscing elit. Suspendisse metus ipsum, feugiat id nisi non, laoreet facilisis nunc. Cras et pellentesque est, a pulvinar turpis. Quisque laoreet tellus nulla, sit amet varius mauris porta sodales.';
+    this.fetchIncident();
+    this.fetchVehicleIncident();
+
+    this.state.id = this.state.incidents.id;
+    this.state.caller_name = this.state.incidents.caller_name;
+    this.state.caller_contact = this.state.incidents.caller_contact;
+    this.state.category = this.state.incidents.category;
+    this.state.postal_code = this.state.incidents.postal_code;
+    this.state.address = this.state.incidents.address;
+    this.state.status = this.state.incidents.status;
+    this.state.description = this.state.incidents.description;
+    this.state.created_at = this.state.incidents.created_at;
+    this.state.plate_number = this.state.vehicle_incidents.plate_number;
+    this.state.veh_status = this.state.vehicle_incidents.veh_status;
   }
 
   render() {
+    const { incidents, vehicle_incidents } = this.state;
     var statusClass = '';
     switch (this.state.status) {
       case Enum.incidentStatus.DISPATCHED:
@@ -54,36 +90,35 @@ class IncidentModal extends Component {
       <div>
         <div className={s.segment}>
           <p className={s.category}>
-            {this.state.category} - {this.state.postalCode},{' '}
-            {this.state.address}
+        {incidents.map(incident =>
+          <p>{incident.category} - {incident.postal_code},{' '}{incident.address}</p>
+        )}
           </p>
         </div>
-        <div className={s.caseNo}>Case No: {this.state.id} </div> &ensp;
-        <div className={`${s.status} ${statusClass}`}>{this.state.status}</div>
+        <div className={s.caseNo}>Case No: {incidents.map(incident => {incident.id})}</div> &ensp;
+        <div className={`${s.status} ${statusClass}`}>{incidents.map(incident => {incident.status})}</div>
         <hr />
         <p className={s.contentHeader}>Incident Description</p>
-        <div className={s.contentBody}>{this.state.description}</div>
+        <div className={s.contentBody}>{incidents.map(incident => {incident.description})}</div>
         <p className={s.contentHeader}>Incident Details</p>
         <div className={s.contentBody}>
           <table>
             <tbody>
               <tr>
-                <td className={s.detailHeader}>Time of Call: </td>
-                <td>12:30:32</td>
+                <td className={s.detailHeader}>Date and Time of Call: </td>
+                {incidents.map(incident => <td>{incident.created_at}</td>)}
               </tr>
               <tr>
                 <td className={s.detailHeader}>Vehicle Plate Number: </td>
-                <td>SXX0000X, SXX0000X, SXX0000X</td>
+                {vehicle_incidents.map(vehicle_incident => <td>{vehicle_incident.plate_number}</td>)}
               </tr>
               <tr>
                 <td className={s.detailHeader}>Incident Location: </td>
-                <td>
-                  {this.state.postalCode}, {this.state.address}
-                </td>
+                {incidents.map(incident => <td>{incident.postal_code},{' '}{incident.address}</td>)}
               </tr>
               <tr>
                 <td className={s.detailHeader}>Caller Information: </td>
-                <td>Lim Ah Choo, 94567293</td>
+                {incidents.map(incident => <td>{incident.caller_name},{' '}{incident.caller_contact}</td>)}
               </tr>
             </tbody>
           </table>

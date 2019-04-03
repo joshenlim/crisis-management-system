@@ -18,6 +18,11 @@ router.get('/get', async (req, res) => {
   return res.status(200).send(incidents);
 });
 
+router.get('/get_vehicleIncident', async (req, res) => {
+  const incidents = await database.getVehicleIncidents()
+  return res.status(200).send(incidents);
+});
+
 router.get('/get_ongoing', async (req, res) => {
   const incidents = await database.getOngoingIncidents()
   return res.status(200).send(incidents);
