@@ -118,6 +118,19 @@ class MySQLDB {
     return res;
   }
 
+  getDispatchedVehicles(incident_id) {
+    const res = this.query(
+      `SELECT * FROM vehicle_incident vi JOIN vehicle v ON v.plate_number = vi.plate_number WHERE vi.incident_id = ? AND v.on_off_call = '1'`,
+      [incident_id],
+    )
+      .then(rows => rows)
+      .catch(err => {
+        console.error('Error from getDispatchedVehicles:', err.sqlMessage);
+        return err.code;
+      });
+    return res;
+  }
+
   getIncidentByID(id) {
     const res = this.query('SELECT * FROM incidents WHERE id = ?', [id])
       .then(rows => rows)
