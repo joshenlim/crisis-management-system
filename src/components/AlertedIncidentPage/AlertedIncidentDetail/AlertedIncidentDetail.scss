@@ -5,12 +5,11 @@
   justify-content: space-between;
   width: 100%;
 
-  div {
-    margin: 3px;
-  }
-
   .leftCol {
-    width: 100%;
+    width: 80%;
+    border-right: 1px solid var(--border-black);
+    margin-right: 10px;
+    padding-right: 10px;
 
     .back {
       cursor: pointer;
@@ -74,6 +73,7 @@
       display: flex;
       justify-content: center;
       align-content: center;
+      margin-bottom: 10px;
 
       .resolveBtn {
         cursor: pointer;

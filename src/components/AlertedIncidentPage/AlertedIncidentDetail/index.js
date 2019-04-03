@@ -5,7 +5,10 @@ import s from './AlertedIncidentDetail.scss';
 import fetch from 'node-fetch';
 import { API_HOST } from '../../../constants';
 
+import DispatchVehicleList from '../DispatchVehicleList';
+
 import backBtn from '../../../assets/images/back.svg';
+import IncidentDetailMap from './IncidentDetailMap/IncidentDetailMap';
 
 class AlertedIncidentDetail extends Component {
   constructor(props) {
@@ -105,11 +108,17 @@ class AlertedIncidentDetail extends Component {
           <div className={s.header2}>Incident Description</div>
           <p>{incident.description}</p>
           <div className={s.header2}>Map Location</div>
-          <p>//TODO - Reuse "Map" Component</p>
+          <IncidentDetailMap
+            address={incident.postal_code}
+            center={{ lat: incident.lat, lng: incident.lng }}
+            zoom={12}
+          />
           <div className={s.header2}>Incident Details</div>
           <p>
-            Create At: {incident.create_at}
+            Create At: {incident.created_at}
+            <br />
             Incident Location: {incident.address}, {incident.postal_code}
+            <br />
             Caller Information: {incident.caller}, {incident.caller_contact}
           </p>
           <div className={s.header2}>Dispatch Details</div>
@@ -122,6 +131,10 @@ class AlertedIncidentDetail extends Component {
               Mark Case as Resolved
             </div>
           </div>
+        </div>
+
+        <div className={s.rightCol}>
+          <DispatchVehicleList {...this.props} />
         </div>
       </div>
     );
