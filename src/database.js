@@ -205,10 +205,6 @@ class MySQLDB {
   }
 
   getIncidentByID(id) {
-    const res = this.query('SELECT * FROM incidents WHERE id = ?', [
-      id,
-    ])
-  getIncidentByID(id) {
     const res = this.query('SELECT * FROM incidents WHERE id = ?', [id])
       .then(rows => rows)
       .catch(err => {
