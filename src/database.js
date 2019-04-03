@@ -80,7 +80,7 @@ class MySQLDB {
     )
       .then(rows => rows)
       .catch(err => {
-        console.error('Error from createStaff:', err.sqlMessage);
+        console.error('Error from getPolicies:', err.sqlMessage);
         return err.code;
       });
     return res;
@@ -151,7 +151,7 @@ class MySQLDB {
     const res = this.query('SELECT * FROM fire_station WHERE id = ?', [id])
       .then(rows => rows)
       .catch(err => {
-        console.error('Error from getStationCallsign:', err.sqlMessage);
+        console.error('Error from getStationById:', err.sqlMessage);
         return err.code;
       });
     return res;
@@ -176,6 +176,17 @@ class MySQLDB {
       .then(rows => rows)
       .catch(err => {
         console.error('Error from getStationVehiclesDetails:', err.sqlMessage);
+      }
+    }
+
+  getDispatchedVehicles(incident_id) {
+    const res = this.query(
+      `SELECT * FROM vehicle_incident vi JOIN vehicle v ON v.plate_number = vi.plate_number WHERE vi.incident_id = ? AND v.on_off_call = '1'`,
+      [incident_id],
+    )
+      .then(rows => rows)
+      .catch(err => {
+        console.error('Error from getDispatchedVehicles:', err.sqlMessage);
         return err.code;
       });
     return res;
@@ -197,6 +208,8 @@ class MySQLDB {
     const res = this.query('SELECT * FROM incidents WHERE id = ?', [
       id,
     ])
+  getIncidentByID(id) {
+    const res = this.query('SELECT * FROM incidents WHERE id = ?', [id])
       .then(rows => rows)
       .catch(err => {
         console.error('Error from getIncidentById:', err.sqlMessage);
@@ -219,22 +232,13 @@ class MySQLDB {
   }
 
   getOngoingIncidents() {
-    const res = this.query('SELECT * FROM incidents WHERE status <> ?', [
-      Enum.incidentStatus.CLOSED,
-    ])
+    const res = this.query(
+      'SELECT * FROM incidents WHERE status <> ? AND status <> ?',
+      [Enum.incidentStatus.CLOSED, Enum.incidentStatus.RESOLVED],
+    )
       .then(rows => rows)
       .catch(err => {
         console.error('Error from getOngoingIncidents:', err.sqlMessage);
-        return res.status(409).send({ Error: err.code });
-      });
-    return res;
-  }
-
-  getArchivedIncidents() {
-    const res = this.query("SELECT * FROM incidents WHERE status = 'CLOSED'")
-      .then(rows => rows)
-      .catch(err => {
-        console.error('Error from getArchivedIncident:', err.sqlMessage);
         return res.status(409).send({ Error: err.code });
       });
     return res;
@@ -250,6 +254,16 @@ class MySQLDB {
     return res;
   }
 
+  getEscalated() {
+    const res = this.query(`SELECT * FROM incidents WHERE if_escalate_hq = '1'`)
+      .then(rows => rows)
+      .catch(err => {
+        console.error('Error from getEscalated:', err.sqlMessage);
+        return res.status(409).send({ Error: err.code });
+      });
+    return res;
+  }
+
   updateIncident(body) {
     const {
       id,
@@ -259,13 +273,14 @@ class MySQLDB {
       address,
       lat,
       lng,
-      updated_at,
       completed_at,
       casualty_no,
       description,
       status,
       op_id,
     } = body;
+    var moment = require('moment'); // including the moment module
+    var updated_at = moment().format('YYYY-MM-DD HH:mm:ss');
     const res = this.query(
       `UPDATE incidents SET 
       caller_name = ?, 
@@ -299,6 +314,36 @@ class MySQLDB {
       .then(rows => rows)
       .catch(err => {
         console.error('Error from updateIncident:', err.sqlMessage);
+        return res.status(409).send({ Error: err.code });
+      });
+  }
+
+  updateStatus(body) {
+    const { id, status, op_id } = body;
+    var moment = require('moment'); // including the moment module
+    var updated_at = moment().format('YYYY-MM-DD HH:mm:ss');
+    const res = this.query(
+      'UPDATE incidents SET status = ?, updated_at = ?, op_update_id = ? WHERE id = ?',
+      [status, updated_at, op_id, id],
+    )
+      .then(rows => rows)
+      .catch(err => {
+        console.error('Error from updateStatus:', err.sqlMessage);
+        return res.status(409).send({ Error: err.code });
+      });
+  }
+
+  updateEscalation(body) {
+    const { id, if_escalate_hq, op_id } = body;
+    var moment = require('moment'); // including the moment module
+    var updated_at = moment().format('YYYY-MM-DD HH:mm:ss');
+    const res = this.query(
+      'UPDATE incidents SET if_escalate_hq = ?, updated_at = ?, op_update_id = ? WHERE id = ?',
+      [if_escalate_hq, updated_at, op_id, id],
+    )
+      .then(rows => rows)
+      .catch(err => {
+        console.error('Error from updateEscalation:', err.sqlMessage);
         return res.status(409).send({ Error: err.code });
       });
   }
@@ -419,18 +464,80 @@ class MySQLDB {
     return res;
   }
 
+  getIncidentByCurrentDate() {
+    var moment = require('moment'); // including the moment module
+    var datetime = moment().format('YYYY-MM-DD');
+    //var sampledatetime = "2019-03-26 18:55:01"; --> completed_at datetime same as this
+
+    const res = this.query(
+      'SELECT * FROM incidents WHERE DATE(completed_at) = ?',
+      [datetime],
+    )
+      .then(rows => rows)
+      .catch(err => {
+        console.error('Error from getIncidentByCurrentDate:', err.sqlMessage);
+        return res.status(409).send({ Error: err.code });
+      });
+    return res;
+  }
+
+  getIncidentBySixDaysBeforeCurrentDate() {
+    var moment = require('moment'); // including the moment module
+
+    // get 6 days from current day (weekly)
+    var oneweek = moment().subtract(6, 'days');
+    var oneweek2 = oneweek.startOf('day');
+    var olddate = oneweek2.format('YYYY-MM-DD');
+
+    // get current date
+    var date = moment().endOf('day');
+    var currentdate = date.format('YYYY-MM-DD');
+
+    //var sampledate1 = "2019-03-26";
+    //var sampledate2 = "2019-03-30";
+
+    const res = this.query(
+      'SELECT * FROM incidents WHERE DATE(completed_at) >= ? AND DATE(completed_at) <= ?',
+      [olddate, currentdate],
+    )
+      .then(rows => rows)
+      .catch(err => {
+        console.error(
+          'Error from getIncidentBySixDaysBeforeCurrentDate:',
+          err.sqlMessage,
+        );
+        return res.status(409).send({ Error: err.code });
+      });
+    return res;
+  }
+
+  dispatchVehicle(body) {
+    const { id, plate_number } = body;
+    const res = this.query(
+      'UPDATE vehicle SET on_off_call = 1 WHERE plate_number = ?; INSERT INTO vehicle_incident (incident_id, plate_number, veh_status) VALUES (?, ?, "ON THE WAY")',
+      [plate_number, id, plate_number],
+    )
+      .then(rows => rows)
+      .catch(err => {
+        console.error('Error from dispatchAdditionalUnit:', err.sqlMessage);
+        return res.status(409).send({ Error: err.code });
+      });
+  }
   dispatchToIncident(incident_id, plate_number) {
     const res = this.query(
       `UPDATE vehicle SET on_off_call = 1 WHERE plate_number = ?;
        INSERT INTO vehicle_incident (incident_id, plate_number, veh_status)
        VALUES (?, ?, "OUT")`,
-      [ plate_number, incident_id, plate_number]
+      [plate_number, incident_id, plate_number],
     )
-    .then(rows => rows)
-    .catch(err => {
-      console.error('Error from dispatch units to incidents:', err.sqlMessage);
-      return res.status(409).send({ Error: err.code });
-    });
+      .then(rows => rows)
+      .catch(err => {
+        console.error(
+          'Error from dispatch units to incidents:',
+          err.sqlMessage,
+        );
+        return res.status(409).send({ Error: err.code });
+      });
 
     return res.status(200).send({
       Success: 'Dispatch units successfully',

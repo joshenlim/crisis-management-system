@@ -35,4 +35,10 @@ router.get('/get_station_details_from_incident', async (req, res) => {
   return res.status(200).send(station);
 });
 
+router.get('/get_dispatched_vehicles', async (req, res) => {
+  const { incident_id } = req.query;
+  const vehicles = await database.getDispatchedVehicles(incident_id);
+  return res.status(200).send(vehicles);
+});
+
 export default router;

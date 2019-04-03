@@ -30,6 +30,7 @@ class OpsDashboard extends React.Component {
       detailModalType: Enum.detailType.INCIDENT,
       showCreateNewIncidentModal: false,
     };
+
   }
 
   componentWillMount() {
@@ -39,6 +40,7 @@ class OpsDashboard extends React.Component {
       }
     });
   }
+
 
   changeTab = (e) => {
     this.setState({
@@ -122,6 +124,7 @@ class OpsDashboard extends React.Component {
           </div>
         </div>
         <div className={s.main}>
+
           <div className={s.nav + " " + (this.state.activeScreen == "map" ? s.activeMap : s.active)}>
             <img
               className={s.navBtn}
