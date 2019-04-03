@@ -13,13 +13,14 @@ import IncidentDetailMap from './IncidentDetailMap/IncidentDetailMap';
 class AlertedIncidentDetail extends Component {
   constructor(props) {
     super(props);
-    this.state = { incident: {} };
+    this.state = { incident: {}, dispatchedUnits: [] };
 
     this.resolveCase = this.resolveCase.bind(this);
   }
 
   componentWillMount() {
     this.fetchIncident();
+    this.fetchDispatchUnit();
   }
 
   resolveCase() {
@@ -44,6 +45,23 @@ class AlertedIncidentDetail extends Component {
         })
         .catch(err => console.log(err));
     }
+  }
+
+  fetchDispatchUnit() {
+    fetch(
+      API_HOST +
+        'api/station/get_dispatched_vehicles?incident_id=' +
+        this.props.incidentId,
+      {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      },
+    )
+      .then(res => res.json())
+      .then(data => this.setState({ dispatchedUnits: data }))
+      .catch(err => console.log(err));
   }
 
   fetchIncident() {
@@ -122,7 +140,19 @@ class AlertedIncidentDetail extends Component {
             Caller Information: {incident.caller}, {incident.caller_contact}
           </p>
           <div className={s.header2}>Dispatch Details</div>
-          <p>//TODO - Get dispatch details of incident</p>
+          <table>
+            <tbody>
+              {this.state.dispatchedUnits.map(unit => {
+                return (
+                  <tr>
+                    <td>{unit.call_sign} - </td>
+                    <td>{unit.type}</td>&emsp;
+                    <td>{unit.veh_status}</td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
 
           <hr />
 
