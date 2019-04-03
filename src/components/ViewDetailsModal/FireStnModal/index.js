@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import s from '../ViewDetailsModal.scss';
 import Enum from '../../../constants/enum';
+import { API_HOST } from '../../../constants';
 
 class FireStnModal extends Component {
   static propTypes = {
@@ -14,28 +15,52 @@ class FireStnModal extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      callsign: '',
-      name: '',
-      postalCode: '',
-      address: '',
+      station_id: '',
+      station_name: '',
+      vehicle_id: '',
+      vehicle_type: '',
+      vehicle_on_off_call: '',
+      incident_id: '',
+      stations: [],
+      station_vehicles: [],
     };
+  }
+
+  fetchStation = () => {
+    fetch(API_HOST + 'api/station/get_station_by_id?id='+this.props.id, {
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json' },
+    })
+      .then(res => res.json())
+      .then(data => this.setState({ stations: data }))
+      .catch(err => console.log(err));
+  }
+
+  fetchStationIncident = () => {
+    fetch(API_HOST + 'api/station/get_station_vehicles_details?id='+this.props.id, {
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json' },
+    })
+      .then(res => res.json())
+      .then(data => this.setState({ station_vehicles: data }))
+      .catch(err => console.log(err));
   }
 
   componentWillMount() {
     //TODO - AJAX to API for selecting fire station details with this.props.id
-    this.state.callsign = 'FS001';
-    this.state.name = 'Sengkang Fire Department';
-    this.state.postalCode = 'S820193';
-    this.state.address = 'Sengkang Ave 1 #01-231';
+    this.fetchStationIncident();
+    this.fetchStation();
   }
 
   render() {
+    const { stations, station_vehicles } = this.state;
+ 
     return (
       <div>
         <div className={s.segment}>
-          <p className={s.category}>
-            {this.state.callsign} - {this.state.name}
-          </p>
+          {stations.map(station =><p className={s.category}>
+            {station.name}
+          </p>)}
         </div>
 
         <hr />
@@ -45,17 +70,18 @@ class FireStnModal extends Component {
             <tr>
               <td className={s.contentHeader}>Callsign</td>
               <td className={s.contentHeader}>Type</td>
-              <td className={s.contentHeader}>On Call</td>
+              <td className={s.contentHeader}>On Call (No/Yes)</td>
               <td className={s.contentHeader}>Case Attached</td>
             </tr>
           </thead>
           <tbody>
             <tr>
-              <td />
-              <td />
-              <td />
-              <td />
-            </tr>
+              {station_vehicles.map(vehicle =><tr>{ vehicle.call_sign }</tr>)}<td>
+              {station_vehicles.map(vehicle =><tr>{ vehicle.type }</tr>)}</td>
+              {station_vehicles.map(vehicle =><tr>{ vehicle.on_off_call }</tr>)}<td>
+              {station_vehicles.map(vehicle_incident =><tr>{ vehicle_incident.on_off_call }</tr>)}</td>
+              {station_vehicles.map(vehicle_incident =><tr>{ vehicle_incident.incident_id }</tr>)}<td></td>
+              </tr>
           </tbody>
         </table>
       </div>

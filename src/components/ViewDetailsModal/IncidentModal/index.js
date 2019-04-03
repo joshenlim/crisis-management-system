@@ -28,6 +28,7 @@ class IncidentModal extends Component {
       veh_status: '',
       incidents: [],
       vehicle_incidents: [],
+      station_incidents: [],
     };
   }
 
@@ -51,27 +52,34 @@ class IncidentModal extends Component {
       .catch(err => console.log(err));
   }
 
+  fetchStationIncident = () => {
+    fetch(API_HOST + 'api/station/get_station_details_from_incident?id='+this.props.id, {
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json' },
+    })
+      .then(res => res.json())
+      .then(data => this.setState({ station_incidents: data }))
+      .catch(err => console.log(err));
+  }
+
   componentDidMount() {
     //TODO - AJAX to API for selecting incident with this.props.id
     this.fetchIncident();
     this.fetchVehicleIncident();
+    this.fetchStationIncident();
+    console.log(this.props.id);
+  }
 
-    this.state.id = this.state.incidents.id;
-    this.state.caller_name = this.state.incidents.caller_name;
-    this.state.caller_contact = this.state.incidents.caller_contact;
-    this.state.category = this.state.incidents.category;
-    this.state.postal_code = this.state.incidents.postal_code;
-    this.state.address = this.state.incidents.address;
-    this.state.status = this.state.incidents.status;
-    this.state.description = this.state.incidents.description;
-    this.state.created_at = this.state.incidents.created_at;
-    this.state.plate_number = this.state.vehicle_incidents.plate_number;
-    this.state.veh_status = this.state.vehicle_incidents.veh_status;
+  formatAbbrev = (category) => {
+    return category.split("_").map((str) => {
+      return str.charAt(0).toUpperCase()
+    }).join("")
   }
 
   render() {
-    const { incidents, vehicle_incidents } = this.state;
+    const { incidents, vehicle_incidents, station_incidents } = this.state;
     var statusClass = '';
+    console.log(this.props.id);
     switch (this.state.status) {
       case Enum.incidentStatus.DISPATCHED:
         statusClass = s.dispatched;
@@ -95,11 +103,11 @@ class IncidentModal extends Component {
         )}
           </p>
         </div>
-        <div className={s.caseNo}>Case No: {incidents.map(incident => {incident.id})}</div> &ensp;
-        <div className={`${s.status} ${statusClass}`}>{incidents.map(incident => {incident.status})}</div>
+        {incidents.map(incident => <div className={s.caseNo}>Case No: {this.formatAbbrev(incident.category)}-{incident.id}</div>)} &ensp;
+        {incidents.map(incident => <div className={`${s.status} ${statusClass}`}>{incident.status}</div>)}
         <hr />
         <p className={s.contentHeader}>Incident Description</p>
-        <div className={s.contentBody}>{incidents.map(incident => {incident.description})}</div>
+        {incidents.map(incident => <div className={s.contentBody}>{incident.description}</div>)}
         <p className={s.contentHeader}>Incident Details</p>
         <div className={s.contentBody}>
           <table>
@@ -110,7 +118,7 @@ class IncidentModal extends Component {
               </tr>
               <tr>
                 <td className={s.detailHeader}>Vehicle Plate Number: </td>
-                {vehicle_incidents.map(vehicle_incident => <td>{vehicle_incident.plate_number}</td>)}
+                {vehicle_incidents.map(vehicle_incident =><td>{vehicle_incident.plate_number},{' '}</td>)}
               </tr>
               <tr>
                 <td className={s.detailHeader}>Incident Location: </td>
@@ -124,7 +132,7 @@ class IncidentModal extends Component {
           </table>
         </div>
         <p className={s.contentHeader}>Dispatchment Details</p>
-        <div>Sengkang Fire Station</div>
+        {station_incidents.map(station =><div>{station.name}:{' '}{station.plate_number}{' '}-{' '}{station.type}</div>)}
         <div />
       </div>
     );

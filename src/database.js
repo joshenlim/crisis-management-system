@@ -86,6 +86,17 @@ class MySQLDB {
     return res;
   }
 
+  getFireStationDetailsByIncidentID(id) {
+    const res = this.query(
+      'SELECT * FROM fire_station JOIN vehicle ON fire_station.id = vehicle.fire_station_id JOIN vehicle_incident ON vehicle_incident.plate_number = vehicle.plate_number WHERE vehicle_incident.incident_id = ?',[id])
+      .then(rows => rows)
+      .catch(err => {
+        console.error('Error from getFireStationDetailsByIncidentID:', err.sqlMessage);
+        return err.code;
+      });
+    return res;
+  }
+
   getAllHospitals() {
     const res = this.query('SELECT * FROM hospital')
       .then(rows => rows)
@@ -153,6 +164,18 @@ class MySQLDB {
       .then(rows => rows)
       .catch(err => {
         console.error('Error from getStationVehicles:', err.sqlMessage);
+        return err.code;
+      });
+    return res;
+  }
+
+  getStationVehiclesDetails(stationId) {
+    const res = this.query('SELECT * FROM vehicle JOIN fire_station ON fire_station.id = vehicle.fire_station_id WHERE vehicle.fire_station_id = ?', [
+      stationId,
+    ])
+      .then(rows => rows)
+      .catch(err => {
+        console.error('Error from getStationVehiclesDetails:', err.sqlMessage);
         return err.code;
       });
     return res;

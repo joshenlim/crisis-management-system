@@ -36,9 +36,7 @@ class PublicHospitalModal extends Component {
     //TODO - AJAX to API for selecting hospital details with this.props.id
     this.fetchPublicHospital();
 
-    this.state.name = this.state.hospitals.name;
-    this.state.postal_code = this.state.hospitals.postal_code;
-    this.state.address = this.state.hospitals.address;
+
   }
   
   render() {

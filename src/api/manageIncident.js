@@ -19,7 +19,8 @@ router.get('/get', async (req, res) => {
 });
 
 router.get('/get_vehicleIncident', async (req, res) => {
-  const incidents = await database.getVehicleIncidents()
+  const { id } = req.query;
+  const incidents = await database.getVehicleIncidents(id)
   return res.status(200).send(incidents);
 });
 

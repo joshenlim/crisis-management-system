@@ -7,6 +7,13 @@ import expandIcon from '../../assets/images/expand.svg';
 import Enum from '../../constants/enum';
 
 class IncidentCard extends React.Component {
+  static propTypes = {
+    iconType: PropTypes.number.isRequired,
+    type: PropTypes.number.isRequired,
+    id: PropTypes.string.isRequired,
+    mountModal: PropTypes.func.isRequired,
+  };
+  
   constructor(props) {
     super(props);
 
@@ -19,7 +26,7 @@ class IncidentCard extends React.Component {
   //TODO - Provide ID for mountModal
   expandIncident = () => {
     console.log('Expand event');
-    this.props.mountModal(Enum.detailType.INCIDENT, '');
+    this.props.mountModal(Enum.detailType.INCIDENT, this.state.incident.id);
   };
 
   handleOnKeyDown = event => {
@@ -75,6 +82,7 @@ class IncidentCard extends React.Component {
       default:
         statusClass = s.dispatched;
     }
+    this.state.incident = incident;
 
     return (
       <div className={s.incidentCard + " " + (incident.status == "CLOSED" && s.addMargin)}>
