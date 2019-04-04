@@ -19,7 +19,7 @@ class ArchivedIncidents extends React.Component {
   }
 
   fetchArchivedIncident = () => {
-    fetch(API_HOST + 'api/incident/get_archived', {
+    fetch(API_HOST + 'api/incident/get_by_status?status=CLOSED', {
       method: 'GET',
       headers: { 'Content-Type': 'application/json' },
     })
@@ -35,7 +35,7 @@ class ArchivedIncidents extends React.Component {
         <div className={s.incidentList}>
           {
             this.state.incidents.length > 0 && this.state.incidents.map(incident => (
-              <IncidentCard incident={incident} mountModal={this.mountModal} />
+              <IncidentCard incident={incident} mountModal={this.props.mountModal} />
             ))
           }
           {

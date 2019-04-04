@@ -176,8 +176,9 @@ class MySQLDB {
       .then(rows => rows)
       .catch(err => {
         console.error('Error from getStationVehiclesDetails:', err.sqlMessage);
-      }
-    }
+      });
+    return res;
+  }
 
   getDispatchedVehicles(incident_id) {
     const res = this.query(

@@ -152,7 +152,7 @@ class OpsDashboard extends React.Component {
               ongoingIncidentList={this.props.ongoingIncidentList}
             />
           }
-          { this.state.activeTab == 1 && <ArchivedIncidents /> }
+          { this.state.activeTab == 1 && <ArchivedIncidents mountModal={this.mountModal} /> }
         </div>
         <div className={s.sideColumn} style={{ marginTop: '70px' }}>
           <div

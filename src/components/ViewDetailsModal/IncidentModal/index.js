@@ -4,6 +4,7 @@ import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import s from '../ViewDetailsModal.scss';
 import Enum from '../../../constants/enum';
 import { API_HOST } from '../../../constants';
+import formatUtils from '../../../formatUtils';
 
 class IncidentModal extends Component {
   static propTypes = {
@@ -26,24 +27,24 @@ class IncidentModal extends Component {
       created_at: '',
       plate_number: '',
       veh_status: '',
-      incidents: [],
+      incident: {},
       vehicle_incidents: [],
       station_incidents: [],
     };
   }
 
   fetchIncident = () => {
-    fetch(API_HOST + 'api/incident/get?id='+this.props.id, {
+    fetch(API_HOST + 'api/incident/get?id=' + this.props.id, {
       method: 'GET',
       headers: { 'Content-Type': 'application/json' },
     })
       .then(res => res.json())
-      .then(data => this.setState({ incidents: data }))
+      .then(data => this.setState({ incident: data[0] }))
       .catch(err => console.log(err));
   }
 
   fetchVehicleIncident = () => {
-    fetch(API_HOST + 'api/incident/get_vehicleIncident?id='+this.props.id, {
+    fetch(API_HOST + 'api/incident/get_vehicleIncident?id=' + this.props.id, {
       method: 'GET',
       headers: { 'Content-Type': 'application/json' },
     })
@@ -53,7 +54,7 @@ class IncidentModal extends Component {
   }
 
   fetchStationIncident = () => {
-    fetch(API_HOST + 'api/station/get_station_details_from_incident?id='+this.props.id, {
+    fetch(API_HOST + 'api/station/get_station_details_from_incident?id=' + this.props.id, {
       method: 'GET',
       headers: { 'Content-Type': 'application/json' },
     })
@@ -65,21 +66,15 @@ class IncidentModal extends Component {
   componentDidMount() {
     //TODO - AJAX to API for selecting incident with this.props.id
     this.fetchIncident();
-    this.fetchVehicleIncident();
-    this.fetchStationIncident();
+    // this.fetchVehicleIncident();
+    // this.fetchStationIncident();
     console.log(this.props.id);
-  }
-
-  formatAbbrev = (category) => {
-    return category.split("_").map((str) => {
-      return str.charAt(0).toUpperCase()
-    }).join("")
   }
 
   render() {
-    const { incidents, vehicle_incidents, station_incidents } = this.state;
+    const { incident, vehicle_incidents, station_incidents } = this.state;
     var statusClass = '';
-    console.log(this.props.id);
+    console.log(incident);
     switch (this.state.status) {
       case Enum.incidentStatus.DISPATCHED:
         statusClass = s.dispatched;
@@ -94,45 +89,52 @@ class IncidentModal extends Component {
         statusClass = s.dispatched;
     }
 
-    return (
+    return Object.keys(incident).length != 0 && (
       <div>
         <div className={s.segment}>
           <p className={s.category}>
-        {incidents.map(incident =>
-          <p>{incident.category} - {incident.postal_code},{' '}{incident.address}</p>
-        )}
+            {formatUtils.formatCategoryName(incident.category)} - {incident.postal_code}, {incident.address}
           </p>
         </div>
-        {incidents.map(incident => <div className={s.caseNo}>Case No: {this.formatAbbrev(incident.category)}-{incident.id}</div>)} &ensp;
-        {incidents.map(incident => <div className={`${s.status} ${statusClass}`}>{incident.status}</div>)}
+        <div className={s.caseNo}>
+          Case No: {formatUtils.formatAbbrev(incident.category)}-{incident.id}
+        </div>
+        <div className={`${s.status} ${statusClass}`}>
+          {incident.status}
+        </div>
+
         <hr />
+
         <p className={s.contentHeader}>Incident Description</p>
-        {incidents.map(incident => <div className={s.contentBody}>{incident.description}</div>)}
+        <div className={s.contentBody}>{incident.description}</div>
+
         <p className={s.contentHeader}>Incident Details</p>
         <div className={s.contentBody}>
           <table>
             <tbody>
               <tr>
                 <td className={s.detailHeader}>Date and Time of Call: </td>
-                {incidents.map(incident => <td>{incident.created_at}</td>)}
+                <td>{formatUtils.formatDate(incident.created_at)}</td>
               </tr>
-              <tr>
-                <td className={s.detailHeader}>Vehicle Plate Number: </td>
-                {vehicle_incidents.map(vehicle_incident =><td>{vehicle_incident.plate_number},{' '}</td>)}
-              </tr>
+              {
+                incident.category == "road_traffic" && <tr>
+                  <td className={s.detailHeader}>Vehicle Plate Number: </td>
+                  {vehicle_incidents.map(vehicle_incident => <td>{vehicle_incident.plate_number},{' '}</td>)}
+                </tr>
+              }
               <tr>
                 <td className={s.detailHeader}>Incident Location: </td>
-                {incidents.map(incident => <td>{incident.postal_code},{' '}{incident.address}</td>)}
+                <td>{incident.postal_code},{' '}{incident.address}</td>
               </tr>
               <tr>
                 <td className={s.detailHeader}>Caller Information: </td>
-                {incidents.map(incident => <td>{incident.caller_name},{' '}{incident.caller_contact}</td>)}
+                <td>{incident.caller_name},{' '}{incident.caller_contact}</td>
               </tr>
             </tbody>
           </table>
         </div>
         <p className={s.contentHeader}>Dispatchment Details</p>
-        {station_incidents.map(station =><div>{station.name}:{' '}{station.plate_number}{' '}-{' '}{station.type}</div>)}
+        {/* {station_incidents.map(station => <div>{station.name}:{' '}{station.plate_number}{' '}-{' '}{station.type}</div>)} */}
         <div />
       </div>
     );
