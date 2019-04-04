@@ -51,27 +51,31 @@ router.post('/create', async (req, res) => {
     case 'road_traffic': {
       await database.createRoadIncident(newIncidentId, reqBody);
       return res.status(200).send({
-        Success: 'Incident successfully created',
+        success: 'Incident successfully created',
+        incident_id: newIncidentId,
       });
       break;
     }
     case 'medical_emergency': {
       await database.createMedicalIncident(newIncidentId, reqBody);
       return res.status(200).send({
-        Success: 'Incident successfully created',
+        success: 'Incident successfully created',
+        incident_id: newIncidentId,
       });
       break;
     }
     case 'fire_emergency': {
       await database.createFireIncident(newIncidentId, reqBody);
       return res.status(200).send({
-        Success: 'Incident successfully created',
+        success: 'Incident successfully created',
+        incident_id: newIncidentId,
       });
       break;
     }
     case 'gas_leak': {
       return res.status(200).send({
-        Success: 'Incident successfully created',
+        success: 'Incident successfully created',
+        incident_id: newIncidentId,
       });
       break;
     }
@@ -113,7 +117,6 @@ router.post('/update_escalation', async (req, res) => {
 
 router.post('/dispatch', async (req, res) => {
   await database.dispatchVehicle(req.body);
-
   return res.status(201).send({
     Success: 'Dispatch additional units successfully',
   });

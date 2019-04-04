@@ -1,12 +1,14 @@
 import React from 'react';
 import s from './CreateNewIncidentModal.scss';
 import expandDrop from '../../assets/images/down-arrow.svg';
+import formatUtils from '../../formatUtils';
 
 class DispatchVehicleList extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       selectedStationId: 0,
+      selectedStations: [],
     }
     this.expandDropdown = this.expandDropdown.bind(this);
   }
@@ -18,6 +20,29 @@ class DispatchVehicleList extends React.Component {
       this.setState({ selectedStationId: event.target.id })
     }
   }
+
+  updateVehicleDispatch = (event) => {
+    let found = false;
+    const { selectedStations } = this.state;
+    const selected = {
+      id: event.target.id,
+      plate: event.target.value,
+    }
+    selectedStations.forEach((station) => {
+      if (station.id == selected.id) found = true;
+      return;
+    })
+
+    if (found) {
+      selectedStations.splice(selectedStations.indexOf(selected), 1)
+      this.setState({ selectedStations: selectedStations });
+      this.props.updateVehicleDispatch(selectedStations);
+    } else {
+      selectedStations.push(selected)
+      this.setState({ selectedStations: selectedStations })
+      this.props.updateVehicleDispatch(selectedStations);
+    }
+  };
 
   render() {
     const { fireStationList } = this.props;
@@ -49,6 +74,7 @@ class DispatchVehicleList extends React.Component {
                               value={vehicle.plate_number}
                               id={vehicle.call_sign}
                               disabled={vehicle.on_off_call}
+                              onChange={this.updateVehicleDispatch}
                             />
                             <label htmlFor={vehicle.call_sign}>
                               {vehicle.call_sign} - {vehicle.type}

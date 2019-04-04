@@ -88,7 +88,7 @@ class MySQLDB {
 
   getFireStationDetailsByIncidentID(id) {
     const res = this.query(
-      'SELECT * FROM fire_station JOIN vehicle ON fire_station.id = vehicle.fire_station_id JOIN vehicle_incident ON vehicle_incident.plate_number = vehicle.plate_number WHERE vehicle_incident.incident_id = ?',[id])
+      'SELECT * FROM fire_station JOIN vehicle ON fire_station.id = vehicle.fire_station_id JOIN vehicle_incident ON vehicle_incident.plate_number = vehicle.plate_number WHERE vehicle_incident.incident_id = ?', [id])
       .then(rows => rows)
       .catch(err => {
         console.error('Error from getFireStationDetailsByIncidentID:', err.sqlMessage);
@@ -108,7 +108,7 @@ class MySQLDB {
   }
 
   getAllHospitalsById(id) {
-    const res = this.query('SELECT * FROM hospital WHERE id = ?',[id])
+    const res = this.query('SELECT * FROM hospital WHERE id = ?', [id])
       .then(rows => rows)
       .catch(err => {
         console.error('Error from getAllHospitals:', err.sqlMessage);
@@ -509,10 +509,11 @@ class MySQLDB {
   }
 
   dispatchVehicle(body) {
-    const { id, plate_number } = body;
+    const { incident_id, plate_number } = body;
     const res = this.query(
-      'UPDATE vehicle SET on_off_call = 1 WHERE plate_number = ?; INSERT INTO vehicle_incident (incident_id, plate_number, veh_status) VALUES (?, ?, "ON THE WAY")',
-      [plate_number, id, plate_number],
+      `UPDATE vehicle SET on_off_call = 1 WHERE plate_number = ?;
+      INSERT INTO vehicle_incident (incident_id, plate_number, veh_status) VALUES (?, ?, "ON THE WAY")`,
+      [plate_number, incident_id, plate_number],
     )
       .then(rows => rows)
       .catch(err => {

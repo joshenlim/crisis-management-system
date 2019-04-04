@@ -59,25 +59,13 @@ class CreateNewIncidentModal extends React.Component {
 
       // FE Specific
       fireSpreadRate: 1,
-    };
 
-    this.closeModal = this.closeModal.bind(this);
-    this.nextPage = this.nextPage.bind(this);
-    this.prevPage = this.prevPage.bind(this);
-    this.updateSelectedType = this.updateSelectedType.bind(this);
-    this.updateNumCasualties = this.updateNumCasualties.bind(this);
-    this.updatePostalCode = this.updatePostalCode.bind(this);
-    this.updateAddress = this.updateAddress.bind(this);
-    this.updateCallerName = this.updateCallerName.bind(this);
-    this.updateCallerContact = this.updateCallerContact.bind(this);
-    this.updateVehicleType = this.updateVehicleType.bind(this);
-    this.updateVehiclePlate = this.updateVehiclePlate.bind(this);
-    this.updateFireSpreadRate = this.updateFireSpreadRate.bind(this);
-    this.escalateIncident = this.escalateIncident.bind(this);
-    this.onSubmit = this.onSubmit.bind(this);
+      // Vehicle Dispatch
+      vehicleDispatch: [],
+    };
   }
 
-  closeModal(event) {
+  closeModal = (event) => {
     this.props.mountModal();
   }
 
@@ -117,7 +105,7 @@ class CreateNewIncidentModal extends React.Component {
   updateSuicide = (res) => this.setState({ suicide: res });
   updateSuicidalEquipment = (equipment) => this.setState({ suicidalEquipment: equipment });
   updateSuicidalMethod = (method) => this.setState({ suicidalMethod: method });
-
+  updateVehicleDispatch = (vehicles) => this.setState({ vehicleDispatch: vehicles });
 
   nextPage = (event) => {
     const self = this;
@@ -174,16 +162,30 @@ class CreateNewIncidentModal extends React.Component {
       fire_spread_rate: this.state.fireSpreadRate,
     }
 
+    const { vehicleDispatch } = this.state;
+
     axios.post('/api/incident/create', postBody)
       .then((res) => {
-        setTimeout(() => {
-          this.setState({ submittingIncident: false });
-          io.emit('notify', Enum.socketEvents.NEW_INCIDENT);
-        }, 1000)
-    
-        setTimeout(() => {
-          this.closeModal()
-        }, 3000)
+        vehicleDispatch.forEach((vehicle) => {
+          const body = {
+            incident_id: res.data.incident_id,
+            plate_number: vehicle.plate,
+          }
+          axios.post('/api/incident/dispatch', body)
+            .then((res) => {
+              setTimeout(() => {
+                this.setState({ submittingIncident: false });
+                io.emit('notify', Enum.socketEvents.NEW_INCIDENT);
+              }, 1000)
+          
+              setTimeout(() => {
+                this.closeModal()
+              }, 3000)
+            })
+            .catch((err) => {
+              console.log(err)
+            })
+        })
       })
       .catch((err) => {
         console.log(err)
@@ -322,7 +324,7 @@ class CreateNewIncidentModal extends React.Component {
 
               <div className={s.dispatchUnits}>
                 <div className={s.dispatchList}>
-                  <DispatchVehicleList fireStationList={fireStationList} />
+                  <DispatchVehicleList fireStationList={fireStationList} updateVehicleDispatch={this.updateVehicleDispatch}/>
                 </div>
                 <div className={s.dispatchMap}>
                   <DispatchMap
