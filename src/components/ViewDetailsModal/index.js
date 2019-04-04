@@ -8,6 +8,8 @@ import Enum from '../../constants/enum';
 
 import IncidentModal from './IncidentModal';
 import FireStnModal from './FireStnModal';
+import PublicHospitalModal from './PublicHospitalModal';
+import PrivateHospitalModal from './PrivateHospitalModal';
 
 class ViewDetailsModal extends React.Component {
   static propTypes = {
@@ -42,9 +44,9 @@ class ViewDetailsModal extends React.Component {
       case Enum.detailType.FIRE_STATION:
         return <FireStnModal {...this.props} />;
       case Enum.detailType.PUBLIC_HOSPITAL:
-        return <IncidentModal {...this.props} />;
+        return <PublicHospitalModal {...this.props} />;
       case Enum.detailType.PRIVATE_HOSPITAL:
-        return <IncidentModal {...this.props} />;
+        return <PrivateHospitalModal {...this.props} />;
       case Enum.detailType.INCIDENT:
         return <IncidentModal {...this.props} />;
       default:

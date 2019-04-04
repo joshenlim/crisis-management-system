@@ -17,16 +17,24 @@ async function action({ fetch }) {
       });
   }
 
-  const ongoingIncidents = await fetch(localAPI + '/incident/get_ongoing')
+  const ongoingIncidentList = await fetch(localAPI + '/incident/get_ongoing')
     .then(res => res.json())
     .then(data => data.reverse())
+
+  const publicHospitalList = await fetch(localAPI + '/hospitals/get_public_hospital')
+    .then(res => res.json())
+    .then(data => data)
+
+  const privateHospitalList = await fetch(localAPI + '/hospitals/get_private_hospital')
+    .then(res => res.json())
+    .then(data => data)  
 
   return {
     title: 'Dashboard',
     chunks: ['opsDashboard'],
     component: (
       <Layout>
-        <OpsDashboard fireStationList={fireStationList} ongoingIncidents={ongoingIncidents} />
+        <OpsDashboard fireStationList={fireStationList} ongoingIncidentList={ongoingIncidentList} publicHospitalList={publicHospitalList} privateHospitalList={privateHospitalList}/>
       </Layout>
     ),
   };

@@ -34,6 +34,7 @@ import authRouter from './api/auth';
 import incidentAPI from './api/manageIncident';
 import stationAPI from './api/station';
 import geocodeAPI from './api/geocode';
+import hospitalAPI from './api/hospitals';
 
 const isAuthorized = (req, res, next) => {
   if (req.isAuthenticated()) {
@@ -187,6 +188,7 @@ app.use('/api/auth', authRouter);
 app.use('/api/incident', incidentAPI);
 app.use('/api/station', stationAPI);
 app.use('/api/geocode', geocodeAPI);
+app.use('/api/hospitals', hospitalAPI);
 // app.use('/ops/dashboard', opsRouter);
 
 //

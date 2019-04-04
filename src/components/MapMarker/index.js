@@ -66,7 +66,7 @@ class MapMarker extends Component {
 
   //TODO - Insert assigned ID for mountModal
   mountModal() {
-    this.props.mountModal(this.props.iconType, '');
+    this.props.mountModal(this.props.iconType, this.props.id);
   }
 
   render() {

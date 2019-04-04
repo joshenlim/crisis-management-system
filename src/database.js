@@ -86,6 +86,57 @@ class MySQLDB {
     return res;
   }
 
+  getFireStationDetailsByIncidentID(id) {
+    const res = this.query(
+      'SELECT * FROM fire_station JOIN vehicle ON fire_station.id = vehicle.fire_station_id JOIN vehicle_incident ON vehicle_incident.plate_number = vehicle.plate_number WHERE vehicle_incident.incident_id = ?',[id])
+      .then(rows => rows)
+      .catch(err => {
+        console.error('Error from getFireStationDetailsByIncidentID:', err.sqlMessage);
+        return err.code;
+      });
+    return res;
+  }
+
+  getAllHospitals() {
+    const res = this.query('SELECT * FROM hospital')
+      .then(rows => rows)
+      .catch(err => {
+        console.error('Error from getAllHospitals:', err.sqlMessage);
+        return err.code;
+      });
+    return res;
+  }
+
+  getAllHospitalsById(id) {
+    const res = this.query('SELECT * FROM hospital WHERE id = ?',[id])
+      .then(rows => rows)
+      .catch(err => {
+        console.error('Error from getAllHospitals:', err.sqlMessage);
+        return err.code;
+      });
+    return res;
+  }
+
+  getPublicHospitals() {
+    const res = this.query("SELECT * FROM hospital WHERE ownership = 'public'")
+      .then(rows => rows)
+      .catch(err => {
+        console.error('Error from getPublicHospitals:', err.sqlMessage);
+        return err.code;
+      });
+    return res;
+  }
+
+  getPrivateHospitals() {
+    const res = this.query("SELECT * FROM hospital WHERE ownership = 'private'")
+      .then(rows => rows)
+      .catch(err => {
+        console.error('Error from getPrivateHospitals:', err.sqlMessage);
+        return err.code;
+      });
+    return res;
+  }
+
   getAllStations() {
     const res = this.query('SELECT * FROM fire_station')
       .then(rows => rows)
@@ -118,6 +169,16 @@ class MySQLDB {
     return res;
   }
 
+  getStationVehiclesDetails(stationId) {
+    const res = this.query('SELECT * FROM vehicle JOIN fire_station ON fire_station.id = vehicle.fire_station_id WHERE vehicle.fire_station_id = ?', [
+      stationId,
+    ])
+      .then(rows => rows)
+      .catch(err => {
+        console.error('Error from getStationVehiclesDetails:', err.sqlMessage);
+      }
+    }
+
   getDispatchedVehicles(incident_id) {
     const res = this.query(
       `SELECT * FROM vehicle_incident vi JOIN vehicle v ON v.plate_number = vi.plate_number WHERE vi.incident_id = ? AND v.on_off_call = '1'`,
@@ -127,6 +188,18 @@ class MySQLDB {
       .catch(err => {
         console.error('Error from getDispatchedVehicles:', err.sqlMessage);
         return err.code;
+      });
+    return res;
+  }
+
+  getVehicleIncidents(id) {
+    const res = this.query('SELECT * FROM vehicle_incident WHERE incident_id = ?', [
+      id,
+    ])
+      .then(rows => rows)
+      .catch(err => {
+        console.error('Error from getVehicleIncidents:', err.sqlMessage);
+        return res.status(409).send({ Error: err.code });
       });
     return res;
   }
