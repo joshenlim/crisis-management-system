@@ -13,6 +13,10 @@ export default Object.freeze({
     RESOLVED: 'RESOLVED',
     CLOSED: 'CLOSED',
   },
+  vehicleStatus: {
+    ON_THE_WAY: 'ON THE WAY',
+    ON_SITE: 'ON SITE',
+  },
   socketEvents: {
     NEW_INCIDENT: 1,
     ESCALATE_INCIDENT: 2,

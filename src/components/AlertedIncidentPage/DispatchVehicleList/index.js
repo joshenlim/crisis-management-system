@@ -60,11 +60,37 @@ class DispatchVehicleList extends React.Component {
       .catch(err => console.log(err));
   };
 
+  dispatchVeh = () => {
+    let checkedBoxes = document.querySelectorAll(
+      'input[name=selectedVehicles]:checked',
+    );
+    checkedBoxes.forEach(checked => {
+      fetch(API_HOST + 'api/incident/dispatch', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          id: this.props.incidentId,
+          plate_number: checked.value,
+        }),
+      })
+        .then(res => res.json())
+        .catch(err => {
+          console.log(err);
+          throw err;
+        });
+    });
+    alert('Vehicles successfully dispatched.');
+    this.props.displayList();
+  };
+
   //TODO - Include "dispatch" button
   render() {
     const fireStationList = this.state.fireStationList;
     return (
       <div className={s.stationList}>
+        <div className={s.title}>Dispatch Additional Units</div>
         {fireStationList.map(station => {
           if (station.vehicles)
             if (station.vehicles.length) {
@@ -110,6 +136,12 @@ class DispatchVehicleList extends React.Component {
               );
             }
         })}
+        <hr />
+        <div className={s.buttonPanel}>
+          <div className={s.dispatchBtn} onClick={this.dispatchVeh}>
+            Send Dispatch
+          </div>
+        </div>
       </div>
     );
   }

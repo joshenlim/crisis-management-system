@@ -5,18 +5,22 @@ import s from './AlertedIncidentDetail.scss';
 import fetch from 'node-fetch';
 import { API_HOST } from '../../../constants';
 
+import DispatchVehicleList from '../DispatchVehicleList';
+
 import backBtn from '../../../assets/images/back.svg';
+import IncidentDetailMap from './IncidentDetailMap/IncidentDetailMap';
 
 class AlertedIncidentDetail extends Component {
   constructor(props) {
     super(props);
-    this.state = { incident: {} };
+    this.state = { incident: {}, dispatchedUnits: [] };
 
     this.resolveCase = this.resolveCase.bind(this);
   }
 
   componentWillMount() {
     this.fetchIncident();
+    this.fetchDispatchUnit();
   }
 
   resolveCase() {
@@ -41,6 +45,23 @@ class AlertedIncidentDetail extends Component {
         })
         .catch(err => console.log(err));
     }
+  }
+
+  fetchDispatchUnit() {
+    fetch(
+      API_HOST +
+        'api/station/get_dispatched_vehicles?incident_id=' +
+        this.props.incidentId,
+      {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      },
+    )
+      .then(res => res.json())
+      .then(data => this.setState({ dispatchedUnits: data }))
+      .catch(err => console.log(err));
   }
 
   fetchIncident() {
@@ -105,15 +126,33 @@ class AlertedIncidentDetail extends Component {
           <div className={s.header2}>Incident Description</div>
           <p>{incident.description}</p>
           <div className={s.header2}>Map Location</div>
-          <p>//TODO - Reuse "Map" Component</p>
+          <IncidentDetailMap
+            address={incident.postal_code}
+            center={{ lat: incident.lat, lng: incident.lng }}
+            zoom={12}
+          />
           <div className={s.header2}>Incident Details</div>
           <p>
-            Create At: {incident.create_at}
+            Create At: {incident.created_at}
+            <br />
             Incident Location: {incident.address}, {incident.postal_code}
+            <br />
             Caller Information: {incident.caller}, {incident.caller_contact}
           </p>
           <div className={s.header2}>Dispatch Details</div>
-          <p>//TODO - Get dispatch details of incident</p>
+          <table>
+            <tbody>
+              {this.state.dispatchedUnits.map(unit => {
+                return (
+                  <tr>
+                    <td>{unit.call_sign} - </td>
+                    <td>{unit.type}</td>&emsp;
+                    <td>{unit.veh_status}</td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
 
           <hr />
 
@@ -122,6 +161,10 @@ class AlertedIncidentDetail extends Component {
               Mark Case as Resolved
             </div>
           </div>
+        </div>
+
+        <div className={s.rightCol}>
+          <DispatchVehicleList {...this.props} />
         </div>
       </div>
     );
