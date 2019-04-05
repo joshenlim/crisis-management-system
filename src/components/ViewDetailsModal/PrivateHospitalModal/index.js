@@ -15,10 +15,7 @@ class PublicHospitalModal extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      name: '',
-      postal_code: '',
-      address: '',
-      hospitals: [],
+      hospital: {},
     };
   }
 
@@ -28,51 +25,41 @@ class PublicHospitalModal extends Component {
       headers: { 'Content-Type': 'application/json' },
     })
       .then(res => res.json())
-      .then(data => this.setState({ hospitals: data }))
+      .then(data => this.setState({ hospital: data[0] }))
       .catch(err => console.log(err));
   }
 
   componentDidMount() {
-    //TODO - AJAX to API for selecting hospital details with this.props.id
     this.fetchPublicHospital();
-
-
   }
   
   render() {
-    const { hospitals } = this.state;
-
-    return (
+    const { hospital } = this.state;
+    return Object.keys(hospital).length != 0 && (
       <div>
         <div className={s.segment}>
           <p className={s.category}>
-            Hospital Details
+            {hospital.name} (Private)
           </p>
         </div>
-   
+
         <hr />
-        <p className={s.contentHeader}>
-        {hospitals.map(hospital =>
-          <p>Name: {hospital.name} <br/>
-          Postal Code: {hospital.postal_code} <br/>
-          Address: {hospital.address}</p>
-        )}
-        </p>
-        <table>
-          <thead>
-            <tr>
-              <td className={s.contentHeader}></td>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-            <td className={s.contentHeader}></td>
-              <td />
-              <td />
-              <td />
-            </tr>
-          </tbody>
-        </table>
+
+        <p className={s.contentHeader}>Hospital Details</p>
+        <div className={s.contentBody}>
+          <table>
+            <tbody>
+              <tr>
+                <td className={s.detailHeader}>Address: </td>
+                <td>{hospital.address}</td>
+              </tr>
+              <tr>
+                <td className={s.detailHeader}>Postal Code: </td>
+                <td>{hospital.postal_code}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     );
   }

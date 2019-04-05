@@ -30,7 +30,6 @@ class ViewDetailsModal extends React.Component {
   }
 
   closeModal(event) {
-    console.log(event);
     this.props.mountModal();
   }
 

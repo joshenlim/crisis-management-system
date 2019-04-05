@@ -15,65 +15,51 @@ class PublicHospitalModal extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      name: '',
-      postal_code: '',
-      address: '',
-      hospitals: [],
+      hospital: {},
     };
   }
 
   fetchPublicHospital = () => {
-    fetch(API_HOST + 'api/hospitals/get_hospital_id?id='+this.props.id, {
+    fetch(API_HOST + 'api/hospitals/get_hospital_id?id=' + this.props.id, {
       method: 'GET',
       headers: { 'Content-Type': 'application/json' },
     })
       .then(res => res.json())
-      .then(data => this.setState({ hospitals: data }))
+      .then(data => this.setState({ hospital: data[0] }))
       .catch(err => console.log(err));
   }
 
   componentDidMount() {
-    //TODO - AJAX to API for selecting hospital details with this.props.id
-    console.log("testing mount");
     this.fetchPublicHospital();
-    console.log("id is: " + this.props.id);
-
-      this.state.name = this.state.hospitals.name;
-      this.state.postal_code = this.state.hospitals.postal_code;
-      this.state.address = this.state.hospitals.address;
   }
-  
-  render() {
-    const { hospitals } = this.state;
 
-    return (
+  render() {
+    const { hospital } = this.state;
+    return Object.keys(hospital).length != 0 && (
       <div>
         <div className={s.segment}>
           <p className={s.category}>
-            Hospital Details
+            {hospital.name} (Public)
           </p>
         </div>
-   
+
         <hr />
-        <p className={s.contentHeader}>
-        {hospitals.map(hospital =>
-          <p>Name: {hospital.name} <br/>
-          Postal Code: {hospital.postal_code} <br/>
-          Address: {hospital.address}</p>
-        )}
-        </p>
-        <table>
-          <thead>
-            <tr>
-              <td className={s.contentHeader}>{this.state.name}</td>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-            <td className={s.contentHeader}>{this.state.postal_code}{this.state.address}</td>
-            </tr>
-          </tbody>
-        </table>
+
+        <p className={s.contentHeader}>Hospital Details</p>
+        <div className={s.contentBody}>
+          <table>
+            <tbody>
+              <tr>
+                <td className={s.detailHeader}>Address: </td>
+                <td>{hospital.address}</td>
+              </tr>
+              <tr>
+                <td className={s.detailHeader}>Postal Code: </td>
+                <td>{hospital.postal_code}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     );
   }
