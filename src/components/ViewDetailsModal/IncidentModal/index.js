@@ -135,7 +135,13 @@ class IncidentModal extends Component {
         </div>
         <p className={s.contentHeader}>Dispatchment Details</p>
         {/* {station_incidents.map(station => <div>{station.name}:{' '}{station.plate_number}{' '}-{' '}{station.type}</div>)} */}
-        <div />
+        <div className={s.contentBody}>To have dispatchment details displayed here, if no dispatchment details then show no dispatchment details</div>
+        <hr />
+
+        <div className={s.button}>
+          Dispatch Additional Units
+        </div>
+
       </div>
     );
   }

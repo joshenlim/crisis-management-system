@@ -6,6 +6,7 @@ import { mapStyle } from './MapStyle';
 import MapMarker from '../MapMarker';
 import MarkerEnum from '../../constants/enum';
 import MapLegend from '../MapLegend';
+import formatUtils from '../../formatUtils';
 
 class Map extends React.Component {
   static propTypes = {
@@ -49,7 +50,7 @@ class Map extends React.Component {
           {
             publicHospitalList.map((publicHospital) => {
               return <MapMarker
-                id ={publicHospital.id}
+                id={publicHospital.id}
                 lng={publicHospital.lng}
                 lat={publicHospital.lat}
                 title={publicHospital.name}
@@ -65,8 +66,13 @@ class Map extends React.Component {
                 id={ongoingIncidents.id}
                 lng={ongoingIncidents.lng}
                 lat={ongoingIncidents.lat}
-                title={ongoingIncidents.description}
-                text={ongoingIncidents.address}
+                title={
+                  formatUtils.formatCategoryName(ongoingIncidents.category) + 
+                  " (" + formatUtils.formatAbbrev(ongoingIncidents.category) + 
+                  " - " + ongoingIncidents.id +
+                  ")"
+                }
+                text={ongoingIncidents.description}
                 iconType={MarkerEnum.detailType.INCIDENT}
                 mountModal={this.props.mountModal}
               />
@@ -85,7 +91,7 @@ class Map extends React.Component {
               />
             })
           }
-          
+
         </GoogleMapReact>
         <MapLegend />
       </div>
