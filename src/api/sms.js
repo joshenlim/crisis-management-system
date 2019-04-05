@@ -14,7 +14,7 @@ router.post('/broadcast', (req, res) => {
   client.messages
     .create({
       from: '+19733397445',
-      to: '+6596554936', //+6596554936
+      to: '+6597693293', //+6596554936
       body: message,
     })
     .then(() => {
