@@ -316,12 +316,12 @@ class MySQLDB {
   }
 
   updateStatus(body) {
-    const { id, status, op_id } = body;
+    const { incident_id, status, op_id } = body;
     var moment = require('moment'); // including the moment module
     var updated_at = moment().format('YYYY-MM-DD HH:mm:ss');
     const res = this.query(
       'UPDATE incidents SET status = ?, updated_at = ?, op_update_id = ? WHERE id = ?',
-      [status, updated_at, op_id, id],
+      [status, updated_at, op_id, incident_id],
     )
       .then(rows => rows)
       .catch(err => {

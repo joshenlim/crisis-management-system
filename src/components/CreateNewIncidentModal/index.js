@@ -37,7 +37,7 @@ class CreateNewIncidentModal extends React.Component {
       submittingIncident: false,
 
       // General Incident Information
-      category: "road_traffic",
+      category: "road_traffic_accident",
       casualtyNo: 0,
       callerName: null,
       callerContact: null,

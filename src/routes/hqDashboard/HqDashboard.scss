@@ -21,6 +21,9 @@
 
   .main {
     width: calc(100vw - 540px);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
   }
 }
 
