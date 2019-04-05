@@ -147,7 +147,7 @@ class CreateNewIncidentModal extends React.Component {
       caller_contact: this.state.callerContact,
       category: this.state.category,
       postal_code: this.state.incidentPostalCode,
-      address: this.state.incidentAddress,
+      address: this.state.incidentAddress || "nil",
       lat: this.state.incidentLocation.center.lat,
       lng: this.state.incidentLocation.center.lng,
       casualty_no: this.state.casualtyNo,

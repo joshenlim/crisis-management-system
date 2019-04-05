@@ -11,7 +11,7 @@ class NavBar extends React.Component {
     };
   }
 
-  componentWillMount() {
+  componentDidMount() {
     this.startTime();
   }
 

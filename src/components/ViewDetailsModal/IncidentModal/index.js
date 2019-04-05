@@ -28,8 +28,7 @@ class IncidentModal extends Component {
       plate_number: '',
       veh_status: '',
       incident: {},
-      vehicle_incidents: [],
-      station_incidents: [],
+      dispatched_vehicles: [],
     };
   }
 
@@ -43,38 +42,25 @@ class IncidentModal extends Component {
       .catch(err => console.log(err));
   }
 
-  fetchVehicleIncident = () => {
+  fetchDispatchedVehicles = () => {
     fetch(API_HOST + 'api/incident/get_vehicleIncident?id=' + this.props.id, {
       method: 'GET',
       headers: { 'Content-Type': 'application/json' },
     })
       .then(res => res.json())
-      .then(data => this.setState({ vehicle_incidents: data }))
-      .catch(err => console.log(err));
-  }
-
-  fetchStationIncident = () => {
-    fetch(API_HOST + 'api/station/get_station_details_from_incident?id=' + this.props.id, {
-      method: 'GET',
-      headers: { 'Content-Type': 'application/json' },
-    })
-      .then(res => res.json())
-      .then(data => this.setState({ station_incidents: data }))
+      .then(data => this.setState({ dispatched_vehicles: data }))
       .catch(err => console.log(err));
   }
 
   componentDidMount() {
-    //TODO - AJAX to API for selecting incident with this.props.id
     this.fetchIncident();
-    // this.fetchVehicleIncident();
-    // this.fetchStationIncident();
-    console.log(this.props.id);
+    this.fetchDispatchedVehicles();
   }
 
   render() {
-    const { incident, vehicle_incidents, station_incidents } = this.state;
+    const { incident, dispatched_vehicles } = this.state;
+    const formattedDispatch = formatUtils.formatDispatchVehicles(dispatched_vehicles);
     var statusClass = '';
-    console.log(incident);
     switch (this.state.status) {
       case Enum.incidentStatus.DISPATCHED:
         statusClass = s.dispatched;
@@ -134,13 +120,35 @@ class IncidentModal extends Component {
           </table>
         </div>
         <p className={s.contentHeader}>Dispatchment Details</p>
-        {/* {station_incidents.map(station => <div>{station.name}:{' '}{station.plate_number}{' '}-{' '}{station.type}</div>)} */}
-        <div className={s.contentBody}>To have dispatchment details displayed here, if no dispatchment details then show no dispatchment details</div>
-        <hr />
-
-        <div className={s.button}>
-          Dispatch Additional Units
+        <div className={s.contentBody}>
+          {
+            formattedDispatch.length > 0 && formattedDispatch.map((station) => {
+              return <div className={s.dispatchStation}>
+                <p className={s.stationName}>{station.station_name}</p>
+                <ul className={s.dispatchList}>
+                  {
+                    station.dispatch.map((vehicle) => {
+                      return <li className={s.dispatchInfo}>{vehicle.call_sign}</li>
+                    })
+                  }
+                </ul>
+              </div>
+            })
+          }
+          {
+            formattedDispatch.length == 0 && <p className={s.noDispatch}>There are no units dispatched to this incident</p>
+          }
         </div>
+
+
+        {
+          incident.status != "CLOSED" && <div>
+            <hr />
+            <div className={s.button}>
+              Dispatch Additional Units
+            </div>
+          </div>
+        }
 
       </div>
     );
