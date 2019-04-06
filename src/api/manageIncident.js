@@ -129,6 +129,32 @@ router.post('/dispatch', async (req, res) => {
   });
 });
 
+router.get('/get_ce_desc', async (req, res) => {
+  const { id } = req.query;
+  const desc = await database.getCEDesc(id);
+  return res.status(200).send(desc);
+});
+
+router.post('/add_ce_desc', async (req, res) => {
+  const reqBody = {
+    specialist_id: req.session.passport.user.id, //Front End ignore this
+    ce_incident_id: req.body.ce_incident_id,
+    description: req.body.description,
+  };
+  await database.addCEDesc(reqBody);
+  return res.status(201).send({
+    Success: 'Civil Emergency description successfully added',
+  });
+});
+
+router.post('/remove_ce_desc', async (req, res) => {
+  const { id } = req.body;
+  await database.removeCEDesc(id);
+  return res.status(201).send({
+    Success: 'Civil Emergency description successfully removed',
+  });
+});
+
 router.post('/set_incident_alert', async (req, res) => {
   const reqBody = {
     ...req.body,
