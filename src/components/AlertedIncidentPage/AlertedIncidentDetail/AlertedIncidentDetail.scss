@@ -28,13 +28,13 @@
     }
 
     .header {
-      margin: 0;
+      margin: 10px 0 10px 0;
       font-size: 1.2em;
       font-weight: bolder;
     }
 
     .header2 {
-      margin: 0;
+      margin: 10px 0 10px 0;
       font-size: 1em;
       font-weight: bolder;
     }
@@ -44,6 +44,13 @@
       color: var(--black);
       margin: 0;
       font-size: 0.9em;
+    }
+
+    .tips {
+      opacity: 0.4;
+      color: var(--black);
+      margin: 0;
+      font-size: 0.7em;
     }
 
     .status {
@@ -67,6 +74,14 @@
 
     .enrouteBack {
       background-color: var(--light-green);
+    }
+
+    .resolved {
+      background-color: var(--green);
+    }
+
+    .caseClosed {
+      background-color: var(--indigo);
     }
 
     .buttonPanel {

@@ -71,7 +71,7 @@ class DispatchVehicleList extends React.Component {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          id: this.props.incidentId,
+          incident_id: this.props.incidentId,
           plate_number: checked.value,
         }),
       })
@@ -85,7 +85,6 @@ class DispatchVehicleList extends React.Component {
     this.props.displayList();
   };
 
-  //TODO - Include "dispatch" button
   render() {
     const fireStationList = this.state.fireStationList;
     return (

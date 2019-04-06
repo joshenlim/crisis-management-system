@@ -30,16 +30,20 @@ class AlertedIncidentList extends Component {
   }
 
   render() {
-    return (
-      <div className={s.list}>
-        {this.state.incidents.map(incident => (
-          <AlertedIncidentCard
-            displayDetail={this.props.displayDetail}
-            incident={incident}
-          />
-        ))}
-      </div>
-    );
+    if (this.state.incidents.length > 0) {
+      return (
+        <div className={s.list}>
+          {this.state.incidents.map(incident => (
+            <AlertedIncidentCard
+              displayDetail={this.props.displayDetail}
+              incident={incident}
+            />
+          ))}
+        </div>
+      );
+    } else {
+      return <p className={s.tips}>There are currently no incidents.</p>;
+    }
   }
 }
 
