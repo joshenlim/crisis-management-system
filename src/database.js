@@ -561,6 +561,44 @@ class MySQLDB {
         return res.status(409).send({ Error: err.code });
       });
   }
+
+  getCEDesc(id) {
+    const res = this.query(
+      `SELECT * FROM ce_desc_log WHERE ce_incident_id=? AND if_active=1`,
+      [id],
+    )
+      .then(rows => rows)
+      .catch(err => {
+        console.error('Error from getCEDesc:', err.sqlMessage);
+        return res.status(409).send({ Error: err.code });
+      });
+
+    return res;
+  }
+
+  addCEDesc(body) {
+    const { specialist_id, ce_incident_id, description } = body;
+    const res = this.query(
+      `INSERT INTO ce_desc_log(specialist_id, ce_incident_id, description, created_at, if_active) VALUES (?,?,?,CURRENT_TIMESTAMP,1) `,
+      [specialist_id, ce_incident_id, description],
+    )
+      .then(rows => rows)
+      .catch(err => {
+        console.error('Error from getCEDesc:', err.sqlMessage);
+        return res.status(409).send({ Error: err.code });
+      });
+  }
+
+  removeCEDesc(id) {
+    const res = this.query(`UPDATE ce_desc_log SET if_active=0 WHERE id=?`, [
+      id,
+    ])
+      .then(rows => rows)
+      .catch(err => {
+        console.error('Error from getCEDesc:', err.sqlMessage);
+        return res.status(409).send({ Error: err.code });
+      });
+  }
 }
 
 export default MySQLDB;
