@@ -7,10 +7,29 @@ import { API_HOST } from '../../../constants';
 import s from './AlertedIncidentList.scss';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
 
+import { SOCKIO_HOST } from '../../../constants';
+import Socket from 'socket.io-client';
+
+var io = Socket(SOCKIO_HOST);
+
 class AlertedIncidentList extends Component {
   constructor(props) {
     super(props);
     this.state = { incidents: [] };
+  }
+
+  //TODO - Emit socket event on escalate incident
+  componentWillMount() {
+    io.on('fetch', type => {
+      if (Enum.socketEvents.ESCALATE_INCIDENT == type) {
+        this.fetchEscalatedIncident();
+        console.log(
+          'SocketIo: received "escalate incident" at ' +
+            new Date().getTime() +
+            'ms',
+        );
+      }
+    });
   }
 
   componentWillMount() {

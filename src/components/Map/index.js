@@ -1,7 +1,7 @@
 import GoogleMapReact from 'google-map-react';
 import React from 'react';
 import PropTypes from 'prop-types';
-import { mapStyle } from './MapStyle';
+import { mapStyle } from '../../constants/mapStyle';
 
 import MapMarker from '../MapMarker';
 import MarkerEnum from '../../constants/enum';

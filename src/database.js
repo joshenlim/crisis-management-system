@@ -202,7 +202,7 @@ class MySQLDB {
       });
     return res;
   }
-
+  
   getIncidentByID(id) {
     const res = this.query('SELECT * FROM incidents WHERE id = ?', [id])
       .then(rows => rows)
@@ -339,6 +339,48 @@ class MySQLDB {
       .then(rows => rows)
       .catch(err => {
         console.error('Error from updateEscalation:', err.sqlMessage);
+        return res.status(409).send({ Error: err.code });
+      });
+  }
+
+  setIncidentAlert(body) {
+    const { id, if_alerted, op_id } = body;
+    var moment = require('moment'); // including the moment module
+    var updated_at = moment().format('YYYY-MM-DD HH:mm:ss');
+    const res = this.query(
+      'UPDATE incidents SET if_alerted = ?, updated_at = ?, op_update_id = ? WHERE id = ?',
+      [if_alerted, updated_at, op_id, id],
+    )
+      .then(rows => rows)
+      .catch(err => {
+        console.error('Error from setIncidentAlert:', err.sqlMessage);
+        return res.status(409).send({ Error: err.code });
+      });
+  }
+
+  setRoadTrafficAlert(body) {
+    const { id, if_alerted } = body;
+    const res = this.query(
+      'UPDATE road_traffic_acc SET if_alerted = ?, WHERE incident_id = ?',
+      [if_alerted, id],
+    )
+      .then(rows => rows)
+      .catch(err => {
+        console.error('Error from setRoadTrafficAlert:', err.sqlMessage);
+        return res.status(409).send({ Error: err.code });
+      });
+  }
+
+  createCivilEmergency(body) {
+    const { incident_id, ce_handle_id, ce_upload_id } = body;
+    const res = this.query(
+      `INSERT INTO civil_emergency (incident_id, ce_handle_id, ce_upload_id)
+      VALUES (?, ?, ?)`,
+      [incident_id, ce_handle_id, ce_upload_id],
+    )
+      .then(rows => rows)
+      .catch(err => {
+        console.error('Error from createCivilEmergency:', err.sqlMessage);
         return res.status(409).send({ Error: err.code });
       });
   }
