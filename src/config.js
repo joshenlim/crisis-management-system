@@ -4,6 +4,8 @@
 //   );
 // }
 
+require('dotenv').config();
+
 module.exports = {
   // Node.js app
   port: process.env.PORT || 3000,
@@ -26,11 +28,11 @@ module.exports = {
 
   // MYSQL Database
   mysql_config: {
-    host     : process.env.DATABASE_HOST,
-    user     : process.env.DATABASE_USERNAME,
-    password : process.env.DATABASE_PASSWORD,
-    database : process.env.DATABASE_NAME,
-    multipleStatements: true
+    host: process.env.DATABASE_HOST,
+    user: process.env.DATABASE_USERNAME,
+    password: process.env.DATABASE_PASSWORD,
+    database: process.env.DATABASE_NAME,
+    multipleStatements: true,
   },
 
   // Web analytics

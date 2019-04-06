@@ -115,10 +115,39 @@ router.post('/update_escalation', async (req, res) => {
   });
 });
 
+router.post('/create_civil_emergency', async (req, res) => {
+  await database.createCivilEmergency(req.body);
+  return res.status(201).send({
+    Success: 'Civil emergency successfully created',
+  });
+});
+
 router.post('/dispatch', async (req, res) => {
   await database.dispatchVehicle(req.body);
   return res.status(201).send({
     Success: 'Dispatch additional units successfully',
+  });
+});
+
+router.post('/set_incident_alert', async (req, res) => {
+  const reqBody = {
+    ...req.body,
+    op_id: req.user.id,
+  };
+  await database.setIncidentAlert(reqBody);
+  return res.status(201).send({
+    Success: 'Incident alert successfully updated',
+  });
+});
+
+router.post('/set_road_traffic_alert', async (req, res) => {
+  const reqBody = {
+    ...req.body,
+    op_id: req.user.id,
+  };
+  await database.setRoadTrafficAlert(reqBody);
+  return res.status(201).send({
+    Success: 'Road traffic alert successfully updated',
   });
 });
 
