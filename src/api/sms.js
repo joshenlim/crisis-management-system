@@ -1,7 +1,10 @@
 import express from 'express';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const client = require('twilio')(
-  process.env.TWILIO_ACCOUT_SID,
+  process.env.TWILIO_ACCOUNT_SID,
   process.env.TWILIO_AUTH_TOKEN,
 );
 
@@ -14,7 +17,7 @@ router.post('/broadcast', (req, res) => {
   client.messages
     .create({
       from: process.env.TWILIO_PHONE_NUMBER,
-      to: '+6597693293', //+6596554936
+      to: process.env.PHONE_NUMBER, //+6596554936
       body: message,
     })
     .then(() => {
