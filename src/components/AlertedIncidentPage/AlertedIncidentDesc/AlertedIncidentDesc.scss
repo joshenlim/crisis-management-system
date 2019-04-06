@@ -1,0 +1,72 @@
+@import '../../variables.css';
+
+.container {
+  width: 80%;
+
+  .inputPanel {
+    width: 100%;
+    display: flex;
+    margin-bottom: 10px;
+
+    .textarea {
+      width: 85%;
+      border-radius: 5px;
+      border: 1px solid var(--border-black);
+      padding: 5px;
+      resize: none;
+      margin-right: 5px;
+    }
+
+    .updateBtn {
+      width: 15%;
+      cursor: pointer;
+      background-color: var(--blue);
+      color: var(--white);
+      border-radius: 5px;
+      font-size: 1em;
+      font-weight: bolder;
+      text-align: center;
+      padding: 20px 5px 20px 5px;
+      vertical-align: middle;
+    }
+
+    .updateBtnDisabled {
+      width: 15%;
+      cursor: not-allowed;
+      background-color: var(--black);
+      color: var(--white);
+      border-radius: 5px;
+      font-size: 1em;
+      font-weight: bolder;
+      text-align: center;
+      padding: 20px 5px 20px 5px;
+      vertical-align: middle;
+    }
+  }
+
+  .descPanel {
+    .card {
+      border: 1px solid var(--border-black);
+      border-radius: 5px;
+      padding: 10px;
+      margin-bottom: 10px;
+    }
+
+    .removeBtn {
+      float: right;
+      cursor: pointer;
+    }
+
+    .tips {
+      opacity: 0.4;
+      color: var(--black);
+      font-size: 1em;
+    }
+
+    .stamp {
+      opacity: 0.4;
+      color: var(--black);
+      font-size: 0.7em;
+    }
+  }
+}

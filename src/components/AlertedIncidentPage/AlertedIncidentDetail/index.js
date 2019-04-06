@@ -11,6 +11,7 @@ import backBtn from '../../../assets/images/back.svg';
 import IncidentDetailMap from './IncidentDetailMap/IncidentDetailMap';
 import formatUtils from '../../../formatUtils';
 import Enum from '../../../constants/enum';
+import AlertedIncidentDesc from '../AlertedIncidentDesc';
 
 class AlertedIncidentDetail extends Component {
   constructor(props) {
@@ -184,6 +185,12 @@ class AlertedIncidentDetail extends Component {
               <div className={s.resolveBtn} onClick={this.resolveCase}>
                 Mark Case as Resolved
               </div>
+            </div>
+
+            <hr />
+
+            <div className={s.descriptionPanel}>
+              <AlertedIncidentDesc incidentId={incident.id} />
             </div>
           </div>
 

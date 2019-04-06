@@ -578,7 +578,7 @@ class MySQLDB {
 
   getCEDesc(id) {
     const res = this.query(
-      `SELECT * FROM ce_desc_log WHERE ce_incident_id=? AND if_active=1`,
+      `SELECT c.*, s.name FROM ce_desc_log c JOIN staff s ON s.id=c.specialist_id WHERE c.ce_incident_id=? AND c.if_active=1`,
       [id],
     )
       .then(rows => rows)

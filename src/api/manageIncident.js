@@ -152,8 +152,8 @@ router.post('/set_road_traffic_alert', async (req, res) => {
 });
 
 router.get('/get_ce_desc', async (req, res) => {
-  const { id } = req.query;
-  const desc = await database.getCEDesc(id);
+  const { incident_id } = req.query;
+  const desc = await database.getCEDesc(incident_id);
   return res.status(200).send(desc);
 });
 
@@ -170,8 +170,8 @@ router.post('/add_ce_desc', async (req, res) => {
 });
 
 router.post('/remove_ce_desc', async (req, res) => {
-  const { id } = req.body;
-  await database.removeCEDesc(id);
+  const { ce_desc_id } = req.body;
+  await database.removeCEDesc(ce_desc_id);
   return res.status(201).send({
     Success: 'Civil Emergency description successfully removed',
   });
