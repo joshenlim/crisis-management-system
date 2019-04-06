@@ -32,12 +32,10 @@ class CreateNewIncidentModal extends React.Component {
       page: 1,
       selectedType: "EA",
       escalate: false,
-      selectedVehicles: [],
-      fireStations: [],
       submittingIncident: false,
 
       // General Incident Information
-      category: "road_traffic",
+      category: "road_traffic_accident",
       casualtyNo: 0,
       callerName: null,
       callerContact: null,
@@ -147,7 +145,7 @@ class CreateNewIncidentModal extends React.Component {
       caller_contact: this.state.callerContact,
       category: this.state.category,
       postal_code: this.state.incidentPostalCode,
-      address: this.state.incidentAddress,
+      address: this.state.incidentAddress || "nil",
       lat: this.state.incidentLocation.center.lat,
       lng: this.state.incidentLocation.center.lng,
       casualty_no: this.state.casualtyNo,
@@ -172,7 +170,7 @@ class CreateNewIncidentModal extends React.Component {
             plate_number: vehicle.plate,
           }
           axios.post('/api/incident/dispatch', body)
-            .then((res) => {
+            .then(() => {
               setTimeout(() => {
                 this.setState({ submittingIncident: false });
                 io.emit('notify', Enum.socketEvents.NEW_INCIDENT);
