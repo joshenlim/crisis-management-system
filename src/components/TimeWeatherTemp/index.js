@@ -3,7 +3,7 @@ import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import s from './TimeWeatherTemp.scss';
 import weatherIcon from '../../assets/images/weather-clear.svg';
 
-class NavBar extends React.Component {
+class TimeWeatherTemp extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -47,4 +47,4 @@ class NavBar extends React.Component {
   }
 }
 
-export default withStyles(s)(NavBar);
+export default withStyles(s)(TimeWeatherTemp);
