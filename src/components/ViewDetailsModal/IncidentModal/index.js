@@ -5,6 +5,8 @@ import s from '../ViewDetailsModal.scss';
 import Enum from '../../../constants/enum';
 import { API_HOST } from '../../../constants';
 import formatUtils from '../../../formatUtils';
+import DispatchMap from '../DispatchMap';
+import DispatchVehicleList from '../DispatchVehicleList';
 
 class IncidentModal extends Component {
   static propTypes = {
@@ -16,21 +18,15 @@ class IncidentModal extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      id: '',
-      caller_name: '',
-      caller_contact: '',
-      category: '',
-      postal_code: '',
-      address: '',
-      status: '',
-      description: '',
-      created_at: '',
-      plate_number: '',
-      veh_status: '',
       incident: {},
       dispatched_vehicles: [],
+      vehicleDispatch: [],
     };
   }
+
+  nextPage = () => this.props.nextPage();
+  prevPage = () => this.props.prevPage();
+  updateVehicleDispatch = (vehicles) => this.setState({ vehicleDispatch: vehicles });
 
   fetchIncident = () => {
     fetch(API_HOST + 'api/incident/get?id=' + this.props.id, {
@@ -57,8 +53,14 @@ class IncidentModal extends Component {
     this.fetchDispatchedVehicles();
   }
 
+  onSubmit = (event) => {
+    event.preventDefault();
+    this.props.dispatchUnits(this.state.incident.id, this.state.vehicleDispatch)
+  }
+
   render() {
     const { incident, dispatched_vehicles } = this.state;
+    const { page, fireStationList } = this.props;
     const formattedDispatch = formatUtils.formatDispatchVehicles(dispatched_vehicles);
     var statusClass = '';
     switch (this.state.status) {
@@ -91,63 +93,95 @@ class IncidentModal extends Component {
 
         <hr />
 
-        <p className={s.contentHeader}>Incident Description</p>
-        <div className={s.contentBody}>{incident.description}</div>
+        {
+          page == 1 && <div>
+            <p className={s.contentHeader}>Incident Description</p>
+            <div className={s.contentBody}>{incident.description}</div>
 
-        <p className={s.contentHeader}>Incident Details</p>
-        <div className={s.contentBody}>
-          <table>
-            <tbody>
-              <tr>
-                <td className={s.detailHeader}>Date and Time of Call: </td>
-                <td>{formatUtils.formatDate(incident.created_at)}</td>
-              </tr>
-              {
-                incident.category == "road_traffic" && <tr>
-                  <td className={s.detailHeader}>Vehicle Plate Number: </td>
-                  {vehicle_incidents.map(vehicle_incident => <td>{vehicle_incident.plate_number},{' '}</td>)}
-                </tr>
-              }
-              <tr>
-                <td className={s.detailHeader}>Incident Location: </td>
-                <td>{incident.postal_code},{' '}{incident.address}</td>
-              </tr>
-              <tr>
-                <td className={s.detailHeader}>Caller Information: </td>
-                <td>{incident.caller_name},{' '}{incident.caller_contact}</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        <p className={s.contentHeader}>Dispatchment Details</p>
-        <div className={s.contentBody}>
-          {
-            formattedDispatch.length > 0 && formattedDispatch.map((station) => {
-              return <div className={s.dispatchStation}>
-                <p className={s.stationName}>{station.station_name}</p>
-                <ul className={s.dispatchList}>
+            <p className={s.contentHeader}>Incident Details</p>
+            <div className={s.contentBody}>
+              <table>
+                <tbody>
+                  <tr>
+                    <td className={s.detailHeader}>Date and Time of Call: </td>
+                    <td>{formatUtils.formatDate(incident.created_at)}</td>
+                  </tr>
                   {
-                    station.dispatch.map((vehicle) => {
-                      return <li className={s.dispatchInfo}>{vehicle.call_sign}</li>
-                    })
+                    incident.category == "road_traffic" && <tr>
+                      <td className={s.detailHeader}>Vehicle Plate Number: </td>
+                      {vehicle_incidents.map(vehicle_incident => <td>{vehicle_incident.plate_number},{' '}</td>)}
+                    </tr>
                   }
-                </ul>
-              </div>
-            })
-          }
-          {
-            formattedDispatch.length == 0 && <p className={s.noDispatch}>There are no units dispatched to this incident</p>
-          }
-        </div>
+                  <tr>
+                    <td className={s.detailHeader}>Incident Location: </td>
+                    <td>{incident.postal_code},{' '}{incident.address}</td>
+                  </tr>
+                  <tr>
+                    <td className={s.detailHeader}>Caller Information: </td>
+                    <td>{incident.caller_name},{' '}{incident.caller_contact}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <p className={s.contentHeader}>Dispatchment Details</p>
+            <div className={s.contentBody}>
+              {
+                formattedDispatch.length > 0 && formattedDispatch.map((station) => {
+                  return <div className={s.dispatchStation}>
+                    <p className={s.stationName}>{station.station_name}</p>
+                    <ul className={s.dispatchList}>
+                      {
+                        station.dispatch.map((vehicle) => {
+                          return <li className={s.dispatchInfo}>{vehicle.call_sign} - {vehicle.type}</li>
+                        })
+                      }
+                    </ul>
+                  </div>
+                })
+              }
+              {
+                formattedDispatch.length == 0 && <p className={s.noDispatch}>There are no units dispatched to this incident</p>
+              }
+              <p className={s.dispatchAdditional} onClick={this.nextPage}>Dispatch Additional Units</p>
+            </div>
 
+            {
+              incident.status != "CLOSED" && <div>
+                <hr />
+                <div className={s.closeIncButton}>
+                  Close Incident
+                </div>
+              </div>
+            }
+          </div>
+        }
 
         {
-          incident.status != "CLOSED" && <div>
-            <hr />
-            <div className={s.button}>
-              Dispatch Additional Units
+          page == 2 && <form onSubmit={this.onSubmit}>
+            <p className={s.contentHeader}>Select a department to dispatch the case to - dropdown to view department status details.</p>
+            <div className={s.dispatchUnits}>
+              <div className={s.dispatchList}>
+                <DispatchVehicleList fireStationList={fireStationList} updateVehicleDispatch={this.updateVehicleDispatch}/>
+              </div>
+              <div className={s.dispatchMap}>
+                <DispatchMap
+                  center={{ lat: incident.lat, lng: incident.lng }}
+                  zoom={12}
+                  address={incident.address}
+                />
+              </div>
             </div>
-          </div>
+            <div className={s.btnGrp}>
+              <div
+                className={s.prevButton}
+                onClick={this.prevPage}>
+                Back
+              </div>
+              <button className={s.button} value="Submit" type="submit">
+                Update Incident
+              </button>
+            </div>
+          </form>
         }
 
       </div>

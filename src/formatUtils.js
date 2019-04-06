@@ -39,7 +39,7 @@ module.exports = {
         let found = false;
         let foundIndex = 0;
         formatData.forEach((data, index) => {
-          if (data.station == dispatchInfo.fire_station) {
+          if (data.station_name == dispatchInfo.fire_station) {
             found = true;
             foundIndex = index;
           }
@@ -47,9 +47,10 @@ module.exports = {
         if (found) {
           formatData[foundIndex].dispatch.push({
             plate_number: dispatchInfo.plate_number,
-              call_sign: dispatchInfo.call_sign,
-              veh_status: dispatchInfo.veh_status,
-              on_off_call: dispatchInfo.on_off_call,
+            type: dispatchInfo.type,
+            call_sign: dispatchInfo.call_sign,
+            veh_status: dispatchInfo.veh_status,
+            on_off_call: dispatchInfo.on_off_call,
           })
         } else {
           formatData.push({
@@ -57,6 +58,7 @@ module.exports = {
             incident_id: dispatchInfo.incident_id,
             dispatch: [{
               plate_number: dispatchInfo.plate_number,
+              type: dispatchInfo.type,
               call_sign: dispatchInfo.call_sign,
               veh_status: dispatchInfo.veh_status,
               on_off_call: dispatchInfo.on_off_call,
