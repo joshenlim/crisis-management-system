@@ -26,8 +26,8 @@ class AlertedIncidentDesc extends Component {
   }
 
   componentWillMount() {
-    this.fetchCEDesc();
     this.fetchCurrentUser();
+    this.fetchCEDesc();
 
     io.on('fetch', type => {
       if (Enum.socketEvents.CE_DESCRIPTION == type) {
