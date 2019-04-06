@@ -18,6 +18,24 @@ router.get('/get', async (req, res) => {
   return res.status(200).send(incidents);
 });
 
+router.get('/get_RTA_details', async (req, res) => {
+  const { id } = req.query;
+  const incidentDetail = await database.getRTADetails(id)
+  return res.status(200).send(incidentDetail);
+});
+
+router.get('/get_FE_details', async (req, res) => {
+  const { id } = req.query;
+  const incidentDetail = await database.getFEDetails(id)
+  return res.status(200).send(incidentDetail);
+});
+
+router.get('/get_ME_details', async (req, res) => {
+  const { id } = req.query;
+  const incidentDetail = await database.getMEDetails(id)
+  return res.status(200).send(incidentDetail);
+});
+
 router.get('/get_vehicleIncident', async (req, res) => {
   const { id } = req.query;
   const incidents = await database.getDispatchedVehicles(id);

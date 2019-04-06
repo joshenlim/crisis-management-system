@@ -213,6 +213,36 @@ class MySQLDB {
     return res;
   }
 
+  getRTADetails(incident_id) {
+    const res = this.query('SELECT * FROM road_traffic_acc WHERE incident_id = ?', [incident_id])
+      .then(rows => rows)
+      .catch(err => {
+        console.error('Error from getIncidentCategoryDetails:', err.sqlMessage);
+        return res.status(409).send({ Error: err.code });
+      });
+    return res;
+  }
+
+  getFEDetails(incident_id) {
+    const res = this.query('SELECT * FROM fire_emergency WHERE incident_id = ?', [incident_id])
+      .then(rows => rows)
+      .catch(err => {
+        console.error('Error from getIncidentCategoryDetails:', err.sqlMessage);
+        return res.status(409).send({ Error: err.code });
+      });
+    return res;
+  }
+
+  getMEDetails(incident_id) {
+    const res = this.query('SELECT * FROM med_emergency WHERE incident_id = ?', [incident_id])
+      .then(rows => rows)
+      .catch(err => {
+        console.error('Error from getIncidentCategoryDetails:', err.sqlMessage);
+        return res.status(409).send({ Error: err.code });
+      });
+    return res;
+  }
+
   getEmergencyIncidentByID(id) {
     const res = this.query(
       'SELECT incidents.* FROM incidents JOIN civil_emergency ON incidents.id = civil_emergency.incident_id WHERE civil_emergency.incident_id = ?',

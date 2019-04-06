@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import s from '../ViewDetailsModal.scss';
 import Enum from '../../../constants/enum';
@@ -9,12 +8,6 @@ import DispatchMap from '../DispatchMap';
 import DispatchVehicleList from '../DispatchVehicleList';
 
 class IncidentModal extends Component {
-  static propTypes = {
-    type: PropTypes.number.isRequired,
-    id: PropTypes.string.isRequired,
-    mountModal: PropTypes.func.isRequired,
-  };
-
   constructor(props) {
     super(props);
     this.state = {
@@ -34,7 +27,72 @@ class IncidentModal extends Component {
       headers: { 'Content-Type': 'application/json' },
     })
       .then(res => res.json())
-      .then(data => this.setState({ incident: data[0] }))
+      .then(data => {
+        const incidentDetails = data[0];
+        switch (formatUtils.formatCategoryName(incidentDetails.category)) {
+          case Enum.incidentCategory.TRAFFIC:
+            fetch(API_HOST + 'api/incident/get_RTA_details?id=' + this.props.id, {
+              method: 'GET',
+              headers: { 'Content-Type': 'application/json' },
+            })
+              .then(res => res.json())
+              .then(data => {
+                this.setState({
+                  incident: {
+                    ...incidentDetails, additionalFields: {
+                      vehicle_plate: data[0].vehicle_plate,
+                      vehicle_type: data[0].vehicle_type,
+                    }
+                  }
+                })
+              })
+            break;
+
+          case Enum.incidentCategory.FIRE:
+            fetch(API_HOST + 'api/incident/get_FE_details?id=' + this.props.id, {
+              method: 'GET',
+              headers: { 'Content-Type': 'application/json' },
+            })
+              .then(res => res.json())
+              .then(data => {
+                this.setState({
+                  incident: {
+                    ...incidentDetails, additionalFields: {
+                      fire_spread_rate: data[0].fire_spread_rate,
+                    }
+                  }
+                })
+              })
+            break;
+
+          case Enum.incidentCategory.MEDICAL:
+            fetch(API_HOST + 'api/incident/get_ME_details?id=' + this.props.id, {
+              method: 'GET',
+              headers: { 'Content-Type': 'application/json' },
+            })
+              .then(res => res.json())
+              .then(data => {
+                this.setState({
+                  incident: {
+                    ...incidentDetails, additionalFields: {
+                      curr_condition: data[0].curr_condition,
+                      level_of_consc: data[0].level_of_consc,
+                      if_suicide: data[0].if_suicide,
+                      suicidal_method: data[0].suicidal_method,
+                      suicidal_equipment: data[0].suicidal_equipment,
+                    }
+                  }
+                })
+              })
+            break;
+
+          default:
+            this.setState({
+              incident: { ...incidentDetails }
+            })
+            break;
+        }
+      })
       .catch(err => console.log(err));
   }
 
@@ -46,6 +104,65 @@ class IncidentModal extends Component {
       .then(res => res.json())
       .then(data => this.setState({ dispatched_vehicles: data }))
       .catch(err => console.log(err));
+  }
+
+  renderIncidentCatDetails = (category) => {
+    const { incident } = this.state;
+    switch (formatUtils.formatCategoryName(category)) {
+      case Enum.incidentCategory.TRAFFIC:
+        return <table>
+          <tbody>
+            <tr>
+              <td className={s.detailHeader}>Vehicle Plate: </td>
+              <td>{incident.additionalFields.vehicle_plate}</td>
+            </tr>
+            <tr>
+              <td className={s.detailHeader}>Vehicle Type: </td>
+              <td>{incident.additionalFields.vehicle_type}</td>
+            </tr>
+          </tbody>
+        </table>
+      case Enum.incidentCategory.FIRE:
+        return <table>
+          <tbody>
+            <tr>
+              <td className={s.detailHeader}>Fire Spread Rate: </td>
+              <td>{incident.additionalFields.fire_spread_rate}</td>
+            </tr>
+          </tbody>
+        </table>
+      case Enum.incidentCategory.MEDICAL:
+        return <table>
+          <tbody>
+            <tr>
+              <td className={s.detailHeader}>Patient Current Condition: </td>
+              <td>{incident.additionalFields.curr_condition}</td>
+            </tr>
+            <tr>
+              <td className={s.detailHeader}>Level of Consciousness: </td>
+              <td>{incident.additionalFields.level_of_consc}</td>
+            </tr>
+            <tr>
+              <td className={s.detailHeader}>If Suicide: </td>
+              <td>{incident.additionalFields.if_suicide == 1 ? "Yes" : "No"}</td>
+            </tr>
+            {
+              incident.additionalFields.if_suicide == 1 && <tr>
+                <td className={s.detailHeader}>Suicidal Method: </td>
+                <td>{incident.additionalFields.suicidal_method}</td>
+              </tr>
+            }
+            {
+              incident.additionalFields.if_suicide == 1 && <tr>
+                <td className={s.detailHeader}>Suicidal Equipment: </td>
+                <td>{incident.additionalFields.suicidal_equipment}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      default:
+        return <table></table>
+    }
   }
 
   componentDidMount() {
@@ -109,7 +226,11 @@ class IncidentModal extends Component {
                   {
                     incident.category == "road_traffic" && <tr>
                       <td className={s.detailHeader}>Vehicle Plate Number: </td>
-                      {vehicle_incidents.map(vehicle_incident => <td>{vehicle_incident.plate_number},{' '}</td>)}
+                      {
+                        vehicle_incidents.map((vehicle_incident, index) => {
+                          return <td key={index}>{vehicle_incident.plate_number},{' '}</td>
+                        })
+                      }
                     </tr>
                   }
                   <tr>
@@ -122,6 +243,9 @@ class IncidentModal extends Component {
                   </tr>
                 </tbody>
               </table>
+
+              {this.renderIncidentCatDetails(incident.category)}
+
             </div>
             <p className={s.contentHeader}>Dispatchment Details</p>
             <div className={s.contentBody}>
@@ -131,8 +255,8 @@ class IncidentModal extends Component {
                     <p className={s.stationName}>{station.station_name}</p>
                     <ul className={s.dispatchList}>
                       {
-                        station.dispatch.map((vehicle) => {
-                          return <li className={s.dispatchInfo}>{vehicle.call_sign} - {vehicle.type}</li>
+                        station.dispatch.map((vehicle, index) => {
+                          return <li key={index} className={s.dispatchInfo}>{vehicle.call_sign} - {vehicle.type}</li>
                         })
                       }
                     </ul>
@@ -161,7 +285,7 @@ class IncidentModal extends Component {
             <p className={s.contentHeader}>Select a department to dispatch the case to - dropdown to view department status details.</p>
             <div className={s.dispatchUnits}>
               <div className={s.dispatchList}>
-                <DispatchVehicleList fireStationList={fireStationList} updateVehicleDispatch={this.updateVehicleDispatch}/>
+                <DispatchVehicleList fireStationList={fireStationList} updateVehicleDispatch={this.updateVehicleDispatch} />
               </div>
               <div className={s.dispatchMap}>
                 <DispatchMap

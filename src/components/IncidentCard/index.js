@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import s from './IncidentCard.scss';
 import expandIcon from '../../assets/images/expand.svg';
@@ -8,13 +7,6 @@ import Enum from '../../constants/enum';
 import formatUtils from '../../formatUtils';
 
 class IncidentCard extends React.Component {
-  static propTypes = {
-    iconType: PropTypes.number.isRequired,
-    type: PropTypes.number.isRequired,
-    id: PropTypes.string.isRequired,
-    mountModal: PropTypes.func.isRequired,
-  };
-  
   constructor(props) {
     super(props);
     this.state = { incident: [] };
@@ -22,9 +14,7 @@ class IncidentCard extends React.Component {
     this.handleOnKeyDown = this.handleOnKeyDown.bind(this);
   }
 
-  //TODO - Provide ID for mountModal
   expandIncident = () => {
-    console.log('Expand event');
     this.props.mountModal(Enum.detailType.INCIDENT, this.state.incident.id);
   };
 

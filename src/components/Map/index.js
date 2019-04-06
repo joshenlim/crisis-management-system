@@ -35,8 +35,9 @@ class Map extends React.Component {
           options={mapOptions}
         >
           {
-            fireStationList.map((station) => {
+            fireStationList.map((station, index) => {
               return <MapMarker
+                key={"fs" + index}
                 id={station.id}
                 lng={station.lng}
                 lat={station.lat}
@@ -48,8 +49,9 @@ class Map extends React.Component {
             })
           }
           {
-            publicHospitalList.map((publicHospital) => {
+            publicHospitalList.map((publicHospital, index) => {
               return <MapMarker
+                key={"pubH" + index}
                 id={publicHospital.id}
                 lng={publicHospital.lng}
                 lat={publicHospital.lat}
@@ -61,8 +63,9 @@ class Map extends React.Component {
             })
           }
           {
-            ongoingIncidentList.map((ongoingIncidents) => {
+            ongoingIncidentList.map((ongoingIncidents, index) => {
               return <MapMarker
+                key={"inc" + index}
                 id={ongoingIncidents.id}
                 lng={ongoingIncidents.lng}
                 lat={ongoingIncidents.lat}
@@ -79,8 +82,9 @@ class Map extends React.Component {
             })
           }
           {
-            privateHospitalList.map((privateHospital) => {
+            privateHospitalList.map((privateHospital, index) => {
               return <MapMarker
+                key={"prvH" + index}
                 id={privateHospital.id}
                 lng={privateHospital.lng}
                 lat={privateHospital.lat}

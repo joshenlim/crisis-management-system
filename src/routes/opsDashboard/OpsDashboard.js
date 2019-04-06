@@ -116,8 +116,9 @@ class OpsDashboard extends React.Component {
           <p className={s.columnTitle}>Ongoing Incidents</p>
           <div className={s.incidentList}>
             {this.state.incidents.length > 0 &&
-              this.state.incidents.map(incident => (
+              this.state.incidents.map((incident, index) => (
                 <IncidentCard
+                  key={index}
                   incident={incident}
                   mountModal={this.mountModal}
                 />

@@ -34,8 +34,8 @@ class ArchivedIncidents extends React.Component {
         <h1 className={s.title}>Archived Incidents</h1>
         <div className={s.incidentList}>
           {
-            this.state.incidents.length > 0 && this.state.incidents.map(incident => (
-              <IncidentCard incident={incident} mountModal={this.props.mountModal} />
+            this.state.incidents.length > 0 && this.state.incidents.map((incident, index) => (
+              <IncidentCard incident={incident} mountModal={this.props.mountModal} key={index} />
             ))
           }
           {

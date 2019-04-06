@@ -1,6 +1,5 @@
 import React from 'react';
 import axios from 'axios';
-import PropTypes from 'prop-types';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import s from './ViewDetailsModal.scss';
 import closeBtn from '../../assets/images/close.svg';
@@ -14,12 +13,6 @@ import PublicHospitalModal from './PublicHospitalModal';
 import PrivateHospitalModal from './PrivateHospitalModal';
 
 class ViewDetailsModal extends React.Component {
-  static propTypes = {
-    type: PropTypes.number.isRequired,
-    id: PropTypes.string.isRequired,
-    mountModal: PropTypes.func.isRequired,
-  };
-
   constructor(props) {
     super(props);
     this.state = {
