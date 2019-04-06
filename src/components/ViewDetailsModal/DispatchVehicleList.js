@@ -1,5 +1,5 @@
 import React from 'react';
-import s from './CreateNewIncidentModal.scss';
+import s from './ViewDetailsModal.scss';
 import expandDrop from '../../assets/images/down-arrow.svg';
 
 class DispatchVehicleList extends React.Component {

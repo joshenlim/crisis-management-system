@@ -32,8 +32,6 @@ class CreateNewIncidentModal extends React.Component {
       page: 1,
       selectedType: 'EA',
       escalate: false,
-      selectedVehicles: [],
-      fireStations: [],
       submittingIncident: false,
 
       // General Incident Information
@@ -176,10 +174,9 @@ class CreateNewIncidentModal extends React.Component {
           const body = {
             incident_id: res.data.incident_id,
             plate_number: vehicle.plate,
-          };
-          axios
-            .post('/api/incident/dispatch', body)
-            .then(res => {
+          }
+          axios.post('/api/incident/dispatch', body)
+            .then(() => {
               setTimeout(() => {
                 this.setState({ submittingIncident: false });
                 io.emit('notify', Enum.socketEvents.NEW_INCIDENT);

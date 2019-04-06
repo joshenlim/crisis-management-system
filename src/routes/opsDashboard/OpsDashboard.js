@@ -86,6 +86,7 @@ class OpsDashboard extends React.Component {
           id={this.state.detailModalId}
           type={this.state.detailModalType}
           mountModal={this.mountModal}
+          fireStationList={this.props.fireStationList}
         />
       );
     }
