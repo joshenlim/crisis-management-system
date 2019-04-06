@@ -33,6 +33,7 @@ module.exports = {
     password: process.env.DATABASE_PASSWORD,
     database: process.env.DATABASE_NAME,
     multipleStatements: true,
+    connectTimeout: 100 * 1000,
   },
 
   // Web analytics
