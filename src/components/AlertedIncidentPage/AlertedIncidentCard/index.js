@@ -64,6 +64,12 @@ class AlertedIncidentCard extends Component {
       case 'ENROUTE BACK':
         statusClass = s.enrouteBack;
         break;
+      case 'RESOLVED':
+        statusClass = s.resolved;
+        break;
+      case 'CLOSED':
+        statusClass = s.caseClosed;
+        break;
       default:
         statusClass = s.dispatched;
     }
@@ -85,12 +91,16 @@ class AlertedIncidentCard extends Component {
               incidentid={incident.id}
             />
 
-            <p className={s.category}>Category: {formatUtils.formatCategoryName(incident.category)}</p>
+            <p className={s.category}>
+              Category: {formatUtils.formatCategoryName(incident.category)}
+            </p>
             <p className={s.location}>
               Location: {incident.postal_code}, {incident.address}
             </p>
             <div className={s.statusDate}>
-              <div className={s.nonEmphasis}>Opened: {formatUtils.formatDate(incident.created_at)}</div>
+              <div className={s.nonEmphasis}>
+                Opened: {formatUtils.formatDate(incident.created_at)}
+              </div>
               &emsp;&emsp;
               <div className={`${s.status} ${statusClass}`}>
                 {incident.status}

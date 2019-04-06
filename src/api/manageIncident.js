@@ -195,6 +195,32 @@ router.post('/set_road_traffic_alert', async (req, res) => {
   });
 });
 
+router.get('/get_ce_desc', async (req, res) => {
+  const { incident_id } = req.query;
+  const desc = await database.getCEDesc(incident_id);
+  return res.status(200).send(desc);
+});
+
+router.post('/add_ce_desc', async (req, res) => {
+  const reqBody = {
+    specialist_id: req.session.passport.user.id, //Front End ignore this
+    ce_incident_id: req.body.ce_incident_id,
+    description: req.body.description,
+  };
+  await database.addCEDesc(reqBody);
+  return res.status(201).send({
+    Success: 'Civil Emergency description successfully added',
+  });
+});
+
+router.post('/remove_ce_desc', async (req, res) => {
+  const { ce_desc_id } = req.body;
+  await database.removeCEDesc(ce_desc_id);
+  return res.status(201).send({
+    Success: 'Civil Emergency description successfully removed',
+  });
+});
+
 // on click of generate report button (by today or this week)
 // call t
 // get data from the incidents table by current date or 7 days before and plus current date

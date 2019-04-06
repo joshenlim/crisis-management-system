@@ -280,7 +280,21 @@ class MySQLDB {
   }
 
   getEscalated() {
-    const res = this.query(`SELECT * FROM incidents WHERE if_escalate_hq = '1'`)
+    const res = this.query(
+      `SELECT * FROM incidents WHERE if_escalate_hq = '1' AND status <> 'CLOSED'`,
+    )
+      .then(rows => rows)
+      .catch(err => {
+        console.error('Error from getEscalated:', err.sqlMessage);
+        return res.status(409).send({ Error: err.code });
+      });
+    return res;
+  }
+
+  getEscalatedArchived() {
+    const res = this.query(
+      `SELECT * FROM incidents WHERE if_escalate_hq = '1' AND status = 'CLOSED'`,
+    )
       .then(rows => rows)
       .catch(err => {
         console.error('Error from getEscalated:', err.sqlMessage);
@@ -594,7 +608,7 @@ class MySQLDB {
 
   getCEDesc(id) {
     const res = this.query(
-      `SELECT * FROM ce_desc_log WHERE ce_incident_id=? AND if_active=1`,
+      `SELECT c.*, s.name FROM ce_desc_log c JOIN staff s ON s.id=c.specialist_id WHERE c.ce_incident_id=? AND c.if_active=1`,
       [id],
     )
       .then(rows => rows)

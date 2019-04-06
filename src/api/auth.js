@@ -13,6 +13,17 @@ router.get('/test', async (req, res) => {
   });
 });
 
+router.get('/details', async (req, res) => {
+  const details = {
+    id: req.session.passport.user.id,
+    name: req.session.passport.user.name,
+    s_rank: req.session.passport.user.s_rank,
+    role_id: req.session.passport.user.role_id,
+  };
+
+  return res.status(200).send(details);
+});
+
 router.post('/register', async (req, res) => {
   // eslint-disable-next-line camelcase
   const { name, s_rank, username, password, role_id } = req.body;

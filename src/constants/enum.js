@@ -20,6 +20,7 @@ export default Object.freeze({
   socketEvents: {
     NEW_INCIDENT: 1,
     ESCALATE_INCIDENT: 2,
+    CE_DESCRIPTION: 3,
   },
   staffRole: {
     OPS_MANAGER: 'Ops Center Manager',
