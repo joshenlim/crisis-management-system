@@ -129,6 +129,28 @@ router.post('/dispatch', async (req, res) => {
   });
 });
 
+router.post('/set_incident_alert', async (req, res) => {
+  const reqBody = {
+    ...req.body,
+    op_id: req.user.id,
+  };
+  await database.setIncidentAlert(reqBody);
+  return res.status(201).send({
+    Success: 'Incident alert successfully updated',
+  });
+});
+
+router.post('/set_road_traffic_alert', async (req, res) => {
+  const reqBody = {
+    ...req.body,
+    op_id: req.user.id,
+  };
+  await database.setRoadTrafficAlert(reqBody);
+  return res.status(201).send({
+    Success: 'Road traffic alert successfully updated',
+  });
+});
+
 // on click of generate report button (by today or this week)
 // call t
 // get data from the incidents table by current date or 7 days before and plus current date
