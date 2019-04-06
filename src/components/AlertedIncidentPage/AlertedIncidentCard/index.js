@@ -11,6 +11,7 @@ import logoTank from '../../../assets/images/alerted-tank.svg';
 import nextBtn from '../../../assets/images/next.svg';
 
 import Enum from '../../../constants/enum';
+import formatUtils from '../../../formatUtils';
 
 class AlertedIncidentCard extends Component {
   //TODO - Update proptype
@@ -33,7 +34,7 @@ class AlertedIncidentCard extends Component {
   }
 
   renderLogo() {
-    switch (this.state.incident.category) {
+    switch (formatUtils.formatCategoryName(this.state.incident.category)) {
       case Enum.incidentCategory.TRAFFIC:
         return logoTraffic;
       case Enum.incidentCategory.MEDICAL:
@@ -84,12 +85,12 @@ class AlertedIncidentCard extends Component {
               incidentid={incident.id}
             />
 
-            <p className={s.category}>Category: {incident.category}</p>
+            <p className={s.category}>Category: {formatUtils.formatCategoryName(incident.category)}</p>
             <p className={s.location}>
               Location: {incident.postal_code}, {incident.address}
             </p>
             <div className={s.statusDate}>
-              <div className={s.nonEmphasis}>Opened: {incident.created_at}</div>
+              <div className={s.nonEmphasis}>Opened: {formatUtils.formatDate(incident.created_at)}</div>
               &emsp;&emsp;
               <div className={`${s.status} ${statusClass}`}>
                 {incident.status}

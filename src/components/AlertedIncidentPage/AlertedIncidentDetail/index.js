@@ -9,6 +9,8 @@ import DispatchVehicleList from '../DispatchVehicleList';
 
 import backBtn from '../../../assets/images/back.svg';
 import IncidentDetailMap from './IncidentDetailMap/IncidentDetailMap';
+import formatUtils from '../../../formatUtils';
+import Enum from '../../../constants/enum';
 
 class AlertedIncidentDetail extends Component {
   constructor(props) {
@@ -30,13 +32,14 @@ class AlertedIncidentDetail extends Component {
           '\nAre you sure you want to continue?',
       )
     ) {
-      fetch(API_HOST + 'api/incident/update_resolved', {
+      fetch(API_HOST + 'api/incident/update_status', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          emergid: this.props.incidentId,
+          incident_id: this.props.incidentId,
+          status: Enum.incidentStatus.RESOLVED,
         }),
       })
         .then(() => {
@@ -83,7 +86,7 @@ class AlertedIncidentDetail extends Component {
   }
 
   render() {
-    const incident = this.state.incident;
+    const { incident } = this.state;
 
     let statusClass;
     switch (incident.status) {
@@ -100,7 +103,7 @@ class AlertedIncidentDetail extends Component {
         statusClass = s.dispatched;
     }
 
-    return (
+    return Object.keys(incident).length != 0 && (
       <div className={s.content}>
         <div className={s.leftCol}>
           <div className={s.back} onClick={this.props.displayList}>
@@ -110,7 +113,7 @@ class AlertedIncidentDetail extends Component {
           <hr />
 
           <div className={s.header}>
-            {incident.category} - {incident.address}, {incident.postal_code}
+            {formatUtils.formatCategoryName(incident.category)} - {incident.address}, {incident.postal_code}
           </div>
 
           <div className={s.caseNumStatus}>

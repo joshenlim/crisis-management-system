@@ -188,7 +188,11 @@ class MySQLDB {
 
   getDispatchedVehicles(incident_id) {
     const res = this.query(
-      `SELECT * FROM vehicle_incident vi JOIN vehicle v ON v.plate_number = vi.plate_number WHERE vi.incident_id = ? AND v.on_off_call = '1'`,
+      `SELECT incident_id, v.plate_number, v.call_sign, v.type,
+      fs.name as fire_station, veh_status, on_off_call FROM vehicle_incident vi
+      JOIN vehicle v ON v.plate_number = vi.plate_number
+      JOIN fire_station fs ON fs.id = v.fire_station_id
+      WHERE vi.incident_id = ? AND v.on_off_call = '1';`,
       [incident_id],
     )
       .then(rows => rows)
@@ -198,20 +202,7 @@ class MySQLDB {
       });
     return res;
   }
-
-  getVehicleIncidents(id) {
-    const res = this.query(
-      'SELECT * FROM vehicle_incident WHERE incident_id = ?',
-      [id],
-    )
-      .then(rows => rows)
-      .catch(err => {
-        console.error('Error from getVehicleIncidents:', err.sqlMessage);
-        return res.status(409).send({ Error: err.code });
-      });
-    return res;
-  }
-
+  
   getIncidentByID(id) {
     const res = this.query('SELECT * FROM incidents WHERE id = ?', [id])
       .then(rows => rows)
@@ -323,12 +314,12 @@ class MySQLDB {
   }
 
   updateStatus(body) {
-    const { id, status, op_id } = body;
+    const { incident_id, status, op_id } = body;
     var moment = require('moment'); // including the moment module
     var updated_at = moment().format('YYYY-MM-DD HH:mm:ss');
     const res = this.query(
       'UPDATE incidents SET status = ?, updated_at = ?, op_update_id = ? WHERE id = ?',
-      [status, updated_at, op_id, id],
+      [status, updated_at, op_id, incident_id],
     )
       .then(rows => rows)
       .catch(err => {
@@ -541,26 +532,6 @@ class MySQLDB {
         console.error('Error from dispatchAdditionalUnit:', err.sqlMessage);
         return res.status(409).send({ Error: err.code });
       });
-  }
-  dispatchToIncident(incident_id, plate_number) {
-    const res = this.query(
-      `UPDATE vehicle SET on_off_call = 1 WHERE plate_number = ?;
-       INSERT INTO vehicle_incident (incident_id, plate_number, veh_status)
-       VALUES (?, ?, "OUT")`,
-      [plate_number, incident_id, plate_number],
-    )
-      .then(rows => rows)
-      .catch(err => {
-        console.error(
-          'Error from dispatch units to incidents:',
-          err.sqlMessage,
-        );
-        return res.status(409).send({ Error: err.code });
-      });
-
-    return res.status(200).send({
-      Success: 'Dispatch units successfully',
-    });
   }
 }
 

@@ -20,7 +20,7 @@ router.get('/get', async (req, res) => {
 
 router.get('/get_vehicleIncident', async (req, res) => {
   const { id } = req.query;
-  const incidents = await database.getVehicleIncidents(id);
+  const incidents = await database.getDispatchedVehicles(id)
   return res.status(200).send(incidents);
 });
 
@@ -48,7 +48,7 @@ router.post('/create', async (req, res) => {
   const newIncidentId = await database.createIncident(reqBody);
 
   switch (req.body.category) {
-    case 'road_traffic': {
+    case 'road_traffic_accident': {
       await database.createRoadIncident(newIncidentId, reqBody);
       return res.status(200).send({
         success: 'Incident successfully created',
