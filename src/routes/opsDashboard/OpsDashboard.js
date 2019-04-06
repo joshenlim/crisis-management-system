@@ -30,23 +30,24 @@ class OpsDashboard extends React.Component {
       detailModalType: Enum.detailType.INCIDENT,
       showCreateNewIncidentModal: false,
     };
-
   }
 
   componentWillMount() {
     io.on('fetch', type => {
       if (Enum.socketEvents.NEW_INCIDENT == type) {
         this.fetchOngoingIncident();
+        console.log(
+          'SocketIo: received "new incident" at ' + new Date().getTime() + 'ms',
+        );
       }
     });
   }
 
-
-  changeTab = (e) => {
+  changeTab = e => {
     this.setState({
-      activeTab: e.target.name
+      activeTab: e.target.name,
     });
-  }
+  };
 
   fetchOngoingIncident = () => {
     fetch(API_HOST + 'api/incident/get_ongoing', {
@@ -58,7 +59,7 @@ class OpsDashboard extends React.Component {
       .then(res => res.json())
       .then(data => this.setState({ incidents: data.reverse() }))
       .catch(err => console.log(err));
-  }
+  };
 
   mountModal = (type, id) => {
     this.setState({
@@ -68,7 +69,7 @@ class OpsDashboard extends React.Component {
     });
   };
 
-  handleOnKeyDown = (event) => {
+  handleOnKeyDown = event => {
     event.preventDefault();
   };
 
@@ -103,7 +104,7 @@ class OpsDashboard extends React.Component {
         />
       );
     }
-  }
+  };
 
   render() {
     return (
@@ -114,19 +115,30 @@ class OpsDashboard extends React.Component {
           <TimeWeatherTemp />
           <p className={s.columnTitle}>Ongoing Incidents</p>
           <div className={s.incidentList}>
-            {
-              this.state.incidents.length > 0 && this.state.incidents.map(incident => (
-                <IncidentCard incident={incident} mountModal={this.mountModal} />
-              ))
-            }
-            {
-              this.state.incidents.length == 0 && <p className={s.noIncidents}>There are currently no<br/>ongoing incidents</p>
-            }
+            {this.state.incidents.length > 0 &&
+              this.state.incidents.map(incident => (
+                <IncidentCard
+                  incident={incident}
+                  mountModal={this.mountModal}
+                />
+              ))}
+            {this.state.incidents.length == 0 && (
+              <p className={s.noIncidents}>
+                There are currently no
+                <br />
+                ongoing incidents
+              </p>
+            )}
           </div>
         </div>
         <div className={s.main}>
-
-          <div className={s.nav + " " + (this.state.activeScreen == "map" ? s.activeMap : s.active)}>
+          <div
+            className={
+              s.nav +
+              ' ' +
+              (this.state.activeScreen == 'map' ? s.activeMap : s.active)
+            }
+          >
             <img
               className={s.navBtn}
               style={this.state.activeTab == 0 ? { opacity: 1 } : {}}
@@ -144,16 +156,18 @@ class OpsDashboard extends React.Component {
               onClick={this.changeTab}
             />
           </div>
-          { 
-            this.state.activeTab == 0 && <Map
+          {this.state.activeTab == 0 && (
+            <Map
               mountModal={this.mountModal}
               fireStationList={this.props.fireStationList}
               publicHospitalList={this.props.publicHospitalList}
               privateHospitalList={this.props.privateHospitalList}
               ongoingIncidentList={this.props.ongoingIncidentList}
             />
-          }
-          { this.state.activeTab == 1 && <ArchivedIncidents mountModal={this.mountModal} /> }
+          )}
+          {this.state.activeTab == 1 && (
+            <ArchivedIncidents mountModal={this.mountModal} />
+          )}
         </div>
         <div className={s.sideColumn} style={{ marginTop: '70px' }}>
           <div

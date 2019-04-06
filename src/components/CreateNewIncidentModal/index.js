@@ -30,12 +30,12 @@ class CreateNewIncidentModal extends React.Component {
     super(props);
     this.state = {
       page: 1,
-      selectedType: "EA",
+      selectedType: 'EA',
       escalate: false,
       submittingIncident: false,
 
       // General Incident Information
-      category: "road_traffic_accident",
+      category: 'road_traffic_accident',
       casualtyNo: 0,
       callerName: null,
       callerContact: null,
@@ -50,7 +50,7 @@ class CreateNewIncidentModal extends React.Component {
 
       // ME Specific
       condition: null,
-      consciousness: "alert",
+      consciousness: 'alert',
       suicide: false,
       suicidalMethod: null,
       suicidalEquipment: null,
@@ -63,54 +63,59 @@ class CreateNewIncidentModal extends React.Component {
     };
   }
 
-  closeModal = (event) => {
+  closeModal = event => {
     this.props.mountModal();
-  }
+  };
 
-  updateNumCasualties = (event) => {
+  updateNumCasualties = event => {
     const numberCasualties = event.target.value;
     this.setState({ casualtyNo: numberCasualties });
     if (numberCasualties >= 10 && !this.state.escalate) {
       this.setState({
         escalate: true,
-      })
+      });
     } else if (numberCasualties < 10 && this.state.escalate) {
       this.setState({
         escalate: false,
-      })
+      });
     }
-  }
+  };
 
   updateSelectedType = (typeRef, typeVal) => {
     this.setState({
       selectedType: typeRef,
-      category: typeVal
-    })
-  }
+      category: typeVal,
+    });
+  };
 
-  updatePostalCode = (postalCode) => this.setState({ incidentPostalCode: postalCode });
-  updateAddress = (address) => this.setState({ incidentAddress: address });
-  updateCallerName = (name) => this.setState({ callerName: name });
-  updateCallerContact = (contact) => this.setState({ callerContact: contact });
-  updateDescription = (event) => this.setState({ description: event.target.value });
+  updatePostalCode = postalCode =>
+    this.setState({ incidentPostalCode: postalCode });
+  updateAddress = address => this.setState({ incidentAddress: address });
+  updateCallerName = name => this.setState({ callerName: name });
+  updateCallerContact = contact => this.setState({ callerContact: contact });
+  updateDescription = event =>
+    this.setState({ description: event.target.value });
   escalateIncident = () => this.setState({ escalate: !this.state.escalate });
 
-  updateVehicleType = (type) => this.setState({ vehicleType: type });
-  updateVehiclePlate = (plate) => this.setState({ vehiclePlate: plate });
-  updateFireSpreadRate = (rate) => this.setState({ fireSpreadRate: rate });
-  updateCurrentCondition = (condition) => this.setState({ condition: condition });
-  updateLevelConsc = (level) => this.setState({ consciousness: level });
-  updateSuicide = (res) => this.setState({ suicide: res });
-  updateSuicidalEquipment = (equipment) => this.setState({ suicidalEquipment: equipment });
-  updateSuicidalMethod = (method) => this.setState({ suicidalMethod: method });
-  updateVehicleDispatch = (vehicles) => this.setState({ vehicleDispatch: vehicles });
+  updateVehicleType = type => this.setState({ vehicleType: type });
+  updateVehiclePlate = plate => this.setState({ vehiclePlate: plate });
+  updateFireSpreadRate = rate => this.setState({ fireSpreadRate: rate });
+  updateCurrentCondition = condition => this.setState({ condition: condition });
+  updateLevelConsc = level => this.setState({ consciousness: level });
+  updateSuicide = res => this.setState({ suicide: res });
+  updateSuicidalEquipment = equipment =>
+    this.setState({ suicidalEquipment: equipment });
+  updateSuicidalMethod = method => this.setState({ suicidalMethod: method });
+  updateVehicleDispatch = vehicles =>
+    this.setState({ vehicleDispatch: vehicles });
 
-  nextPage = (event) => {
+  nextPage = event => {
     const self = this;
     if (this.state.incidentPostalCode && event.target.attributes.tag) {
-      if (event.target.attributes.tag.value == "convertGeocode") {
-        axios.get('/api/geocode/address?q=' + this.state.incidentPostalCode)
-          .then(function (res) {
+      if (event.target.attributes.tag.value == 'convertGeocode') {
+        axios
+          .get('/api/geocode/address?q=' + this.state.incidentPostalCode)
+          .then(function(res) {
             self.setState({
               incidentLocation: {
                 address: res.data.address,
@@ -118,23 +123,23 @@ class CreateNewIncidentModal extends React.Component {
                   lat: res.data.lat,
                   lng: res.data.lng,
                 },
-              }
-            })
+              },
+            });
           });
       }
     }
     if (this.state.page < 3) {
-      this.setState({ page: this.state.page + 1 })
+      this.setState({ page: this.state.page + 1 });
     }
-  }
+  };
 
   prevPage = () => {
     if (this.state.page > 1) {
-      this.setState({ page: this.state.page - 1 })
+      this.setState({ page: this.state.page - 1 });
     }
-  }
+  };
 
-  onSubmit = (event) => {
+  onSubmit = event => {
     event.preventDefault();
     this.setState({
       page: 0,
@@ -145,7 +150,7 @@ class CreateNewIncidentModal extends React.Component {
       caller_contact: this.state.callerContact,
       category: this.state.category,
       postal_code: this.state.incidentPostalCode,
-      address: this.state.incidentAddress || "nil",
+      address: this.state.incidentAddress || 'nil',
       lat: this.state.incidentLocation.center.lat,
       lng: this.state.incidentLocation.center.lng,
       casualty_no: this.state.casualtyNo,
@@ -158,13 +163,14 @@ class CreateNewIncidentModal extends React.Component {
       suicidal_equipment: this.state.suicidalEquipment,
       suicidal_method: this.state.suicidalMethod,
       fire_spread_rate: this.state.fireSpreadRate,
-    }
+    };
 
     const { vehicleDispatch } = this.state;
 
-    axios.post('/api/incident/create', postBody)
-      .then((res) => {
-        vehicleDispatch.forEach((vehicle) => {
+    axios
+      .post('/api/incident/create', postBody)
+      .then(res => {
+        vehicleDispatch.forEach(vehicle => {
           const body = {
             incident_id: res.data.incident_id,
             plate_number: vehicle.plate,
@@ -174,67 +180,85 @@ class CreateNewIncidentModal extends React.Component {
               setTimeout(() => {
                 this.setState({ submittingIncident: false });
                 io.emit('notify', Enum.socketEvents.NEW_INCIDENT);
-              }, 1000)
-          
+                console.log(
+                  'SocketIo: emitted "new incident" at ' +
+                    new Date().getTime() +
+                    'ms',
+                );
+              }, 1000);
+
               setTimeout(() => {
-                this.closeModal()
-              }, 3000)
+                this.closeModal();
+              }, 3000);
             })
-            .catch((err) => {
-              console.log(err)
-            })
-        })
+            .catch(err => {
+              console.log(err);
+            });
+        });
       })
-      .catch((err) => {
-        console.log(err)
-      })
-  }
+      .catch(err => {
+        console.log(err);
+      });
+  };
 
   render() {
     const { fireStationList } = this.props;
     return (
       <div className={s.modalBackground}>
-        <div className={s.incidentModal + " " + 
-          (this.state.page == 3 ? s.dispatchMapStep : "") + " " +
-          (this.state.page == 0 ? s.submitStep : "")
-        }>
-          {
-            !this.state.page == 0 && <span className={s.closeBtn} onClick={this.closeModal}>
+        <div
+          className={
+            s.incidentModal +
+            ' ' +
+            (this.state.page == 3 ? s.dispatchMapStep : '') +
+            ' ' +
+            (this.state.page == 0 ? s.submitStep : '')
+          }
+        >
+          {!this.state.page == 0 && (
+            <span className={s.closeBtn} onClick={this.closeModal}>
               <img src={closeBtn} alt="close" />
             </span>
-          }
+          )}
 
           <form onSubmit={this.onSubmit}>
-            {
-              !this.state.page == 0 && <div className={s.segment}>
+            {!this.state.page == 0 && (
+              <div className={s.segment}>
                 <p className={s.category}>Create New Incident</p>
               </div>
-            }
+            )}
 
             {!this.state.page == 0 && <hr />}
 
             <div className={this.state.page == 1 ? s.showPage : s.hidePage}>
               <p className={s.contentHeader}>Type of assistance requested:</p>
               <div className={s.contentBody}>
-                <AssistanceTypeQuestionSet updateSelectedType={this.updateSelectedType} />
+                <AssistanceTypeQuestionSet
+                  updateSelectedType={this.updateSelectedType}
+                />
               </div>
 
               <p className={s.contentHeader}>Incident Details</p>
               <div className={s.contentBody}>
-                {this.state.selectedType == "EA" && <RTAQuestionSet
-                  onVehicleTypeChange={this.updateVehicleType}
-                  onVehiclePlateChange={this.updateVehiclePlate}
-                />}
-                {this.state.selectedType == "FF" && <FFQuestionSet
-                  onFireSpreadRateChange={this.updateFireSpreadRate}
-                />}
-                {this.state.selectedType == "ME" && <MEQuestionSet
-                  onCurrConditionChange={this.updateCurrentCondition}
-                  onLevelConscChange={this.updateLevelConsc}
-                  onSuicideChange={this.updateSuicide}
-                  onSuicidalEquipmentChange={this.updateSuicidalEquipment}
-                  onSuicidalMethodChange={this.updateSuicidalMethod}
-                />}
+                {this.state.selectedType == 'EA' && (
+                  <RTAQuestionSet
+                    onVehicleTypeChange={this.updateVehicleType}
+                    onVehiclePlateChange={this.updateVehiclePlate}
+                  />
+                )}
+                {this.state.selectedType == 'FF' && (
+                  <FFQuestionSet
+                    onFireSpreadRateChange={this.updateFireSpreadRate}
+                  />
+                )}
+                {this.state.selectedType == 'ME' && (
+                  <MEQuestionSet
+                    onCurrConditionChange={this.updateCurrentCondition}
+                    onLevelConscChange={this.updateLevelConsc}
+                    onSuicideChange={this.updateSuicide}
+                    onSuicidalEquipmentChange={this.updateSuicidalEquipment}
+                    onSuicidalMethodChange={this.updateSuicidalMethod}
+                  />
+                )}
                 <div className={s.questionSet}>
                   <div className={s.textQuestion}>
                     <div className={s.question}>
@@ -247,7 +271,7 @@ class CreateNewIncidentModal extends React.Component {
                       onChange={this.updateNumCasualties}
                     />
                   </div>
-                  <div className={s.textQuestion + " " + s.textArea}>
+                  <div className={s.textQuestion + ' ' + s.textArea}>
                     <div className={s.question}>
                       <p className={s.title}>Incident Description:</p>
                     </div>
@@ -276,13 +300,10 @@ class CreateNewIncidentModal extends React.Component {
                 </div>
               </div>
 
-              <div
-                className={s.nextButton}
-                onClick={this.nextPage}>
+              <div className={s.nextButton} onClick={this.nextPage}>
                 Next
               </div>
             </div>
-
 
             <div className={this.state.page == 2 ? s.showPage : s.hidePage}>
               <p className={s.contentHeader}>Caller Information</p>
@@ -302,27 +323,32 @@ class CreateNewIncidentModal extends React.Component {
               </div>
 
               <div className={s.btnGrp}>
-                <div
-                  className={s.prevButton}
-                  onClick={this.prevPage}>
+                <div className={s.prevButton} onClick={this.prevPage}>
                   Back
                 </div>
                 <div
                   className={s.nextButton}
                   style={{ margin: 0 }}
                   onClick={this.nextPage}
-                  tag="convertGeocode">
+                  tag="convertGeocode"
+                >
                   Next
                 </div>
               </div>
             </div>
 
             <div className={this.state.page == 3 ? s.showPage : s.hidePage}>
-              <p className={s.contentHeader}>Select a department to dispatch the case to - dropdown to view department status details.</p>
+              <p className={s.contentHeader}>
+                Select a department to dispatch the case to - dropdown to view
+                department status details.
+              </p>
 
               <div className={s.dispatchUnits}>
                 <div className={s.dispatchList}>
-                  <DispatchVehicleList fireStationList={fireStationList} updateVehicleDispatch={this.updateVehicleDispatch}/>
+                  <DispatchVehicleList
+                    fireStationList={fireStationList}
+                    updateVehicleDispatch={this.updateVehicleDispatch}
+                  />
                 </div>
                 <div className={s.dispatchMap}>
                   <DispatchMap
@@ -334,9 +360,7 @@ class CreateNewIncidentModal extends React.Component {
               </div>
 
               <div className={s.btnGrp}>
-                <div
-                  className={s.prevButton}
-                  onClick={this.prevPage}>
+                <div className={s.prevButton} onClick={this.prevPage}>
                   Back
                 </div>
                 <button className={s.button} value="Submit" type="submit">
@@ -346,25 +370,24 @@ class CreateNewIncidentModal extends React.Component {
             </div>
 
             <div className={this.state.page == 0 ? s.showPage : s.hidePage}>
-              {
-                this.state.submittingIncident && <div className={s.loadingWindow}>
+              {this.state.submittingIncident && (
+                <div className={s.loadingWindow}>
                   <img className={s.loadingIcon} src={loading} alt="loading" />
                   <p>Creating Incident</p>
                 </div>
-              }
-              {
-                !this.state.submittingIncident && <div className={s.successWindow}>
-                    <div className={s.checkIcon}>
-                    <span className={s.iconLine + " " + s.lineTip}></span>
-                    <span className={s.iconLine + " " + s.lineLong}></span>
-                    <div className={s.iconCircle}></div>
-                    <div className={s.iconFix}></div>
+              )}
+              {!this.state.submittingIncident && (
+                <div className={s.successWindow}>
+                  <div className={s.checkIcon}>
+                    <span className={s.iconLine + ' ' + s.lineTip} />
+                    <span className={s.iconLine + ' ' + s.lineLong} />
+                    <div className={s.iconCircle} />
+                    <div className={s.iconFix} />
                   </div>
                   <p>Incident successfully created!</p>
                 </div>
-              }
+              )}
             </div>
-
           </form>
         </div>
       </div>
