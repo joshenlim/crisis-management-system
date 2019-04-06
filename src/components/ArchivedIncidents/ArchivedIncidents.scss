@@ -9,6 +9,8 @@
   .incidentList {
     display: flex;
     flex-wrap: wrap;
+    height: calc(100vh - 225px);
+    overflow-y: scroll;
   }
 
   .noIncidents {
