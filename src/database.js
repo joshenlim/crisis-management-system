@@ -88,10 +88,15 @@ class MySQLDB {
 
   getFireStationDetailsByIncidentID(id) {
     const res = this.query(
-      'SELECT * FROM fire_station JOIN vehicle ON fire_station.id = vehicle.fire_station_id JOIN vehicle_incident ON vehicle_incident.plate_number = vehicle.plate_number WHERE vehicle_incident.incident_id = ?', [id])
+      'SELECT * FROM fire_station JOIN vehicle ON fire_station.id = vehicle.fire_station_id JOIN vehicle_incident ON vehicle_incident.plate_number = vehicle.plate_number WHERE vehicle_incident.incident_id = ?',
+      [id],
+    )
       .then(rows => rows)
       .catch(err => {
-        console.error('Error from getFireStationDetailsByIncidentID:', err.sqlMessage);
+        console.error(
+          'Error from getFireStationDetailsByIncidentID:',
+          err.sqlMessage,
+        );
         return err.code;
       });
     return res;
@@ -170,9 +175,10 @@ class MySQLDB {
   }
 
   getStationVehiclesDetails(stationId) {
-    const res = this.query('SELECT * FROM vehicle JOIN fire_station ON fire_station.id = vehicle.fire_station_id WHERE vehicle.fire_station_id = ?', [
-      stationId,
-    ])
+    const res = this.query(
+      'SELECT * FROM vehicle JOIN fire_station ON fire_station.id = vehicle.fire_station_id WHERE vehicle.fire_station_id = ?',
+      [stationId],
+    )
       .then(rows => rows)
       .catch(err => {
         console.error('Error from getStationVehiclesDetails:', err.sqlMessage);
@@ -510,6 +516,44 @@ class MySQLDB {
       .then(rows => rows)
       .catch(err => {
         console.error('Error from dispatchAdditionalUnit:', err.sqlMessage);
+        return res.status(409).send({ Error: err.code });
+      });
+  }
+
+  getCEDesc(id) {
+    const res = this.query(
+      `SELECT * FROM ce_desc_log WHERE ce_incident_id=? AND if_active=1`,
+      [id],
+    )
+      .then(rows => rows)
+      .catch(err => {
+        console.error('Error from getCEDesc:', err.sqlMessage);
+        return res.status(409).send({ Error: err.code });
+      });
+
+    return res;
+  }
+
+  addCEDesc(body) {
+    const { specialist_id, ce_incident_id, description } = body;
+    const res = this.query(
+      `INSERT INTO ce_desc_log(specialist_id, ce_incident_id, description, created_at, if_active) VALUES (?,?,?,CURRENT_TIMESTAMP,1) `,
+      [specialist_id, ce_incident_id, description],
+    )
+      .then(rows => rows)
+      .catch(err => {
+        console.error('Error from getCEDesc:', err.sqlMessage);
+        return res.status(409).send({ Error: err.code });
+      });
+  }
+
+  removeCEDesc(id) {
+    const res = this.query(`UPDATE ce_desc_log SET if_active=0 WHERE id=?`, [
+      id,
+    ])
+      .then(rows => rows)
+      .catch(err => {
+        console.error('Error from getCEDesc:', err.sqlMessage);
         return res.status(409).send({ Error: err.code });
       });
   }
