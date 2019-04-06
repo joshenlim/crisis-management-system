@@ -405,7 +405,7 @@ class MySQLDB {
   setRoadTrafficAlert(body) {
     const { id, if_alerted } = body;
     const res = this.query(
-      'UPDATE road_traffic_acc SET if_alerted = ?, WHERE incident_id = ?',
+      'UPDATE road_traffic_acc SET if_alerted = ? WHERE incident_id = ?',
       [if_alerted, id],
     )
       .then(rows => rows)

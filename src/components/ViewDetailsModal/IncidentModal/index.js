@@ -42,6 +42,7 @@ class IncidentModal extends Component {
                     ...incidentDetails, additionalFields: {
                       vehicle_plate: data.length > 0 ? data[0].vehicle_plate : "Missing",
                       vehicle_type: data.length > 0 ? data[0].vehicle_type : "Missing",
+                      if_alerted: data.length > 0 ? data[0].if_alerted : false,
                     }
                   }
                 })
@@ -181,6 +182,30 @@ class IncidentModal extends Component {
     }
   }
 
+  updateAlert = (event) => {
+    const { incident } = this.state;
+    const alertType = event.target.name;
+    if (alertType == "SPF") {
+      const alertUpdate = incident.if_alerted == 0 ? 1 : 0;
+      this.setState({
+        incident: { ...incident, if_alerted: alertUpdate }
+      })
+      this.props.updateAlert(alertType, incident.id, alertUpdate)
+    } else if (alertType == "LTA") {
+      const alertUpdate = incident.additionalFields.if_alerted == 0 ? 1 : 0;
+      this.setState({
+        incident: {
+          ...incident,
+          additionalFields: {
+            ...incident.additionalFields,
+            if_alerted: alertUpdate,
+          }
+        }
+      })
+      this.props.updateAlert(alertType, incident.id, alertUpdate)
+    }
+  }
+
   render() {
     const { incident, dispatched_vehicles } = this.state;
     const { page, fireStationList } = this.props;
@@ -217,7 +242,7 @@ class IncidentModal extends Component {
         <hr />
 
         {
-          page == 1 && <div>
+          page == 1 && <div className={s.incidentDetailBody}>
             <p className={s.contentHeader}>Incident Description</p>
             <div className={s.contentBody}>{incident.description}</div>
 
@@ -253,6 +278,35 @@ class IncidentModal extends Component {
               {this.renderIncidentCatDetails(incident.category)}
 
             </div>
+            
+            <p className={s.contentHeader}>Alert Relevant Authorities</p>
+            <div className={s.contentBody}>
+              <div className={s.textQuestion}>
+                <div className={s.question}>
+                  <p className={s.title}>Alerted SPF:</p>
+                </div>
+                <input
+                  name="SPF"
+                  type="checkbox"
+                  checked={incident.if_alerted}
+                  onChange={this.updateAlert}
+                />
+              </div>
+              {
+                incident.category == "road_traffic_accident" && <div className={s.textQuestion}>
+                  <div className={s.question}>
+                    <p className={s.title}>Alerted LTA:</p>
+                  </div>
+                  <input
+                    name="LTA"
+                    type="checkbox"
+                    checked={incident.additionalFields.if_alerted}
+                    onChange={this.updateAlert}
+                  />
+                </div>
+              }
+            </div>
+
             <p className={s.contentHeader}>Dispatchment Details</p>
             <div className={s.contentBody}>
               {
@@ -274,15 +328,15 @@ class IncidentModal extends Component {
               }
               <p className={s.dispatchAdditional} onClick={this.nextPage}>Dispatch Additional Units</p>
             </div>
+          </div>
+        }
 
-            {
-              incident.status != "CLOSED" && <div>
-                <hr />
-                <div className={s.closeIncButton} onClick={this.closeIncident}>
-                  Close Incident
-                </div>
-              </div>
-            }
+        {
+          incident.status != "CLOSED" && page == 1 && <div>
+            <hr />
+            <div className={s.closeIncButton} onClick={this.closeIncident}>
+              Close Incident
+            </div>
           </div>
         }
 

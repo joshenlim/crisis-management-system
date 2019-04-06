@@ -75,6 +75,11 @@
       font-size: 1em;
     }
 
+    .incidentDetailBody {
+      max-height: 435px;
+      overflow-y: scroll;
+    }
+
     .contentHeader {
       font-size: 1em;
       font-weight: 400;
@@ -460,5 +465,26 @@
     width: 47px;
     right: 8px;
     top: 38px;
+  }
+}
+
+.textQuestion {
+  display: flex;
+  margin-bottom: 5px;
+  align-items: center;
+
+  .question {
+    width: 200px;
+
+    .title {
+      margin: 0;
+    }
+
+    .subtitle {
+      margin: 0;
+      font-size: 0.7em;
+      opacity: 0.4;
+      font-style: italic;
+    }
   }
 }

@@ -88,6 +88,26 @@ class ViewDetailsModal extends React.Component {
       })
   }
 
+  updateAlert = (alertType, incident_id, alert_update) => {
+    const body = {
+      id: incident_id,
+      if_alerted: alert_update,
+    }
+    if (alertType == "SPF") {
+      axios.post('/api/incident/set_incident_alert', body)
+        .then((res) => res)
+        .catch((err) => {
+          console.log(err)
+        })
+    } else if (alertType == "LTA") {
+      axios.post('/api/incident/set_road_traffic_alert', body)
+        .then((res) => res)
+        .catch((err) => {
+          console.log(err)
+        })
+    }
+  }
+
   renderContent = () => {
     switch (this.props.type) {
       case Enum.detailType.FIRE_STATION:
@@ -101,6 +121,7 @@ class ViewDetailsModal extends React.Component {
                 fireStationList={this.props.fireStationList}
                 dispatchUnits={this.dispatchUnits}
                 closeIncident={this.closeIncident}
+                updateAlert={this.updateAlert}
                 nextPage={this.nextPage}
                 prevPage={this.prevPage}
                 page={this.state.page} />;
