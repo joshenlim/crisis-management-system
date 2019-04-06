@@ -256,8 +256,8 @@ class IncidentModal extends Component {
             <p className={s.contentHeader}>Dispatchment Details</p>
             <div className={s.contentBody}>
               {
-                formattedDispatch.length > 0 && formattedDispatch.map((station) => {
-                  return <div className={s.dispatchStation}>
+                formattedDispatch.length > 0 && formattedDispatch.map((station, index) => {
+                  return <div key={index} className={s.dispatchStation}>
                     <p className={s.stationName}>{station.station_name}</p>
                     <ul className={s.dispatchList}>
                       {
