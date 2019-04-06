@@ -20,7 +20,7 @@ router.get('/get', async (req, res) => {
 
 router.get('/get_vehicleIncident', async (req, res) => {
   const { id } = req.query;
-  const incidents = await database.getVehicleIncidents(id)
+  const incidents = await database.getVehicleIncidents(id);
   return res.status(200).send(incidents);
 });
 
@@ -112,6 +112,13 @@ router.post('/update_escalation', async (req, res) => {
   await database.updateEscalation(reqBody);
   return res.status(201).send({
     Success: 'Incident escalation successfully updated',
+  });
+});
+
+router.post('/create_civil_emergency', async (req, res) => {
+  await database.createCivilEmergency(req.body);
+  return res.status(201).send({
+    Success: 'Civil emergency successfully created',
   });
 });
 

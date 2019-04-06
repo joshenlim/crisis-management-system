@@ -1,8 +1,8 @@
 import express from 'express';
 
 const client = require('twilio')(
-  'AC7f59907990b789ffa0d3012ca0deb34d',
-  '0ac5e93a426a622a22c56af967fd6d70',
+  process.env.TWILIO_ACCOUT_SID,
+  process.env.TWILIO_AUTH_TOKEN,
 );
 
 const router = express.Router();
@@ -13,7 +13,7 @@ router.post('/broadcast', (req, res) => {
   res.header('Content-Type', 'application/json');
   client.messages
     .create({
-      from: '+19733397445',
+      from: process.env.TWILIO_PHONE_NUMBER,
       to: '+6597693293', //+6596554936
       body: message,
     })
