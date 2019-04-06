@@ -643,6 +643,13 @@ class MySQLDB {
         return res.status(409).send({ Error: err.code });
       });
   }
+
+  closeIncident(incident_id, completed_at) {
+    const res = this.query(
+      `UPDATE incidents SET completed_at = ?, status = 'CLOSED' WHERE id = ?`,
+      [completed_at, incident_id],
+    )
+  }
 }
 
 export default MySQLDB;

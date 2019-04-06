@@ -1,6 +1,9 @@
 import express from 'express';
 import MySQLDB from '../database';
 import config from '../config';
+import moment from 'moment';
+import PDF from 'pdfkit';
+import fs from 'fs';
 
 const router = express.Router({ mergeParams: true });
 
@@ -147,6 +150,15 @@ router.post('/dispatch', async (req, res) => {
   });
 });
 
+router.post('/close_incident', async (req, res) => {
+  const { incident_id } = req.body;
+  const completed_at = moment().format('YYYY-MM-DD kk:mm:ss');
+  await database.closeIncident(incident_id, completed_at);
+  return res.status(200).send({
+    Success: 'Closed incident succesfully',
+  });
+});
+
 router.get('/get_ce_desc', async (req, res) => {
   const { id } = req.query;
   const desc = await database.getCEDesc(id);
@@ -231,10 +243,6 @@ router.post('/remove_ce_desc', async (req, res) => {
 // remember to edit on gitignore
 router.post('/generate_dailyreport', async (req, res) => {
   const incidents = await database.getIncidentByCurrentDate(); // need to select according to current date for completed_at
-
-  var moment = require('moment'); // including the moment module
-  var PDF = require('pdfkit'); // including the pdfkit module
-  var fs = require('fs'); // including the fs module
 
   // create current datetime
   var datetime = moment().format('YYYY-MM-DD kk:mm:ss');
@@ -321,10 +329,6 @@ router.post('/generate_dailyreport', async (req, res) => {
 
 router.post('/generate_weeklyreport', async (req, res) => {
   const incidents = await database.getIncidentBySixDaysBeforeCurrentDate(); // need to select according to (from current date - 6 to current date) and status = completed
-
-  var moment = require('moment'); // including the moment module
-  var PDF = require('pdfkit'); // including the pdfkit module
-  var fs = require('fs'); // including the fs module
 
   // create old datetime (6 days before -> weekly)
   var oneweek = moment().subtract(6, 'days');

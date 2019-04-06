@@ -40,8 +40,8 @@ class IncidentModal extends Component {
                 this.setState({
                   incident: {
                     ...incidentDetails, additionalFields: {
-                      vehicle_plate: data[0].vehicle_plate,
-                      vehicle_type: data[0].vehicle_type,
+                      vehicle_plate: data.length > 0 ? data[0].vehicle_plate : "Missing",
+                      vehicle_type: data.length > 0 ? data[0].vehicle_type : "Missing",
                     }
                   }
                 })
@@ -58,7 +58,7 @@ class IncidentModal extends Component {
                 this.setState({
                   incident: {
                     ...incidentDetails, additionalFields: {
-                      fire_spread_rate: data[0].fire_spread_rate,
+                      fire_spread_rate: data.length > 0 ? data[0].fire_spread_rate : "Missing",
                     }
                   }
                 })
@@ -75,11 +75,11 @@ class IncidentModal extends Component {
                 this.setState({
                   incident: {
                     ...incidentDetails, additionalFields: {
-                      curr_condition: data[0].curr_condition,
-                      level_of_consc: data[0].level_of_consc,
-                      if_suicide: data[0].if_suicide,
-                      suicidal_method: data[0].suicidal_method,
-                      suicidal_equipment: data[0].suicidal_equipment,
+                      curr_condition: data.length > 0 ? data[0].curr_condition : "Missing",
+                      level_of_consc: data.length > 0 ? data[0].level_of_consc : "Missing",
+                      if_suicide: data.length > 0 ? data[0].if_suicide : "Missing",
+                      suicidal_method: data.length > 0 ? data[0].suicidal_method : "Missing",
+                      suicidal_equipment: data.length > 0 ? data[0].suicidal_equipment : "Missing",
                     }
                   }
                 })
@@ -173,6 +173,12 @@ class IncidentModal extends Component {
   onSubmit = (event) => {
     event.preventDefault();
     this.props.dispatchUnits(this.state.incident.id, this.state.vehicleDispatch)
+  }
+
+  closeIncident = () => {
+    if (confirm(`Confirm to close Incident ID: ${this.state.incident.id}?`)) {
+      this.props.closeIncident(this.state.incident.id);
+    }
   }
 
   render() {
@@ -272,7 +278,7 @@ class IncidentModal extends Component {
             {
               incident.status != "CLOSED" && <div>
                 <hr />
-                <div className={s.closeIncButton}>
+                <div className={s.closeIncButton} onClick={this.closeIncident}>
                   Close Incident
                 </div>
               </div>
