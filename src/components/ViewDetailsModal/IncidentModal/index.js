@@ -260,26 +260,25 @@ class IncidentModal extends Component {
                     <td className={s.detailHeader}>Date and Time of Call: </td>
                     <td>{formatUtils.formatDate(incident.created_at)}</td>
                   </tr>
-                  {
-                    incident.category == "road_traffic" && <tr>
-                      <td className={s.detailHeader}>Vehicle Plate Number: </td>
-                      {
-                        vehicle_incidents.map((vehicle_incident, index) => {
-                          return <td key={index}>{vehicle_incident.plate_number},{' '}</td>
-                        })
-                      }
-                    </tr>
-                  }
+
+                  <tr>
+                    <td className={s.detailHeader}>Number of Casualties: </td>
+                    <td>{incident.casualty_no}</td>
+                  </tr>
+
                   <tr>
                     <td className={s.detailHeader}>Incident Location: </td>
                     <td>{incident.postal_code},{' '}{incident.address}</td>
                   </tr>
+
                   <tr>
                     <td className={s.detailHeader}>Caller Information: </td>
                     <td>{incident.caller_name},{' '}{incident.caller_contact}</td>
                   </tr>
                 </tbody>
               </table>
+
+              <div style={{marginTop: "10px"}} />
 
               {this.renderIncidentCatDetails(incident.category)}
 
