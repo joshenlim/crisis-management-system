@@ -12,21 +12,37 @@ import IncidentDetailMap from './IncidentDetailMap/IncidentDetailMap';
 import formatUtils from '../../../formatUtils';
 import Enum from '../../../constants/enum';
 import AlertedIncidentDesc from '../AlertedIncidentDesc';
+import SubmitReportPanel from '../SubmitReportPanel';
+
+import { SOCKIO_HOST } from '../../../constants';
+import Socket from 'socket.io-client';
+
+var io = Socket(SOCKIO_HOST);
 
 class AlertedIncidentDetail extends Component {
   constructor(props) {
     super(props);
     this.state = { incident: {}, dispatchedUnits: [] };
-
-    this.resolveCase = this.resolveCase.bind(this);
   }
 
   componentWillMount() {
     this.fetchIncident();
     this.fetchDispatchUnit();
+
+    io.on('fetch', type => {
+      if (Enum.socketEvents.INCIDENT_DETAIL == type) {
+        this.fetchIncident();
+        this.fetchDispatchUnit();
+        console.log(
+          'SocketIo: received "incident detail" at ' +
+            new Date().getTime() +
+            'ms',
+        );
+      }
+    });
   }
 
-  resolveCase() {
+  resolveCase = () => {
     if (
       confirm(
         "You are about to set this incident as 'RESOLVED'. " +
@@ -44,14 +60,20 @@ class AlertedIncidentDetail extends Component {
         }),
       })
         .then(() => {
+          io.emit('notify', Enum.socketEvents.INCIDENT_DETAIL);
+          console.log(
+            'SocketIo: emitted "incident detail" at ' +
+              new Date().getTime() +
+              'ms',
+          );
+
           alert('Incident successfully resolved!');
-          this.props.displayList();
         })
         .catch(err => console.log(err));
     }
-  }
+  };
 
-  fetchDispatchUnit() {
+  fetchDispatchUnit = () => {
     fetch(
       API_HOST +
         'api/station/get_dispatched_vehicles?incident_id=' +
@@ -66,7 +88,7 @@ class AlertedIncidentDetail extends Component {
       .then(res => res.json())
       .then(data => this.setState({ dispatchedUnits: data }))
       .catch(err => console.log(err));
-  }
+  };
 
   renderDispatchDetails = () => {
     if (this.state.dispatchedUnits.length > 0) {
@@ -94,7 +116,7 @@ class AlertedIncidentDetail extends Component {
     }
   };
 
-  fetchIncident() {
+  fetchIncident = () => {
     fetch(
       API_HOST +
         'api/incident/get?id=' +
@@ -110,6 +132,38 @@ class AlertedIncidentDetail extends Component {
       .then(res => res.json())
       .then(data => this.setState({ incident: data[0] }))
       .catch(err => console.log(err));
+  };
+
+  renderResolveBtn = () => {
+    const { incident } = this.state;
+    if (
+      incident.status !== Enum.incidentStatus.RESOLVED &&
+      incident.status !== Enum.incidentStatus.CLOSED
+    ) {
+      return (
+        <span>
+          <hr />
+
+          <div className={s.buttonPanel}>
+            <div className={s.resolveBtn} onClick={this.resolveCase}>
+              Mark Case as Resolved
+            </div>
+          </div>
+        </span>
+      );
+    }
+  };
+
+  renderSidebar() {
+    const { incident } = this.state;
+    if (
+      incident.status !== Enum.incidentStatus.RESOLVED &&
+      incident.status !== Enum.incidentStatus.CLOSED
+    ) {
+      return <DispatchVehicleList {...this.props} />;
+    } else {
+      return <SubmitReportPanel incidentId={incident.id} />;
+    }
   }
 
   render() {
@@ -117,19 +171,19 @@ class AlertedIncidentDetail extends Component {
 
     let statusClass;
     switch (incident.status) {
-      case 'DISPATCHED':
+      case Enum.incidentStatus.DISPATCHED:
         statusClass = s.dispatched;
         break;
-      case 'ON-SITE':
+      case Enum.incidentStatus.ON_SITE:
         statusClass = s.onsite;
         break;
-      case 'ENROUTE BACK':
+      case Enum.incidentStatus.ENROUTE:
         statusClass = s.enrouteBack;
         break;
-      case 'RESOLVED':
+      case Enum.incidentStatus.RESOLVED:
         statusClass = s.resolved;
         break;
-      case 'CLOSED':
+      case Enum.incidentStatus.CLOSED:
         statusClass = s.caseClosed;
         break;
       default:
@@ -179,13 +233,7 @@ class AlertedIncidentDetail extends Component {
             <div className={s.header2}>Dispatch Details</div>
             {this.renderDispatchDetails()}
 
-            <hr />
-
-            <div className={s.buttonPanel}>
-              <div className={s.resolveBtn} onClick={this.resolveCase}>
-                Mark Case as Resolved
-              </div>
-            </div>
+            {this.renderResolveBtn()}
 
             <hr />
 
@@ -194,9 +242,7 @@ class AlertedIncidentDetail extends Component {
             </div>
           </div>
 
-          <div className={s.rightCol}>
-            <DispatchVehicleList {...this.props} />
-          </div>
+          <div className={s.rightCol}>{this.renderSidebar()}</div>
         </div>
       )
     );

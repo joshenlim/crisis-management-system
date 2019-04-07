@@ -2,9 +2,16 @@ import React from 'react';
 import s from './DispatchVehicleList.scss';
 import expandDrop from '../../../assets/images/down-arrow.svg';
 
+import Enum from '../../../constants/enum';
+
 import fetch from 'node-fetch';
 import { API_HOST } from '../../../constants';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
+
+import { SOCKIO_HOST } from '../../../constants';
+import Socket from 'socket.io-client';
+
+var io = Socket(SOCKIO_HOST);
 
 class DispatchVehicleList extends React.Component {
   constructor(props) {
@@ -18,6 +25,17 @@ class DispatchVehicleList extends React.Component {
 
   componentWillMount() {
     this.fetchAllStation();
+
+    io.on('fetch', type => {
+      if (Enum.socketEvents.INCIDENT_DETAIL == type) {
+        this.fetchAllStation();
+        console.log(
+          'SocketIo: received "incident detail" at ' +
+            new Date().getTime() +
+            'ms',
+        );
+      }
+    });
   }
 
   expandDropdown(event) {
@@ -64,7 +82,7 @@ class DispatchVehicleList extends React.Component {
     let checkedBoxes = document.querySelectorAll(
       'input[name=selectedVehicles]:checked',
     );
-    checkedBoxes.forEach(checked => {
+    checkedBoxes.forEach((checked, ind) => {
       fetch(API_HOST + 'api/incident/dispatch', {
         method: 'POST',
         headers: {
@@ -75,14 +93,25 @@ class DispatchVehicleList extends React.Component {
           plate_number: checked.value,
         }),
       })
-        .then(res => res.json())
+        .then(res => {
+          res.json();
+
+          //Check to ensure that socket emits only on the last insert
+          if (ind >= checkedBoxes.length - 1) {
+            io.emit('notify', Enum.socketEvents.INCIDENT_DETAIL);
+            console.log(
+              'SocketIo: emitted "incident detail" at ' +
+                new Date().getTime() +
+                'ms',
+            );
+            alert('Vehicles successfully dispatched.');
+          }
+        })
         .catch(err => {
           console.log(err);
           throw err;
         });
     });
-    alert('Vehicles successfully dispatched.');
-    this.props.displayList();
   };
 
   render() {
@@ -135,7 +164,7 @@ class DispatchVehicleList extends React.Component {
               );
             }
         })}
-        <hr />
+        <br />
         <div className={s.buttonPanel}>
           <div className={s.dispatchBtn} onClick={this.dispatchVeh}>
             Send Dispatch
