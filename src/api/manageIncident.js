@@ -23,19 +23,19 @@ router.get('/get', async (req, res) => {
 
 router.get('/get_RTA_details', async (req, res) => {
   const { id } = req.query;
-  const incidentDetail = await database.getRTADetails(id)
+  const incidentDetail = await database.getRTADetails(id);
   return res.status(200).send(incidentDetail);
 });
 
 router.get('/get_FE_details', async (req, res) => {
   const { id } = req.query;
-  const incidentDetail = await database.getFEDetails(id)
+  const incidentDetail = await database.getFEDetails(id);
   return res.status(200).send(incidentDetail);
 });
 
 router.get('/get_ME_details', async (req, res) => {
   const { id } = req.query;
-  const incidentDetail = await database.getMEDetails(id)
+  const incidentDetail = await database.getMEDetails(id);
   return res.status(200).send(incidentDetail);
 });
 
@@ -161,32 +161,6 @@ router.post('/close_incident', async (req, res) => {
   await database.closeIncident(incident_id, completed_at);
   return res.status(200).send({
     Success: 'Closed incident succesfully',
-  });
-});
-
-router.get('/get_ce_desc', async (req, res) => {
-  const { id } = req.query;
-  const desc = await database.getCEDesc(id);
-  return res.status(200).send(desc);
-});
-
-router.post('/add_ce_desc', async (req, res) => {
-  const reqBody = {
-    specialist_id: req.session.passport.user.id, //Front End ignore this
-    ce_incident_id: req.body.ce_incident_id,
-    description: req.body.description,
-  };
-  await database.addCEDesc(reqBody);
-  return res.status(201).send({
-    Success: 'Civil Emergency description successfully added',
-  });
-});
-
-router.post('/remove_ce_desc', async (req, res) => {
-  const { id } = req.body;
-  await database.removeCEDesc(id);
-  return res.status(201).send({
-    Success: 'Civil Emergency description successfully removed',
   });
 });
 
