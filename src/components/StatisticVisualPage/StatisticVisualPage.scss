@@ -1,10 +1,17 @@
+@import '../variables.css';
+
 .container {
   display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  width: 100%;
+  min-width: 840px;
 
-  .card {
+  .cardTop {
+    width: 30%;
+    min-width: 250px;
     border-radius: 5px;
     padding: 10px;
-    margin: 10px;
     background: #fff;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 
@@ -13,9 +20,48 @@
       margin: 5px;
     }
 
-    .linegraph {
-      width: 50%;
-      height: 250px;
+    .hugenum {
+      font-weight: bolder;
+      font-size: 70px;
+      margin-left: 5px;
+    }
+
+    .body {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+
+      .leftcol {
+        border-right: 1px solid var(--border-black);
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+      }
+
+      .text {
+        margin: 10px;
+        font-weight: bolder;
+      }
+    }
+  }
+
+  .card {
+    width: 47%;
+    min-width: 400px;
+    border-radius: 5px;
+    padding: 10px;
+    margin-top: 20px;
+    background: #fff;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+
+    .title {
+      font-weight: bolder;
+      margin: 5px;
+    }
+
+    .chart {
+      align-content: center;
+      justify-content: center;
     }
   }
 }
