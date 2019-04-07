@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import Enum from '../../constants/enum';
 
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
@@ -11,14 +10,6 @@ import PubHIcon from '../../assets/images/mapicon-pubhospital.svg';
 import PriHIcon from '../../assets/images/mapicon-prihospital.svg';
 
 class MapMarker extends Component {
-  static propTypes = {
-    iconType: PropTypes.number.isRequired,
-    color: PropTypes.string,
-    mountModal: PropTypes.func.isRequired,
-    title: PropTypes.string.isRequired,
-    text: PropTypes.string.isRequired,
-  };
-
   constructor(props) {
     super(props);
     this.state = { showBubble: false, svg: {}, iconAlt: '' };

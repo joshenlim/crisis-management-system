@@ -60,10 +60,10 @@ class MEQuestionSet extends React.Component {
             <p className={s.title}>Level of Consciousness:</p>
           </div>
           <select onChange={this.updateSelectedConsciousness}>
-            <option value="alert">Alert (GSC 15)</option>
-            <option value="confused">Confused (GSC 13)</option>
-            <option value="drowzy">Drowzy (GSC 10)</option>
-            <option value="unconscious">Unconscious (GSC 6)</option>
+            <option value="Alert">Alert (GSC 15)</option>
+            <option value="Confused">Confused (GSC 13)</option>
+            <option value="Drowzy">Drowzy (GSC 10)</option>
+            <option value="Unconscious">Unconscious (GSC 6)</option>
           </select>
         </div>
 

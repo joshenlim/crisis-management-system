@@ -137,8 +137,13 @@ router.post('/update_escalation', async (req, res) => {
 });
 
 router.post('/create_civil_emergency', async (req, res) => {
-  await database.createCivilEmergency(req.body);
-  return res.status(201).send({
+  const reqBody = {
+    ...req.body,
+    ce_handle_id: req.user.id,
+    ce_upload_id: req.user.id,
+  };
+  await database.createCivilEmergency(reqBody);
+  return res.status(200).send({
     Success: 'Civil emergency successfully created',
   });
 });

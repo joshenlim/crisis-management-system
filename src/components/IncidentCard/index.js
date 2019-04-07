@@ -2,6 +2,7 @@ import React from 'react';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import s from './IncidentCard.scss';
 import expandIcon from '../../assets/images/expand.svg';
+import escalateIcon from '../../assets/images/escalate.svg';
 
 import Enum from '../../constants/enum';
 import formatUtils from '../../formatUtils';
@@ -9,13 +10,12 @@ import formatUtils from '../../formatUtils';
 class IncidentCard extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { incident: [] };
     this.expandIncident = this.expandIncident.bind(this);
     this.handleOnKeyDown = this.handleOnKeyDown.bind(this);
   }
 
   expandIncident = () => {
-    this.props.mountModal(Enum.detailType.INCIDENT, this.state.incident.id);
+    this.props.mountModal(Enum.detailType.INCIDENT, this.props.incident.id);
   };
 
   handleOnKeyDown = event => {
@@ -39,7 +39,6 @@ class IncidentCard extends React.Component {
       default:
         statusClass = s.dispatched;
     }
-    this.state.incident = incident;
 
     return (
       <div className={s.incidentCard + " " + (incident.status == "CLOSED" && s.addMargin)}>
@@ -61,7 +60,10 @@ class IncidentCard extends React.Component {
           S{incident.postal_code}, {incident.address}
         </p>
         {
-          incident.status != "CLOSED" && <div className={`${s.status} ${statusClass}`}>{incident.status}</div>
+          incident.status != "CLOSED" && <div className={s.incidentStatus}>
+            <div className={`${s.status} ${statusClass}`}>{incident.status}</div>
+            { incident.if_escalate_hq == 1 && <img className={s.escalate} src={escalateIcon} alt="escalate" /> }
+          </div>
         }
         {
           incident.status == "CLOSED" && <div className={s.timeInfo}>

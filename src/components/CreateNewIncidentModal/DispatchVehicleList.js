@@ -48,11 +48,11 @@ class DispatchVehicleList extends React.Component {
     return (
       <div className={s.stationList}>
         {
-          fireStationList.map((station) => {
+          fireStationList.map((station, index) => {
             if (station.vehicles.length) {
               return (
                 <div
-                  className={s.stationTile + " " + (this.state.selectedStationId == station.id ? s.openDropdown : "")}>
+                  className={s.stationTile + " " + (this.state.selectedStationId == station.id ? s.openDropdown : "")} key={index}>
                   <div className={s.tileHeader}>
                     <p className={s.stationName}>{station.name}</p>
                     <img
@@ -64,9 +64,9 @@ class DispatchVehicleList extends React.Component {
                   </div>
                   <div className={s.vehicleList}>
                     {
-                      station.vehicles.map((vehicle) => {
+                      station.vehicles.map((vehicle, index) => {
                         return (
-                          <div className={s.vehicleOption}>
+                          <div className={s.vehicleOption} key={index}>
                             <input
                               name="selectedVehicles"
                               type="checkbox"

@@ -50,16 +50,26 @@
     font-size: 0.9em;
   }
 
-  .status {
-    margin: 0;
-    color: var(--white);
-    border-radius: 20px;
-    width: 110px;
-    font-size: 0.8em;
-    font-weight: 400;
-    text-align: center;
+  .incidentStatus {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
     margin-top: 10px;
-    padding: 3px 0;
+
+    .escalate {
+      margin-left: 10px;
+    }
+
+    .status {
+      margin: 0;
+      color: var(--white);
+      border-radius: 20px;
+      width: 110px;
+      font-size: 0.8em;
+      font-weight: 400;
+      text-align: center;
+      padding: 3px 0;
+    }
   }
 
   .timeInfo {

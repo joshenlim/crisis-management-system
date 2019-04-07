@@ -50,7 +50,7 @@ class CreateNewIncidentModal extends React.Component {
 
       // ME Specific
       condition: null,
-      consciousness: 'alert',
+      consciousness: 'Alert',
       suicide: false,
       suicidalMethod: null,
       suicidalEquipment: null,
@@ -165,14 +165,30 @@ class CreateNewIncidentModal extends React.Component {
       fire_spread_rate: this.state.fireSpreadRate,
     };
 
-    const { vehicleDispatch } = this.state;
+    const { vehicleDispatch, escalate } = this.state;
 
     axios
       .post('/api/incident/create', postBody)
       .then(res => {
+        const newIncidentId = res.data.incident_id;
+        if (escalate) {
+          axios.post('/api/incident/update_escalation', {
+            incident_id: newIncidentId,
+            if_escalate_hq: 1
+          })
+            .then(res => {
+              axios.post('/api/incident/create_civil_emergency', {
+                incident_id: newIncidentId
+              })
+                .then(res => res)
+                .catch(err => console.log(err));
+            })
+            .catch(err => console.log(err));
+        }
+
         vehicleDispatch.forEach(vehicle => {
           const body = {
-            incident_id: res.data.incident_id,
+            incident_id: newIncidentId,
             plate_number: vehicle.plate,
           }
           axios.post('/api/incident/dispatch', body)

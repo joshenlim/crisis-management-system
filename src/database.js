@@ -373,12 +373,12 @@ class MySQLDB {
   }
 
   updateEscalation(body) {
-    const { id, if_escalate_hq, op_id } = body;
+    const { incident_id, if_escalate_hq, op_id } = body;
     var moment = require('moment'); // including the moment module
     var updated_at = moment().format('YYYY-MM-DD HH:mm:ss');
     const res = this.query(
       'UPDATE incidents SET if_escalate_hq = ?, updated_at = ?, op_update_id = ? WHERE id = ?',
-      [if_escalate_hq, updated_at, op_id, id],
+      [if_escalate_hq, updated_at, op_id, incident_id],
     )
       .then(rows => rows)
       .catch(err => {
@@ -514,7 +514,7 @@ class MySQLDB {
   createMedicalIncident(incident_id, body) {
     const {
       curr_condition,
-      level_consciousness,
+      level_of_consc,
       committed_suicide,
       suicide_method,
       suicide_equipment,
@@ -528,7 +528,7 @@ class MySQLDB {
       [
         incident_id,
         curr_condition,
-        level_consciousness,
+        level_of_consc,
         if_suicide,
         suicide_method,
         suicide_equipment,
