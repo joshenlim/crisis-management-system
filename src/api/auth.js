@@ -14,14 +14,19 @@ router.get('/test', async (req, res) => {
 });
 
 router.get('/details', async (req, res) => {
-  const details = {
-    id: req.session.passport.user.id,
-    name: req.session.passport.user.name,
-    s_rank: req.session.passport.user.s_rank,
-    role_id: req.session.passport.user.role_id,
-  };
+  if (req.session.passport) {
+    const details = {
+      id: req.session.passport.user.id,
+      name: req.session.passport.user.name,
+      s_rank: req.session.passport.user.s_rank,
+      role_id: req.session.passport.user.role_id,
+    };
 
-  return res.status(200).send(details);
+    return res.status(200).send(details);
+  } else
+    return res.status(409).send({
+      Error: 'User not logged in',
+    });
 });
 
 router.post('/register', async (req, res) => {
