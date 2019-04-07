@@ -13,6 +13,7 @@ import AlertedIncidentPage from '../../components/AlertedIncidentPage';
 import { SOCKIO_HOST } from '../../constants';
 
 import Socket from 'socket.io-client';
+import StatisticVisualPage from '../../components/StatisticVisualPage';
 
 var io = Socket(SOCKIO_HOST);
 
@@ -34,6 +35,8 @@ class HqDashboard extends React.Component {
   renderTab() {
     if (this.state.activeTab == 0) {
       return <AlertedIncidentPage />;
+    } else if (this.state.activeTab == 1) {
+      return <StatisticVisualPage />;
     }
   }
 

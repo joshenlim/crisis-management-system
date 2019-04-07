@@ -1,0 +1,21 @@
+.container {
+  display: flex;
+
+  .card {
+    border-radius: 5px;
+    padding: 10px;
+    margin: 10px;
+    background: #fff;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+
+    .title {
+      font-weight: bolder;
+      margin: 5px;
+    }
+
+    .linegraph {
+      width: 50%;
+      height: 250px;
+    }
+  }
+}
