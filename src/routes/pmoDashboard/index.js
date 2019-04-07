@@ -8,16 +8,16 @@
  */
 
 import React from 'react';
-import HqDashboard from './HqDashboard';
+import PmoDashboard from './PmoDashboard';
 import Layout from '../../components/Layout';
 
 async function action({ fetch }) {
   return {
     title: 'Dashboard',
-    chunks: ['hqDashboard'],
+    chunks: ['pmoDashboard'],
     component: (
       <Layout>
-        <HqDashboard />
+        <PmoDashboard />
       </Layout>
     ),
   };

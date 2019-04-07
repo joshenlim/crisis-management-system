@@ -52,31 +52,36 @@ class Header extends React.Component {
       backgroundImage: `url(${mockProfile})`,
     };
 
-    let logoSrc, cssHeader, cssProfile, cssLogout;
+    let logoSrc, cssHeader, cssProfile, cssLogout, dashboardTitle;
     switch (user.role) {
       case Enum.staffRole.SPECIALIST:
         cssHeader = s.headerHQ;
         logoSrc = logoAlt;
         cssProfile = s.userProfileHQ;
         cssLogout = s.logoutHQ;
+        dashboardTitle = "HQ"
         break;
       case Enum.staffRole.RELATIONS_OFFICER:
         cssHeader = s.headerPMO;
         logoSrc = logoAlt;
         cssProfile = s.userProfilePMO;
         cssLogout = s.logoutPMO;
+        dashboardTitle = "PMO"
         break;
       default:
         cssHeader = s.headerOps;
         logoSrc = logo;
         cssProfile = s.userProfileOps;
         cssLogout = s.logoutOps;
+        dashboardTitle = ""
     }
 
     return (
       <div className={cssHeader}>
+        { user.role == Enum.staffRole.RELATIONS_OFFICER && <div className={s.blueStrip}></div> }
         <div className={s.logo}>
-          <img className={s.logo} alt="Logo" src={logoSrc} />
+          <img className={s.logoImg} alt="Logo" src={logoSrc} />
+          <div className={s.title}>{dashboardTitle}</div>
         </div>
         <div className={s.nav}>
           <div className={s.userProfile + ' ' + cssProfile}>

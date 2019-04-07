@@ -18,6 +18,15 @@
   color: var(--black);
 }
 
+.blueStrip {
+  background-color: var(--cyan);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 7px;
+  height: 90px;
+}
+
 .headerOps {
   display: flex;
   flex-direction: horizontal;
@@ -49,8 +58,18 @@
 }
 
 .logo {
-  img {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+
+  .logoImg {
     width: 40px;
+  }
+
+  .title {
+    font-weight: 100;
+    margin-left: 15px;
+    font-size: 0.8em;
   }
 }
 

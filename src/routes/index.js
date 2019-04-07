@@ -28,15 +28,15 @@ const routes = {
       path: '/hq/dashboard',
       load: () => import(/* webpackChunkName: 'hqDashboard' */ './hqDashboard'),
     },
+    {
+      path: '/pmo/dashboard',
+      load: () => import(/* webpackChunkName: 'pmoDashboard' */ './pmoDashboard'),
+    },
     // These are all left here for reference, will remove all of them eventually prior to deployment
     {
       path: '/contact',
       load: () => import(/* webpackChunkName: 'contact' */ './contact'),
     },
-    // {
-    //   path: '/home',
-    //   load: () => import(/* webpackChunkName: 'login' */ './home'),
-    // },
     {
       path: '/register',
       load: () => import(/* webpackChunkName: 'register' */ './register'),
