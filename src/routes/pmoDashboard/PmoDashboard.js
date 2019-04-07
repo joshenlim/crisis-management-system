@@ -29,7 +29,7 @@ class PmoDashboard extends React.Component {
 
   renderTab = () => {
     if (this.state.activeTab == 0) {
-      return <AlertedIncidentPage />;
+      return <AlertedIncidentPage escalatedIncidents={this.props.escalatedIncidents} />;
     } else if (this.state.activeTab == 1) {
       return <StatisticVisualPage />;
     }

@@ -22,7 +22,10 @@ class AlertedIncidentPage extends Component {
   render() {
     switch (this.state.page) {
       case 0:
-        return <AlertedIncidentList displayDetail={this.displayDetail} />;
+        return <AlertedIncidentList
+          displayDetail={this.displayDetail}
+          escalatedIncidents={this.props.escalatedIncidents}
+        />;
       case 1:
         return (
           <AlertedIncidentDetail

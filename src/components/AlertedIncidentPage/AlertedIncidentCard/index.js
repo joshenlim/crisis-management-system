@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import s from './AlertedIncidentCard.scss';
 
@@ -14,18 +13,6 @@ import Enum from '../../../constants/enum';
 import formatUtils from '../../../formatUtils';
 
 class AlertedIncidentCard extends Component {
-  //TODO - Update proptype
-  static propTypes = {
-    incident: PropTypes.shape({
-      id: PropTypes.string.isRequired,
-      category: PropTypes.string.isRequired,
-      postalCode: PropTypes.string.isRequired,
-      address: PropTypes.string.isRequired,
-      status: PropTypes.string.isRequired,
-    }).isRequired,
-    mountModal: PropTypes.func.isRequired,
-  };
-
   constructor(props) {
     super(props);
     this.state = { incident: this.props.incident };

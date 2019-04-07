@@ -18,6 +18,36 @@
       p {
         margin: 0;
       }
+
+      .broadcastActions {
+        display: flex;
+        align-items: center;
+
+        .actionBubble {
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+          border: 1px solid var(--border-black);
+          border-radius: 5px;
+          width: 120px;
+          height: 100px;
+          margin-right: 10px;
+          cursor: pointer;
+          background-color: var(--white);
+          transition: all 0.2s ease;
+
+          &:hover {
+            background-color: var(--border-black);
+          }
+
+          .actionName {
+            font-size: 0.9em;
+            font-weight: 400;
+            margin-top: 10px;
+          }
+        }
+      }
     }
 
     .back {

@@ -9,7 +9,7 @@ class IncidentDetailMap extends React.Component {
   static propTypes = {
     center: PropTypes.objectOf(PropTypes.number),
     zoom: PropTypes.number,
-    address: PropTypes.string.isRequired,
+    address: PropTypes.number.isRequired,
   };
 
   static defaultProps = {

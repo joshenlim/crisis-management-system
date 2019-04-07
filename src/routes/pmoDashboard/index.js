@@ -1,23 +1,20 @@
-/**
- * React Starter Kit (https://www.reactstarterkit.com/)
- *
- * Copyright © 2014-present Kriasoft, LLC. All rights reserved.
- *
- * This source code is licensed under the MIT license found in the
- * LICENSE.txt file in the root directory of this source tree.
- */
-
 import React from 'react';
 import PmoDashboard from './PmoDashboard';
 import Layout from '../../components/Layout';
 
+const localAPI = 'http://localhost:3000/api';
+
 async function action({ fetch }) {
+  const escalatedIncidents = await fetch(localAPI + '/incident/get_escalated')
+    .then(res => res.json())
+    .then(data => data.reverse())
+
   return {
     title: 'Dashboard',
     chunks: ['pmoDashboard'],
     component: (
       <Layout>
-        <PmoDashboard />
+        <PmoDashboard escalatedIncidents={escalatedIncidents} />
       </Layout>
     ),
   };

@@ -18,6 +18,10 @@ import SubmitReportPanel from '../SubmitReportPanel';
 import { SOCKIO_HOST } from '../../../constants';
 import Socket from 'socket.io-client';
 
+import smsIcon from '../../../assets/images/sms.svg';
+import emailIcon from '../../../assets/images/email.svg';
+import socialIcon from '../../../assets/images/social.svg';
+
 var io = Socket(SOCKIO_HOST);
 
 @connect(state => ({
@@ -99,9 +103,9 @@ class AlertedIncidentDetail extends Component {
       return (
         <table>
           <tbody>
-            {this.state.dispatchedUnits.map(unit => {
+            {this.state.dispatchedUnits.map((unit, index) => {
               return (
-                <tr>
+                <tr key={index}>
                   <td>{unit.call_sign} - </td>
                   <td>{unit.type}</td>&emsp;
                   <td>{unit.veh_status}</td>
@@ -170,10 +174,21 @@ class AlertedIncidentDetail extends Component {
     }
   }
 
+  sendSMS = () => {
+    console.log("Send SMS");
+  }
+
+  sendEmail = () => {
+    console.log("Send Email")
+  }
+
+  sendSocial = () => {
+    console.log("Send Social")
+  }
+
   render() {
     const { incident } = this.state;
     const { user } = this.props;
-    console.table(incident);
 
     let statusClass;
     switch (incident.status) {
@@ -257,6 +272,26 @@ class AlertedIncidentDetail extends Component {
             {
               user.role_id != 5 && <div className={s.descriptionPanel}>
                 <AlertedIncidentDesc incidentId={incident.id} />
+              </div>
+            }
+
+            {
+              user.role_id == 5 && <div className={s.segment}>
+                <div className={s.header2}>Broadcast Actions</div>
+                <div className={s.broadcastActions}>
+                  <div className={s.actionBubble} onClick={this.sendSMS}>
+                    <img src={smsIcon} alt="SMS" />
+                    <p className={s.actionName}>Warning SMS</p>
+                  </div>
+                  <div className={s.actionBubble} onClick={this.sendEmail}>
+                    <img src={emailIcon} alt="email" />
+                    <p className={s.actionName}>Email Alert</p>
+                  </div>
+                  <div className={s.actionBubble} onClick={this.sendSocial}>
+                    <img src={socialIcon} alt="social" />
+                    <p className={s.actionName}>Social Media</p>
+                  </div>
+                </div>
               </div>
             }
           </div>
