@@ -174,17 +174,9 @@ class AlertedIncidentDetail extends Component {
     }
   }
 
-  sendSMS = () => {
-    console.log("Send SMS");
-  }
-
-  sendEmail = () => {
-    console.log("Send Email")
-  }
-
-  sendSocial = () => {
-    console.log("Send Social")
-  }
+  sendSMS = () => this.props.mountModal("sms");
+  sendEmail = () => this.props.mountModal("email");
+  sendSocial = () => this.props.mountModal("social");
 
   render() {
     const { incident } = this.state;

@@ -19,6 +19,11 @@ class AlertedIncidentPage extends Component {
     this.setState({ page: 0, incidentId: 0 });
   }
 
+  mountModal = (type) => {
+    console.log("Alerted Incident Page:", type)
+    this.props.mountModal(type);
+  }
+
   render() {
     switch (this.state.page) {
       case 0:
@@ -31,6 +36,7 @@ class AlertedIncidentPage extends Component {
           <AlertedIncidentDetail
             displayList={this.displayList}
             incidentId={this.state.incidentId}
+            mountModal={this.mountModal}
           />
         );
     }
