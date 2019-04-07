@@ -6,6 +6,7 @@ import { API_HOST } from '../../../constants';
 import formatUtils from '../../../formatUtils';
 import DispatchMap from '../DispatchMap';
 import DispatchVehicleList from '../DispatchVehicleList';
+import escalateIcon from '../../../assets/images/escalate.svg';
 
 class IncidentModal extends Component {
   constructor(props) {
@@ -232,11 +233,16 @@ class IncidentModal extends Component {
             {formatUtils.formatCategoryName(incident.category)} - {incident.postal_code}, {incident.address}
           </p>
         </div>
-        <div className={s.caseNo}>
-          Case No: {formatUtils.formatAbbrev(incident.category)}-{incident.id}
-        </div>
-        <div className={`${s.status} ${statusClass}`}>
-          {incident.status}
+        <div className={s.incidentStatus}>
+          <div className={s.caseNo}>
+            Case No: {formatUtils.formatAbbrev(incident.category)}-{incident.id}
+          </div>
+          <div className={`${s.status} ${statusClass}`}>
+            {incident.status}
+          </div>
+          {
+            incident.if_escalate_hq == 1 && <img className={s.escalate} src={escalateIcon} alt="escalate" />
+          }
         </div>
 
         <hr />

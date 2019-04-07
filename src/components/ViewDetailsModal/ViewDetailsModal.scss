@@ -57,16 +57,35 @@
       display: inline-block;
     }
 
-    .status {
-      margin: 0;
-      color: var(--white);
-      border-radius: 20px;
-      width: 110px;
-      font-size: 0.8em;
-      font-weight: 400;
-      text-align: center;
-      padding: 3px 0;
-      display: inline-block;
+    .incidentStatus {
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+
+      .caseNo {
+        opacity: 0.4;
+        color: var(--black);
+        margin: 0;
+        margin-right: 20px;
+        font-size: 1em;
+        display: inline-block;
+      }
+
+      .status {
+        margin: 0;
+        color: var(--white);
+        border-radius: 20px;
+        width: 110px;
+        font-size: 0.8em;
+        font-weight: 400;
+        text-align: center;
+        padding: 3px 0;
+        display: inline-block;
+      }
+
+      .escalate {
+        margin-left: 10px;
+      }
     }
 
     .category {

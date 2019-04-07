@@ -165,7 +165,7 @@ class CreateNewIncidentModal extends React.Component {
       fire_spread_rate: this.state.fireSpreadRate,
     };
 
-    const { vehicleDispatch, escalate } = this.state;
+    const { vehicleDispatch, escalate } = this.state;qq
 
     axios
       .post('/api/incident/create', postBody)
