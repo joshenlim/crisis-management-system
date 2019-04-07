@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux'
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import s from './AlertedIncidentDetail.scss';
 
@@ -19,6 +20,9 @@ import Socket from 'socket.io-client';
 
 var io = Socket(SOCKIO_HOST);
 
+@connect(state => ({
+  user: state.user,
+}))
 class AlertedIncidentDetail extends Component {
   constructor(props) {
     super(props);
@@ -35,8 +39,8 @@ class AlertedIncidentDetail extends Component {
         this.fetchDispatchUnit();
         console.log(
           'SocketIo: received "incident detail" at ' +
-            new Date().getTime() +
-            'ms',
+          new Date().getTime() +
+          'ms',
         );
       }
     });
@@ -46,7 +50,7 @@ class AlertedIncidentDetail extends Component {
     if (
       confirm(
         "You are about to set this incident as 'RESOLVED'. " +
-          '\nAre you sure you want to continue?',
+        '\nAre you sure you want to continue?',
       )
     ) {
       fetch(API_HOST + 'api/incident/update_status', {
@@ -63,8 +67,8 @@ class AlertedIncidentDetail extends Component {
           io.emit('notify', Enum.socketEvents.INCIDENT_DETAIL);
           console.log(
             'SocketIo: emitted "incident detail" at ' +
-              new Date().getTime() +
-              'ms',
+            new Date().getTime() +
+            'ms',
           );
 
           alert('Incident successfully resolved!');
@@ -76,8 +80,8 @@ class AlertedIncidentDetail extends Component {
   fetchDispatchUnit = () => {
     fetch(
       API_HOST +
-        'api/station/get_dispatched_vehicles?incident_id=' +
-        this.props.incidentId,
+      'api/station/get_dispatched_vehicles?incident_id=' +
+      this.props.incidentId,
       {
         method: 'GET',
         headers: {
@@ -119,9 +123,9 @@ class AlertedIncidentDetail extends Component {
   fetchIncident = () => {
     fetch(
       API_HOST +
-        'api/incident/get?id=' +
-        this.props.incidentId +
-        '&emergency=true',
+      'api/incident/get?id=' +
+      this.props.incidentId +
+      '&emergency=true',
       {
         method: 'GET',
         headers: {
@@ -168,6 +172,8 @@ class AlertedIncidentDetail extends Component {
 
   render() {
     const { incident } = this.state;
+    const { user } = this.props;
+    console.table(incident);
 
     let statusClass;
     switch (incident.status) {
@@ -193,7 +199,7 @@ class AlertedIncidentDetail extends Component {
     return (
       Object.keys(incident).length != 0 && (
         <div className={s.content}>
-          <div className={s.leftCol}>
+          <div className={s.leftCol + " " + (user.role_id == 5 && s.fullWidth)}>
             <div className={s.back} onClick={this.props.displayList}>
               <img width="8" src={backBtn} />
               <span className={s.backText}>Back</span>
@@ -214,35 +220,48 @@ class AlertedIncidentDetail extends Component {
 
             <br />
 
-            <div className={s.header2}>Incident Description</div>
-            <p>{incident.description}</p>
-            <div className={s.header2}>Map Location</div>
-            <IncidentDetailMap
-              address={incident.postal_code}
-              center={{ lat: incident.lat, lng: incident.lng }}
-              zoom={12}
-            />
-            <div className={s.header2}>Incident Details</div>
-            <p>
-              Create At: {incident.created_at}
-              <br />
-              Incident Location: {incident.address}, {incident.postal_code}
-              <br />
-              Caller Information: {incident.caller}, {incident.caller_contact}
-            </p>
-            <div className={s.header2}>Dispatch Details</div>
-            {this.renderDispatchDetails()}
-
-            {this.renderResolveBtn()}
-
-            <hr />
-
-            <div className={s.descriptionPanel}>
-              <AlertedIncidentDesc incidentId={incident.id} />
+            <div className={s.segment}>
+              <div className={s.header2}>Incident Description</div>
+              <p>{incident.description}</p>
             </div>
+
+            <div className={s.segment}>
+              <div className={s.header2}>Map Location</div>
+              <IncidentDetailMap
+                address={incident.postal_code}
+                center={{ lat: incident.lat, lng: incident.lng }}
+                zoom={12}
+              />
+            </div>
+
+            <div className={s.segment}>
+              <div className={s.header2}>Incident Details</div>
+              <p>
+                Create At: {incident.created_at}
+                <br />
+                Incident Location: {incident.address}, {incident.postal_code}
+                <br />
+                Caller Information: {incident.caller}, {incident.caller_contact}
+              </p>
+            </div>
+
+            <div className={s.segment}>
+              <div className={s.header2}>Dispatch Details</div>
+              {this.renderDispatchDetails()}
+            </div>
+
+            {user.role_id != 5 && this.renderResolveBtn()}
+
+            {user.role_id != 5 && <hr />}
+
+            {
+              user.role_id != 5 && <div className={s.descriptionPanel}>
+                <AlertedIncidentDesc incidentId={incident.id} />
+              </div>
+            }
           </div>
 
-          <div className={s.rightCol}>{this.renderSidebar()}</div>
+          { user.role_id != 5 && <div className={s.rightCol}>{this.renderSidebar()}</div>}
         </div>
       )
     );

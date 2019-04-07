@@ -5,8 +5,7 @@ import s from './PmoDashboard.scss';
 import TimeWeatherTemp from '../../components/TimeWeatherTemp';
 
 import iconArchived from '../../assets/images/hqicon-archived.svg';
-import iconReport from '../../assets/images/hqicon-reports.svg';
-import iconStatistics from '../../assets/images/hqicon-statistics.svg';
+import iconReport from '../../assets/images/report.svg';
 
 import AlertedIncidentPage from '../../components/AlertedIncidentPage';
 
@@ -21,18 +20,14 @@ class PmoDashboard extends React.Component {
   constructor(props) {
     super(props);
     this.state = { activeTab: 0 };
-
-    this.changeTab = this.changeTab.bind(this);
-    this.render = this.render.bind(this);
   }
 
-  changeTab(e) {
+  changeTab = (e) => {
     this.setState({ activeTab: e.target.name });
-
     let icons = document.getElementsByClassName(s.tabIcons);
   }
 
-  renderTab() {
+  renderTab = () => {
     if (this.state.activeTab == 0) {
       return <AlertedIncidentPage />;
     } else if (this.state.activeTab == 1) {
@@ -57,19 +52,11 @@ class PmoDashboard extends React.Component {
             style={this.state.activeTab == 1 ? { opacity: 1 } : {}}
             className={s.tabIcons}
             onClick={this.changeTab}
-            alt="Statistics"
+            alt="Report"
             name="1"
-            src={iconStatistics}
-          />
-          <br />
-          <img
-            style={this.state.activeTab == 2 ? { opacity: 1 } : {}}
-            className={s.tabIcons}
-            onClick={this.changeTab}
-            alt="Reports"
-            name="2"
             src={iconReport}
           />
+          <br />
         </div>
         <div className={s.main}>
           <TimeWeatherTemp />
