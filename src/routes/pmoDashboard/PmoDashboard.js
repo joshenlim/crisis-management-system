@@ -22,14 +22,15 @@ class PmoDashboard extends React.Component {
       activeTab: 0,
       detailModalType: '',
       showDetailsModal: false,
+      selectedIncident: {},
     };
   }
 
-  mountModal = (type) => {
-    console.log("Mount:", type)
+  mountModal = (type, incident) => {
     this.setState({
       detailModalType: type,
       showDetailsModal: !this.state.showDetailsModal,
+      selectedIncident: incident,
     });
   };
 
@@ -50,11 +51,15 @@ class PmoDashboard extends React.Component {
   }
 
   render() {
-    const { showDetailsModal, detailModalType } = this.state;
+    const { showDetailsModal, detailModalType, selectedIncident } = this.state;
     return (
       <div className={s.container}>
         {
-          showDetailsModal && <BroadcastModal type={detailModalType} mountModal={this.mountModal} />
+          showDetailsModal && <BroadcastModal
+            type={detailModalType}
+            mountModal={this.mountModal}
+            incident={selectedIncident}
+          />
         }
         <div className={s.sideColumn}>
           <img

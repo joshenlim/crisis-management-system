@@ -19,9 +19,8 @@ class AlertedIncidentPage extends Component {
     this.setState({ page: 0, incidentId: 0 });
   }
 
-  mountModal = (type) => {
-    console.log("Alerted Incident Page:", type)
-    this.props.mountModal(type);
+  mountModal = (type, incident) => {
+    this.props.mountModal(type, incident);
   }
 
   render() {

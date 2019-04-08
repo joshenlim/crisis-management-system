@@ -6,6 +6,7 @@ import withStyles from 'isomorphic-style-loader/lib/withStyles';
 
 import { SOCKIO_HOST } from '../../../constants';
 import Socket from 'socket.io-client';
+import Enum from '../../../constants/enum';
 
 var io = Socket(SOCKIO_HOST);
 

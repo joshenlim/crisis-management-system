@@ -41,64 +41,6 @@
       }
     }
 
-    .segment {
-      justify-content: space-between;
-      align-items: center;
-      font-size: 1.2em;
-      font-weight: bolder;
-    }
-
-    .caseNo {
-      opacity: 0.4;
-      color: var(--black);
-      margin: 0;
-      margin-right: 20px;
-      font-size: 1em;
-      display: inline-block;
-    }
-
-    .incidentStatus {
-      display: flex;
-      justify-content: flex-start;
-      align-items: center;
-
-      .caseNo {
-        opacity: 0.4;
-        color: var(--black);
-        margin: 0;
-        margin-right: 20px;
-        font-size: 1em;
-        display: inline-block;
-      }
-
-      .status {
-        margin: 0;
-        color: var(--white);
-        border-radius: 20px;
-        width: 110px;
-        font-size: 0.8em;
-        font-weight: 400;
-        text-align: center;
-        padding: 3px 0;
-        display: inline-block;
-      }
-
-      .escalate {
-        margin-left: 10px;
-      }
-    }
-
-    .category {
-      margin: 0;
-      margin-bottom: 10px;
-      font-size: 1em;
-    }
-
-    .incidentDetailBody {
-      max-height: 420px;
-      overflow-y: scroll;
-    }
-
     .contentHeader {
       font-size: 1em;
       font-weight: 400;
@@ -113,55 +55,50 @@
       color: var(--black);
       margin-bottom: 20px;
 
-      .detailHeader {
-        width: 200px;
+      .desc {
+        margin-top: 0;
+        margin-bottom: 20px;
       }
 
-      .noDispatch {
-        color: var(--border-black);
+      .textQuestion {
+        display: flex;
+        margin-bottom: 20px;
+        align-items: flex-start;
+
+        .question {
+          width: 180px;
+
+          .title {
+            margin: 0;
+          }
+        }
+
+        input[type='text'] {
+          border: none;
+          border-bottom: 1px solid var(--border-black);
+          width: 305px;
+          transition: all 0.2s ease;
+          font-weight: 100;
+
+          &:focus {
+            outline: none;
+            border-bottom: 1px solid var(--black);
+          }
+        }
+
+        textarea {
+          border-radius: 5px;
+          border: 1px solid var(--border-black);
+          font-weight: 100;
+          transition: all 0.2s ease;
+          padding: 5px;
+
+          &:focus {
+            outline: none;
+            border: 1px solid var(--black);
+          }
+        }
       }
-
-      tr {
-        margin-bottom: 5px;
-      }
-    }
-  }
-}
-
-.dispatchAdditional {
-  color: var(--blue);
-  text-decoration: underline;
-  cursor: pointer;
-  font-weight: 100;
-}
-
-.closeIncButton {
-  background-color: var(--red);
-  color: var(--white);
-  border: none;
-  padding: 10px 0;
-  border-radius: 5px;
-  width: 170px;
-  text-align: center;
-  cursor: pointer;
-  font-weight: 400;
-  margin: 0 auto;
-}
-
-.dispatchStation {
-  .stationName {
-    font-weight: 100;
-    margin: 0;
-  }
-
-  .dispatchList {
-    font-weight: 100;
-    padding-left: 20px;
-    margin: 10px 0;
-
-    .dispatchInfo {
-      margin: 0;
-      margin-left: 10px;
     }
   }
 }
@@ -178,99 +115,11 @@
   background-color: var(--light-green);
 }
 
-.dispatchUnits {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  .dispatchList {
-    flex: 1;
-  }
-
-  .dispatchMap {
-    flex: 1;
-  }
-}
-
-.dispatchMapStep {
-  width: 800px !important;
-  min-height: 570px;
-}
-
-.openDropdown {
-  .tileHeader {
-    .expandDrop {
-      transform: rotate(180deg);
-    }
-  }
-
-  .vehicleList {
-    margin-top: 5px !important;
-    max-height: 2000px !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-
-    .vehicleOption {
-      max-height: 100px !important;
-      margin-bottom: 5px !important;
-    }
-  }
-}
-
-.stationList {
-  height: 400px;
-  overflow-y: scroll;
-  padding-right: 20px;
-
-  .stationTile {
-    padding: 5px 0;
-
-    .tileHeader {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-
-      .stationName {
-        margin: 0;
-        font-weight: 400;
-      }
-
-      .expandDrop {
-        cursor: pointer;
-        transition: all 0.2s ease;
-        padding: 10px;
-      }
-    }
-
-    .vehicleList {
-      max-height: 0;
-      visibility: hidden;
-      opacity: 0;
-      margin-top: 0;
-      transition: all 0.2s ease;
-
-      .vehicleOption {
-        margin-bottom: 0;
-        max-height: 0;
-        transition: all 0.2s ease;
-
-        input {
-          margin-left: 10px;
-        }
-
-        label {
-          margin-left: 15px;
-        }
-      }
-    }
-  }
-}
-
 .btnGrp {
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-top: 30px;
+  margin-top: 0;
 
   .prevButton {
     background-color: var(--white);
@@ -285,14 +134,18 @@
     cursor: pointer;
   }
 
-  button {
+  .button {
     background-color: var(--blue);
     color: var(--white);
     border: none;
     width: 150px;
+    font-weight: 400;
     padding: 10px 0;
     border-radius: 5px;
     cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 }
 
@@ -487,23 +340,7 @@
   }
 }
 
-.textQuestion {
+.broadcastModal {
   display: flex;
-  margin-bottom: 5px;
-  align-items: center;
-
-  .question {
-    width: 200px;
-
-    .title {
-      margin: 0;
-    }
-
-    .subtitle {
-      margin: 0;
-      font-size: 0.7em;
-      opacity: 0.4;
-      font-style: italic;
-    }
-  }
+  flex-direction: column;
 }
