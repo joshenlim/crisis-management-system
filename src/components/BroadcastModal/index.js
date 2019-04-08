@@ -13,6 +13,8 @@ const io = Socket(SOCKIO_HOST);
 class BroadcastModal extends React.Component {
   constructor(props) {
     super(props);
+    var moment = require('moment'); // including the moment module
+    var date = moment().format('YYYY-MM-DD HH:mm:ss');
     this.state = {
       page: 1,
       updatingIncident: false,
@@ -43,7 +45,7 @@ class BroadcastModal extends React.Component {
         this.props.incident.category,
       )} at ${this.props.incident.address} (${
         this.props.incident.postal_code
-      }). Do avoid that area for until further notice.`,
+      }). Do avoid that area for until further notice. This message was broadcasted at ${date}.`,
     };
   }
 
@@ -64,7 +66,20 @@ class BroadcastModal extends React.Component {
           .post('/api/sms/broadcast', {
             message: publicMsg,
           })
-          .then()
+          .then(res => {
+            console.log('BROADCAST FROM SMS ', res);
+            if (res.data.success) {
+              axios
+                .post('/api/sms/log', {
+                  incident_id: this.props.incident.id,
+                  sms_id: 1,
+                })
+                .then()
+                .catch(err => console.log(err));
+            } else {
+              console.log('SMS failed to send!');
+            }
+          })
           .catch(err => console.log(err));
         break;
       }
@@ -74,7 +89,20 @@ class BroadcastModal extends React.Component {
             title: emailTitle,
             message: emailMsg,
           })
-          .then()
+          .then(res => {
+            console.log('BROADCAST FROM EMAIL ', res);
+            if (res.data.success) {
+              axios
+                .post('/api/email/log', {
+                  incident_id: this.props.incident.id,
+                  email_id: 1,
+                })
+                .then()
+                .catch(err => console.log(err));
+            } else {
+              console.log('Email failed to send!');
+            }
+          })
           .catch(err => console.log(err));
         break;
       }
@@ -83,7 +111,19 @@ class BroadcastModal extends React.Component {
           .post('/api/twitter/tweet', {
             message: publicMsg,
           })
-          .then()
+          .then(res => {
+            console.log('BROADCAST FROM TWITTER ', res);
+            if (res.status == 200) {
+              axios
+                .post('/api/twitter/log', {
+                  incident_id: this.props.incident.id,
+                })
+                .then()
+                .catch(err => console.log(err));
+            } else {
+              console.log('Twitter failed to tweet!');
+            }
+          })
           .catch(err => console.log(err));
         break;
       }
