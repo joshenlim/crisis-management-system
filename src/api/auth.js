@@ -29,6 +29,18 @@ router.get('/details', async (req, res) => {
     });
 });
 
+router.get('/gc_details', async (req, res) => {
+  const {id} = req.query;
+  const profile = await database.getGCDetails(id);
+  return res.status(200).send(profile)
+});
+
+router.get('/get_vehicleIncident', async (req, res) => {
+  const { id } = req.query;
+  const incidents = await database.getDispatchedVehicles(id);
+  return res.status(200).send(incidents);
+});
+
 router.post('/register', async (req, res) => {
   const { name, s_rank, username, password, role_id } = req.body;
   const user = await database.getStaff(username);

@@ -16,6 +16,8 @@ export default Object.freeze({
   vehicleStatus: {
     ON_THE_WAY: 'ON THE WAY',
     ON_SITE: 'ON SITE',
+    ENROUTE_BACK: 'ENROUTE BACK',
+    RETURNED: "RETURNED",
   },
   socketEvents: {
     NEW_INCIDENT: 1,

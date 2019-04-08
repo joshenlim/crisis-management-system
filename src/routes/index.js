@@ -32,6 +32,10 @@ const routes = {
       path: '/pmo/dashboard',
       load: () => import(/* webpackChunkName: 'pmoDashboard' */ './pmoDashboard'),
     },
+    {
+      path: '/gc/dashboard',
+      load: () => import(/* webpackChunkName: 'gcDashboard' */ './gcDashboard'),
+    },
     // Wildcard routes, e.g. { path: '(.*)', ... } (must go last)
     {
       path: '(.*)',
