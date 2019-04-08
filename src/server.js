@@ -200,9 +200,27 @@ app.use('/api/twitter', twitterAPI);
 // -----------------------------------------------------------------------------
 
 app.get('/reports/aa/:id', (req, res) => {
-  const id = req.params.id;
-  var file = './reports/' + id + '/AA.pdf';
-  res.download(file);
+  if (req.session.passport.user) {
+    const id = req.params.id;
+    var file = './reports/' + id + '/AA.pdf';
+    res.download(file);
+  } else {
+    res.status(403).send({
+      Error: 'Access not authorized',
+    });
+  }
+});
+
+app.get('/reports/mp/:id', (req, res) => {
+  if (req.session.passport.user) {
+    const id = req.params.id;
+    var file = './reports/' + id + '/MP.pdf';
+    res.download(file);
+  } else {
+    res.status(403).send({
+      Error: 'Access not authorized',
+    });
+  }
 });
 
 //

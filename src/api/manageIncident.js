@@ -224,7 +224,7 @@ router.post('/uploadReportAA', async (req, res) => {
     fs.mkdirSync(dir);
   }
 
-  fs.writeFile(path, fileAA, { encoding: 'binary' }, err => {
+  await fs.writeFile(path, fileAA, { encoding: 'binary' }, err => {
     if (err) console.log(err);
     else {
       console.log('File saved: ' + path);
@@ -247,7 +247,7 @@ router.post('/uploadReportMP', async (req, res) => {
     fs.mkdirSync(dir);
   }
 
-  fs.writeFile(path, fileMP, { encoding: 'binary' }, err => {
+  await fs.writeFile(path, fileMP, { encoding: 'binary' }, err => {
     if (err) console.log(err);
     else {
       //TODO - update ce with file path
@@ -255,6 +255,17 @@ router.post('/uploadReportMP', async (req, res) => {
       console.log('File saved: ' + path);
     }
   });
+});
+
+router.get('/report_exist', async (req, res) => {
+  const { incident_id } = req.query;
+  let pathAA = './reports/' + incident_id + '/AA.pdf';
+  let pathMP = './reports/' + incident_id + '/MP.pdf';
+
+  let existsAA = fs.existsSync(pathAA);
+  let existsMP = fs.existsSync(pathMP);
+
+  return res.status(200).send({ aa_exists: existsAA, mp_exists: existsMP });
 });
 
 // on click of generate report button (by today or this week)

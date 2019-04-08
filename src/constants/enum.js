@@ -22,6 +22,7 @@ export default Object.freeze({
     ESCALATE_INCIDENT: 2,
     CE_DESCRIPTION: 3,
     INCIDENT_DETAIL: 4,
+    REPORT: 5,
   },
   staffRole: {
     OPS_MANAGER: 'Ops Center Manager',
