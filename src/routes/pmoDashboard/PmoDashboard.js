@@ -4,6 +4,7 @@ import s from './PmoDashboard.scss';
 
 import iconArchived from '../../assets/images/hqicon-archived.svg';
 import iconReport from '../../assets/images/report.svg';
+import iconClosed from '../../assets/images/hqicon-reports.svg';
 
 import AlertedIncidentPage from '../../components/AlertedIncidentPage';
 import StatisticVisualPage from '../../components/StatisticVisualPage';
@@ -14,6 +15,7 @@ import { SOCKIO_HOST, API_HOST } from '../../constants';
 import Socket from 'socket.io-client';
 
 import Enum from '../../constants/enum';
+import ArchivedIncidentPage from '../../components/ArchivedIncidentPage';
 
 var io = Socket(SOCKIO_HOST);
 
@@ -78,6 +80,12 @@ class PmoDashboard extends React.Component {
       );
     } else if (this.state.activeTab == 1) {
       return <StatisticVisualPage />;
+    } else if (this.state.activeTab == 2) {
+      return (
+        <ArchivedIncidentPage
+          escalatedIncidents={this.props.archivedIncidents}
+        />
+      );
     }
   };
 
@@ -111,6 +119,14 @@ class PmoDashboard extends React.Component {
             src={iconReport}
           />
           <br />
+          <img
+            style={this.state.activeTab == 2 ? { opacity: 1 } : {}}
+            className={s.tabIcons}
+            onClick={this.changeTab}
+            alt="Archived"
+            name="2"
+            src={iconClosed}
+          />
         </div>
         <div className={s.main}>
           <TimeWeatherTemp />
