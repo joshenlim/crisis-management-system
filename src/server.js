@@ -37,6 +37,7 @@ import geocodeAPI from './api/geocode';
 import hospitalAPI from './api/hospitals';
 import smsAPI from './api/sms';
 import twitterAPI from './api/twitter';
+import emailAPI from './api/email';
 
 const isAuthorized = (req, res, next) => {
   if (req.isAuthenticated()) {
@@ -193,6 +194,7 @@ app.use('/api/geocode', geocodeAPI);
 app.use('/api/hospitals', hospitalAPI);
 app.use('/api/sms', smsAPI);
 app.use('/api/twitter', twitterAPI);
+app.use('/api/email', emailAPI);
 // app.use('/ops/dashboard', opsRouter);
 
 //
