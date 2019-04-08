@@ -65,7 +65,7 @@ class MySQLDB {
                             VALUES (?, ?, ?, ?, ?)`,
       [name, sRank, username, password, roleId],
     )
-      .then(rows => rows)
+      .then(res => res.insertId)
       .catch(err => {
         console.error('Error from createStaff:', err.sqlMessage);
         return err.code;
@@ -81,6 +81,19 @@ class MySQLDB {
       .then(rows => rows)
       .catch(err => {
         console.error('Error from getPolicies:', err.sqlMessage);
+        return err.code;
+      });
+    return res;
+  }
+
+  updateFirestationGC(staff_id, fire_station_id, veh_plate_num) {
+    const res = this.query(
+      `INSERT INTO fire_station_gc (staff_id, fire_station_id, veh_plate_num) VALUES (?, ?, ?);`,
+      [staff_id, fire_station_id, veh_plate_num]
+    )
+      .then(rows => rows)
+      .catch(err => {
+        console.error('Error from updateFirestationGC:', err.sqlMessage);
         return err.code;
       });
     return res;
