@@ -96,7 +96,6 @@ app.use(
 );
 // Error handler for express-jwt
 app.use((err, req, res, next) => {
-  // eslint-disable-line no-unused-vars
   if (err instanceof Jwt401Error) {
     console.error('[express-jwt-error]', req.cookies.id_token);
     // `clearCookie`, otherwise user can't use web-app until cookie expires
@@ -108,13 +107,11 @@ app.use((err, req, res, next) => {
 app.use(passport.initialize());
 
 app.post('/login', (req, res, next) => {
-  // eslint-disable-next-line consistent-return
   passport.authenticate('local-login', (err, user, info) => {
     if (err || !user) {
       console.log('Error: ', info);
       res.redirect('/');
     } else {
-      // eslint-disable-next-line consistent-return
       req.login(user, error => {
         if (error) {
           res.send(error);
@@ -129,11 +126,14 @@ app.post('/login', (req, res, next) => {
           //res.redirect('/ops/dashboard');
 
           switch (user.role) {
+            case Enum.staffRole.OPS_GROUNDCOMM:
+              res.redirect('/hq/dashboard');
+              break;
             case Enum.staffRole.SPECIALIST:
               res.redirect('/hq/dashboard');
               break;
             case Enum.staffRole.RELATIONS_OFFICER:
-              res.redirect('/hq/dashboard');
+              res.redirect('/pmo/dashboard');
               break;
             default:
               res.redirect('/ops/dashboard');

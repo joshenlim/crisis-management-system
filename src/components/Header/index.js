@@ -46,37 +46,47 @@ class Header extends React.Component {
 
   render() {
     const { user } = this.props;
-    const mockProfile =
-      'https://az616578.vo.msecnd.net/files/2016/07/24/6360498492827782071652557381_corgi%20header.jpg';
-    const userProfileStyle = {
-      backgroundImage: `url(${mockProfile})`,
-    };
+    let mockProfile;
 
-    let logoSrc, cssHeader, cssProfile, cssLogout;
+    let logoSrc, cssHeader, cssProfile, cssLogout, dashboardTitle;
     switch (user.role) {
       case Enum.staffRole.SPECIALIST:
         cssHeader = s.headerHQ;
         logoSrc = logoAlt;
         cssProfile = s.userProfileHQ;
         cssLogout = s.logoutHQ;
+        dashboardTitle = "HQ"
+        mockProfile =
+          'https://az616578.vo.msecnd.net/files/2016/07/24/6360498492827782071652557381_corgi%20header.jpg';
         break;
       case Enum.staffRole.RELATIONS_OFFICER:
         cssHeader = s.headerPMO;
         logoSrc = logoAlt;
         cssProfile = s.userProfilePMO;
         cssLogout = s.logoutPMO;
+        dashboardTitle = "PMO"
+        mockProfile = "https://i.pinimg.com/originals/dd/08/11/dd0811fc907c99e10c9b9c5f929f5c2c.jpg";
         break;
       default:
         cssHeader = s.headerOps;
         logoSrc = logo;
         cssProfile = s.userProfileOps;
         cssLogout = s.logoutOps;
+        dashboardTitle = ""
+        mockProfile =
+          'https://previews.123rf.com/images/scorpp/scorpp1409/scorpp140900103/32110537-pomeranian-puppy-the-age-of-1-5-month-isolated-on-white.jpg';
     }
+
+    const userProfileStyle = {
+      backgroundImage: `url(${mockProfile})`,
+    };
 
     return (
       <div className={cssHeader}>
+        { user.role == Enum.staffRole.RELATIONS_OFFICER && <div className={s.blueStrip}></div> }
         <div className={s.logo}>
-          <img className={s.logo} alt="Logo" src={logoSrc} />
+          <img className={s.logoImg} alt="Logo" src={logoSrc} />
+          <div className={s.title}>{dashboardTitle}</div>
         </div>
         <div className={s.nav}>
           <div className={s.userProfile + ' ' + cssProfile}>
