@@ -32,18 +32,9 @@ const routes = {
       path: '/pmo/dashboard',
       load: () => import(/* webpackChunkName: 'pmoDashboard' */ './pmoDashboard'),
     },
-    // These are all left here for reference, will remove all of them eventually prior to deployment
     {
-      path: '/contact',
-      load: () => import(/* webpackChunkName: 'contact' */ './contact'),
-    },
-    {
-      path: '/register',
-      load: () => import(/* webpackChunkName: 'register' */ './register'),
-    },
-    {
-      path: '/admin',
-      load: () => import(/* webpackChunkName: 'admin' */ './admin'),
+      path: '/gc/dashboard',
+      load: () => import(/* webpackChunkName: 'gcDashboard' */ './gcDashboard'),
     },
     // Wildcard routes, e.g. { path: '(.*)', ... } (must go last)
     {

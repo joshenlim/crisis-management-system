@@ -1,0 +1,458 @@
+@import '../../components/variables.css';
+
+html {
+  color: #222;
+  font-weight: 100;
+  font-size: 1em; /* ~16px; */
+  font-family: var(--font-family-base);
+  line-height: 1.375; /* ~22px */
+}
+
+body {
+  margin: 0;
+}
+
+hr {
+  display: block;
+  height: 1px;
+  border: 0;
+  border-top: 1px solid #ccc;
+  margin: 1em 0;
+  padding: 0;
+}
+
+::-webkit-scrollbar {
+  display: none;
+}
+
+.success {
+  position: absolute;
+  top: -60px;
+  background-color: var(--green);
+  width: 100%;
+  height: 40px;
+  padding: 10px;
+  font-weight: 100;
+  color: var(--white);
+  display: flex;
+  align-items: center;
+  transition: top 0.2s ease;
+
+  p {
+    margin: 0;
+    margin-left: 20px;
+  }
+}
+
+.incidentDetail {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+
+  .backBtn {
+    color: var(--border-black);
+    font-weight: 100;
+    font-size: 0.8em;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    cursor: pointer;
+    width: fit-content;
+    margin-top: 0;
+
+    span {
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+
+      img {
+        margin-right: 10px;
+        transform: rotate(90deg);
+        opacity: 0.3;
+        width: 10px;
+      }
+    }
+  }
+
+  .header {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+
+    .incidentDetail {
+      display: flex;
+      flex-direction: column;
+
+      .caseNo {
+        margin: 0;
+        margin-bottom: 5px;
+        font-size: 0.8em;
+        color: var(--black);
+      }
+
+      .category {
+        margin: 0;
+        font-size: 1.2em;
+        color: var(--black);
+      }
+    }
+
+    .vehStatus {
+      .status {
+        height: 80px;
+        width: 180px;
+        border-radius: 10px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+
+        .statusTitle {
+          color: var(--white);
+          font-weight: 100;
+          font-size: 0.6em;
+          margin: 0;
+          position: absolute;
+          top: 5px;
+          left: 10px;
+        }
+
+        .statusVal {
+          font-size: 0.8em;
+          color: var(--white);
+          margin: 0;
+        }
+      }
+
+      .vehOtw {
+        background-color: var(--blue);
+      }
+
+      .vehOnSite {
+        background-color: var(--red);
+      }
+
+      .vehEnroute {
+        background-color: var(--orange);
+      }
+
+      .vehReturned {
+        background-color: var(--green);
+      }
+    }
+  }
+
+  .incidentTable {
+    font-size: 0.8em;
+    margin-bottom: 20px;
+
+    tr {
+      height: 25px;
+    }
+
+    .contentHeader {
+      margin: 0;
+    }
+
+    .contentBody {
+      font-weight: 100;
+    }
+  }
+
+  .btnGroup {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+
+    .statusReportBtn {
+      background-color: var(--blue);
+      border-radius: 10px;
+      padding: 10px 0;
+      width: 280px;
+      text-align: center;
+      font-size: 0.8em;
+      color: var(--white);
+      cursor: pointer;
+      margin-bottom: 10px;
+    }
+  }
+}
+
+.casualtyList {
+  .expandCasualty {
+    max-height: 500px !important;
+
+    .casualtySummary {
+      margin-bottom: 10px !important;
+
+      .dropdown {
+        transform: rotate(180deg);
+      }
+    }
+
+    .casualtyDetails {
+      opacity: 1 !important;
+      visibility: visible !important;
+    }
+  }
+
+  .casualtyCard {
+    border: 1px solid var(--border-black);
+    padding: 20px;
+    margin-bottom: 10px;
+    border-radius: 10px;
+    font-size: 0.8em;
+    transition: all 0.2s ease;
+    max-height: 25px;
+
+    .casualtySummary {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-weight: 400;
+      margin-bottom: 0;
+      transition: all 0.2s ease;
+
+      p {
+        margin: 0;
+      }
+
+      .dropdown {
+        width: 20px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+      }
+    }
+
+    .casualtyDetails {
+      font-weight: 100;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.2s ease;
+
+      .detailRow {
+        height: 30px;
+
+        .contentHeader {
+          font-weight: 400;
+          width: 200px;
+        }
+
+        p {
+          margin: 0;
+          margin-bottom: 5px;
+        }
+      }
+    }
+  }
+}
+
+.notifMsg {
+  opacity: 0.5;
+  font-weight: 100;
+  margin: 0;
+  font-size: 0.8em;
+}
+
+.textQuestion {
+  display: flex;
+  margin-bottom: 20px;
+  align-items: center;
+
+  .question {
+    width: 240px;
+
+    .title {
+      margin: 0;
+      font-size: 0.8em;
+    }
+  }
+
+  select {
+    width: 280px;
+    font-size: 0.8em;
+    font-weight: 100;
+    background: none;
+    border: 1px solid var(--border-black);
+    transition: all 0.2s ease;
+
+    &:focus {
+      outline: none;
+      border: 1px solid var(--black);
+    }
+  }
+
+  input[type='text'],
+  input[type='number'] {
+    border: none;
+    border-bottom: 1px solid var(--border-black);
+    width: 280px;
+    transition: all 0.2s ease;
+    font-weight: 100;
+    font-size: 0.8em;
+
+    &:focus {
+      outline: none;
+      border-bottom: 1px solid var(--black);
+    }
+  }
+
+  textarea {
+    border-radius: 5px;
+    border: 1px solid var(--border-black);
+    font-weight: 100;
+    transition: all 0.2s ease;
+    padding: 5px;
+
+    &:focus {
+      outline: none;
+      border: 1px solid var(--black);
+    }
+  }
+}
+
+.expandMsg {
+  .success {
+    top: 0;
+  }
+}
+
+.container {
+  margin: 0 auto;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  width: 100vw;
+  height: 100vh;
+  background-color: var(--border-black);
+
+  .view {
+    position: relative;
+    background-color: var(--black);
+    width: 768px;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 15%;
+
+    .card {
+      z-index: 5;
+      font-size: 1.5em;
+      font-weight: 400;
+      background-color: var(--white);
+      border-radius: 10px;
+      height: 500px;
+      width: 550px;
+      max-height: 750px;
+      overflow-y: scroll;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+      padding: 20px;
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      transition: all 0.2s ease;
+
+      .cardBody {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+      }
+
+      .user {
+        font-weight: 100;
+        font-size: 0.8em;
+        margin-bottom: 30px;
+
+        p {
+          margin: 0;
+          margin-bottom: 5px;
+        }
+      }
+
+      .incidentIdInput {
+        font-size: 0.8em;
+        font-weight: 100;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+        border-radius: 20px;
+        width: 300px;
+        height: 50px;
+
+        p {
+          margin: 0;
+          margin-right: 20px;
+        }
+
+        .notifMsg {
+          opacity: 0.5;
+        }
+
+        .nextButton {
+          border-radius: 50%;
+          border: 1px solid var(--border-black);
+          width: 30px;
+          height: 30px;
+          margin-left: 20px;
+          background-image: url('/assets/src/assets/images/down-arrow.svg');
+          background-position: 50% 55%;
+          background-repeat: no-repeat;
+          background-size: 50%;
+          transform: rotate(-90deg);
+          cursor: pointer;
+        }
+      }
+
+      .header {
+        display: flex;
+        justify-items: center;
+        align-items: center;
+        margin-bottom: 30px;
+
+        .logo {
+          width: 50px;
+          margin-right: 20px;
+        }
+
+        .title {
+          p {
+            font-size: 1.3em;
+            margin: 0;
+          }
+        }
+      }
+
+      .logout {
+        color: var(--blue);
+        font-size: 0.8em;
+        font-weight: 100;
+        position: absolute;
+        bottom: 15px;
+        cursor: pointer;
+      }
+    }
+
+    .expandCard {
+      width: 600px !important;
+      height: 750px !important;
+      justify-content: flex-start;
+      align-items: flex-start;
+      padding: 25px !important;
+    }
+  }
+}
+
+.questionSet {
+  margin-top: 10px;
+  padding-left: 20px;
+}

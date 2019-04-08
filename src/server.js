@@ -127,7 +127,7 @@ app.post('/login', (req, res, next) => {
 
           switch (user.role) {
             case Enum.staffRole.OPS_GROUNDCOMM:
-              res.redirect('/hq/dashboard');
+              res.redirect('/gc/dashboard');
               break;
             case Enum.staffRole.SPECIALIST:
               res.redirect('/hq/dashboard');

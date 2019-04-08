@@ -21,6 +21,18 @@ router.get('/get', async (req, res) => {
   return res.status(200).send(incidents);
 });
 
+router.get('/get_gc_active_incident', async (req, res) => {
+  const { plate } = req.query;
+  const incidentDetail = await database.getGCActiveIncident(plate);
+  return res.status(200).send(incidentDetail);
+});
+
+router.get('/get_casualty_list', async (req, res) => {
+  const { id } = req.query;
+  const casualtyList = await database.getCasualtyList(id);
+  return res.status(200).send(casualtyList);
+});
+
 router.get('/get_RTA_details', async (req, res) => {
   const { id } = req.query;
   const incidentDetail = await database.getRTADetails(id);
@@ -122,6 +134,24 @@ router.post('/update_status', async (req, res) => {
   await database.updateStatus(reqBody);
   return res.status(201).send({
     Success: 'Incident successfully updated',
+  });
+});
+
+router.post('/update_gc_veh_status', async (req, res) => {
+  const { status, incident_id, plate_number } = req.body
+  await database.updateGCVehStatus(status, incident_id, plate_number);
+  return res.status(201).send({
+    Success: 'GC Vehicle successfully updated',
+  });
+});
+
+router.post('/add_casualty_info', async (req, res) => {
+  const body = {
+    ...req.body,
+  }
+  await database.addCasualtyInformation(body);
+  return res.status(200).send({
+    Success: 'Casualty Information successfully added',
   });
 });
 
