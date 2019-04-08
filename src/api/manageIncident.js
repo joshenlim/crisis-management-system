@@ -27,6 +27,12 @@ router.get('/get_gc_active_incident', async (req, res) => {
   return res.status(200).send(incidentDetail);
 });
 
+router.get('/get_casualty_list', async (req, res) => {
+  const { id } = req.query;
+  const casualtyList = await database.getCasualtyList(id);
+  return res.status(200).send(casualtyList);
+});
+
 router.get('/get_RTA_details', async (req, res) => {
   const { id } = req.query;
   const incidentDetail = await database.getRTADetails(id);

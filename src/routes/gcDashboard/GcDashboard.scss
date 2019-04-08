@@ -44,69 +44,6 @@ hr {
   }
 }
 
-.textQuestion {
-  display: flex;
-  margin-bottom: 20px;
-  align-items: center;
-
-  .question {
-    width: 240px;
-
-    .title {
-      margin: 0;
-      font-size: 0.8em;
-    }
-  }
-
-  select {
-    width: 280px;
-    font-size: 0.8em;
-    font-weight: 100;
-    background: none;
-    border: 1px solid var(--border-black);
-    transition: all 0.2s ease;
-
-    &:focus {
-      outline: none;
-      border: 1px solid var(--black);
-    }
-  }
-
-  input[type='text'],
-  input[type='number'] {
-    border: none;
-    border-bottom: 1px solid var(--border-black);
-    width: 280px;
-    transition: all 0.2s ease;
-    font-weight: 100;
-    font-size: 0.8em;
-
-    &:focus {
-      outline: none;
-      border-bottom: 1px solid var(--black);
-    }
-  }
-
-  textarea {
-    border-radius: 5px;
-    border: 1px solid var(--border-black);
-    font-weight: 100;
-    transition: all 0.2s ease;
-    padding: 5px;
-
-    &:focus {
-      outline: none;
-      border: 1px solid var(--black);
-    }
-  }
-}
-
-.expandMsg {
-  .success {
-    top: 0;
-  }
-}
-
 .incidentDetail {
   display: flex;
   flex-direction: column;
@@ -115,7 +52,7 @@ hr {
   .backBtn {
     color: var(--border-black);
     font-weight: 100;
-    font-size: 0.6em;
+    font-size: 0.8em;
     display: flex;
     justify-content: flex-start;
     align-items: center;
@@ -233,13 +170,152 @@ hr {
       background-color: var(--blue);
       border-radius: 10px;
       padding: 10px 0;
-      width: 200px;
+      width: 280px;
       text-align: center;
-      font-size: 0.6em;
+      font-size: 0.8em;
       color: var(--white);
       cursor: pointer;
       margin-bottom: 10px;
     }
+  }
+}
+
+.casualtyList {
+  .expandCasualty {
+    max-height: 500px !important;
+
+    .casualtySummary {
+      margin-bottom: 10px !important;
+
+      .dropdown {
+        transform: rotate(180deg);
+      }
+    }
+
+    .casualtyDetails {
+      opacity: 1 !important;
+      visibility: visible !important;
+    }
+  }
+
+  .casualtyCard {
+    border: 1px solid var(--border-black);
+    padding: 20px;
+    margin-bottom: 10px;
+    border-radius: 10px;
+    font-size: 0.8em;
+    transition: all 0.2s ease;
+    max-height: 25px;
+
+    .casualtySummary {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-weight: 400;
+      margin-bottom: 0;
+      transition: all 0.2s ease;
+
+      p {
+        margin: 0;
+      }
+
+      .dropdown {
+        width: 20px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+      }
+    }
+
+    .casualtyDetails {
+      font-weight: 100;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.2s ease;
+
+      .detailRow {
+        height: 30px;
+
+        .contentHeader {
+          font-weight: 400;
+          width: 200px;
+        }
+
+        p {
+          margin: 0;
+          margin-bottom: 5px;
+        }
+      }
+    }
+  }
+}
+
+.notifMsg {
+  opacity: 0.5;
+  font-weight: 100;
+  margin: 0;
+  font-size: 0.8em;
+}
+
+.textQuestion {
+  display: flex;
+  margin-bottom: 20px;
+  align-items: center;
+
+  .question {
+    width: 240px;
+
+    .title {
+      margin: 0;
+      font-size: 0.8em;
+    }
+  }
+
+  select {
+    width: 280px;
+    font-size: 0.8em;
+    font-weight: 100;
+    background: none;
+    border: 1px solid var(--border-black);
+    transition: all 0.2s ease;
+
+    &:focus {
+      outline: none;
+      border: 1px solid var(--black);
+    }
+  }
+
+  input[type='text'],
+  input[type='number'] {
+    border: none;
+    border-bottom: 1px solid var(--border-black);
+    width: 280px;
+    transition: all 0.2s ease;
+    font-weight: 100;
+    font-size: 0.8em;
+
+    &:focus {
+      outline: none;
+      border-bottom: 1px solid var(--black);
+    }
+  }
+
+  textarea {
+    border-radius: 5px;
+    border: 1px solid var(--border-black);
+    font-weight: 100;
+    transition: all 0.2s ease;
+    padding: 5px;
+
+    &:focus {
+      outline: none;
+      border: 1px solid var(--black);
+    }
+  }
+}
+
+.expandMsg {
+  .success {
+    top: 0;
   }
 }
 
@@ -273,7 +349,7 @@ hr {
       border-radius: 10px;
       height: 500px;
       width: 550px;
-      max-height: 700px;
+      max-height: 750px;
       overflow-y: scroll;
       box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
       padding: 20px;
@@ -368,7 +444,7 @@ hr {
 
     .expandCard {
       width: 600px !important;
-      height: 700px !important;
+      height: 750px !important;
       justify-content: flex-start;
       align-items: flex-start;
       padding: 25px !important;

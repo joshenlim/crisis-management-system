@@ -736,6 +736,22 @@ class MySQLDB {
         console.error('Error from addCasualtyInformation:', err.sqlMessage);
         return res.status(409).send({ Error: err.code });
       });
+    return res;
+  }
+
+  getCasualtyList(incident_id) {
+    const res = this.query(
+      `SELECT nric, inc_casualty.name, race, gender, curr_condition,
+      allergy, level_of_consc, medical_history, hospital.name AS hospital FROM inc_casualty
+      JOIN hospital ON hospital.id = inc_casualty.hospital_id
+      WHERE incident_id = ?`
+      , [incident_id])
+      .then(rows => rows)
+      .catch(err => {
+        console.error('Error from getCasualtyList:', err.sqlMessage);
+        return res.status(409).send({ Error: err.code });
+      });
+    return res;
   }
 }
 
