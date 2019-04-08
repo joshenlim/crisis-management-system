@@ -35,7 +35,7 @@ class GcProfile extends React.Component {
   }
 
   viewCasualty = () => {
-
+    this.props.viewCasualty();
   }
 
   render() {
@@ -129,7 +129,7 @@ class GcProfile extends React.Component {
             </div>
           }
           {
-            vehStatus == Enum.vehicleStatus.ENROUTE_BACK &&<div className={s.statusReportBtn} onClick={this.props.reportReturned}>
+            vehStatus == Enum.vehicleStatus.ENROUTE_BACK &&<div className={s.statusReportBtn} onClick={this.reportReturned}>
               Report Returned
             </div>
           }

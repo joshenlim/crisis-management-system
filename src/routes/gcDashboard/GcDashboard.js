@@ -11,6 +11,7 @@ import Enum from '../../constants/enum';
 import GcProfile from './GcProfile';
 import GcIncidentDetail from './GcIncidentDetail';
 import GcAddCasualty from './GcAddCasualty';
+import GcCasualtyList from './GcCasualtyList';
 
 @connect(state => ({
   user: state.user,
@@ -76,7 +77,7 @@ class GcDashboard extends React.Component {
   }
 
   viewCasualty = () => {
-    this.setState({ page: 3 });
+    this.setState({ page: 4 });
   }
 
   reportOnsite = () => {
@@ -181,6 +182,15 @@ class GcDashboard extends React.Component {
 
             {
               page == 3 && <GcAddCasualty 
+                incident={activeIncident[0]}
+                prevPage={this.expandIncidentDetail}
+                hospitalList={this.props.hospitalList}
+                addCasualtyInfo={this.addCasualtyInfo}
+              />
+            }
+
+            {
+              page == 4 && <GcCasualtyList 
                 incident={activeIncident[0]}
                 prevPage={this.expandIncidentDetail}
                 hospitalList={this.props.hospitalList}

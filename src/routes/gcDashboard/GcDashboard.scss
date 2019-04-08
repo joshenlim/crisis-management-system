@@ -21,6 +21,10 @@ hr {
   padding: 0;
 }
 
+::-webkit-scrollbar {
+  display: none;
+}
+
 .success {
   position: absolute;
   top: -60px;
@@ -46,17 +50,17 @@ hr {
   align-items: center;
 
   .question {
-    width: 200px;
+    width: 240px;
 
     .title {
       margin: 0;
-      font-size: 0.6em;
+      font-size: 0.8em;
     }
   }
 
   select {
-    width: 236px;
-    font-size: 0.6em;
+    width: 280px;
+    font-size: 0.8em;
     font-weight: 100;
     background: none;
     border: 1px solid var(--border-black);
@@ -72,10 +76,10 @@ hr {
   input[type='number'] {
     border: none;
     border-bottom: 1px solid var(--border-black);
-    width: 235px;
+    width: 280px;
     transition: all 0.2s ease;
     font-weight: 100;
-    font-size: 0.6em;
+    font-size: 0.8em;
 
     &:focus {
       outline: none;
@@ -145,21 +149,21 @@ hr {
       .caseNo {
         margin: 0;
         margin-bottom: 5px;
-        font-size: 0.6em;
+        font-size: 0.8em;
         color: var(--black);
       }
 
       .category {
         margin: 0;
-        font-size: 0.9em;
+        font-size: 1.2em;
         color: var(--black);
       }
     }
 
     .vehStatus {
       .status {
-        height: 70px;
-        width: 150px;
+        height: 80px;
+        width: 180px;
         border-radius: 10px;
         display: flex;
         flex-direction: column;
@@ -170,7 +174,7 @@ hr {
         .statusTitle {
           color: var(--white);
           font-weight: 100;
-          font-size: 0.5em;
+          font-size: 0.6em;
           margin: 0;
           position: absolute;
           top: 5px;
@@ -178,7 +182,7 @@ hr {
         }
 
         .statusVal {
-          font-size: 0.7em;
+          font-size: 0.8em;
           color: var(--white);
           margin: 0;
         }
@@ -203,7 +207,7 @@ hr {
   }
 
   .incidentTable {
-    font-size: 0.6em;
+    font-size: 0.8em;
     margin-bottom: 20px;
 
     tr {
@@ -267,8 +271,10 @@ hr {
       font-weight: 400;
       background-color: var(--white);
       border-radius: 10px;
-      height: 350px;
-      width: 400px;
+      height: 500px;
+      width: 550px;
+      max-height: 700px;
+      overflow-y: scroll;
       box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
       padding: 20px;
       position: relative;
@@ -287,7 +293,7 @@ hr {
 
       .user {
         font-weight: 100;
-        font-size: 0.6em;
+        font-size: 0.8em;
         margin-bottom: 30px;
 
         p {
@@ -297,14 +303,14 @@ hr {
       }
 
       .incidentIdInput {
-        font-size: 0.6em;
+        font-size: 0.8em;
         font-weight: 100;
         display: flex;
         justify-content: center;
         align-items: center;
         box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
         border-radius: 20px;
-        width: 270px;
+        width: 300px;
         height: 50px;
 
         p {
@@ -335,16 +341,16 @@ hr {
         display: flex;
         justify-items: center;
         align-items: center;
-        margin-bottom: 20px;
+        margin-bottom: 30px;
 
         .logo {
-          width: 40px;
+          width: 50px;
           margin-right: 20px;
         }
 
         .title {
           p {
-            font-size: 0.9em;
+            font-size: 1.3em;
             margin: 0;
           }
         }
@@ -352,7 +358,7 @@ hr {
 
       .logout {
         color: var(--blue);
-        font-size: 0.6em;
+        font-size: 0.8em;
         font-weight: 100;
         position: absolute;
         bottom: 15px;
@@ -361,8 +367,8 @@ hr {
     }
 
     .expandCard {
-      width: 500px !important;
-      height: calc(100vh - 200px) !important;
+      width: 600px !important;
+      height: 700px !important;
       justify-content: flex-start;
       align-items: flex-start;
       padding: 25px !important;

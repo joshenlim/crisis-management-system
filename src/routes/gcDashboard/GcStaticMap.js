@@ -30,7 +30,7 @@ class GcStaticMap extends React.Component {
       zoomControl: false,
     };
     return (
-      <div style={{ height: '200px', width: '100%' }}>
+      <div style={{ height: '300px', width: '100%' }}>
         <input
           style={{ display: 'none' }}
           type="number"
