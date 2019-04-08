@@ -2,19 +2,30 @@ import React from 'react';
 import PmoDashboard from './PmoDashboard';
 import Layout from '../../components/Layout';
 
-const localAPI = 'http://localhost:3000/api';
+import { API_HOST } from '../../constants';
 
 async function action({ fetch }) {
-  const escalatedIncidents = await fetch(localAPI + '/incident/get_escalated')
+  const escalatedIncidents = await fetch(
+    API_HOST + 'api/incident/get_escalated',
+  )
     .then(res => res.json())
-    .then(data => data.reverse())
+    .then(data => data.reverse());
+
+  const archivedIncidents = await fetch(
+    API_HOST + 'api/incident/get_escalated_archived',
+  )
+    .then(res => res.json())
+    .then(data => data.reverse());
 
   return {
     title: 'Dashboard',
     chunks: ['pmoDashboard'],
     component: (
       <Layout>
-        <PmoDashboard escalatedIncidents={escalatedIncidents} />
+        <PmoDashboard
+          escalatedIncidents={escalatedIncidents}
+          archivedIncidents={archivedIncidents}
+        />
       </Layout>
     ),
   };
