@@ -28,6 +28,8 @@ import configureStore from './store/configureStore';
 
 import Enum from './constants/enum';
 
+import moment from 'moment';
+
 import { setRuntimeVariable } from './actions/runtime';
 
 import authRouter from './api/auth';
@@ -215,6 +217,19 @@ app.get('/reports/mp/:id', (req, res) => {
   if (req.session.passport.user) {
     const id = req.params.id;
     var file = './reports/' + id + '/MP.pdf';
+    res.download(file);
+  } else {
+    res.status(403).send({
+      Error: 'Access not authorized',
+    });
+  }
+});
+
+app.get('/reports/daily', (req, res) => {
+  var reportdate = moment().format('YYYY-MM-DD');
+  var file = './reports/DailyReport_' + reportdate + '.pdf';
+
+  if (req.session.passport.user) {
     res.download(file);
   } else {
     res.status(403).send({

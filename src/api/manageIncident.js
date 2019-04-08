@@ -352,10 +352,11 @@ router.post('/generate_dailyreport', async (req, res) => {
     doc.end(); // we end the document writing
   } else {
     return res
-      .status(201)
-      .send(
-        'Daily Report cannot be generated because of 0 such records with the current date (as completed_at) on the database',
-      );
+      .status(409)
+      .send({
+        Error:
+          'Daily Report cannot be generated because of 0 such records with the current date (as completed_at) on the database',
+      });
   }
 
   // download the PDF

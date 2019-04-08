@@ -26,6 +26,18 @@
       margin-left: 5px;
     }
 
+    .downloadBtn {
+      cursor: pointer;
+      background-color: var(--blue);
+      color: var(--white);
+      border-radius: 5px;
+      font-size: 1em;
+      font-weight: bolder;
+      text-align: center;
+      margin: 40px 40px 40px 40px;
+      padding: 10px 5px 10px 5px;
+    }
+
     .body {
       display: flex;
       flex-direction: row;
