@@ -165,22 +165,32 @@ class CreateNewIncidentModal extends React.Component {
       fire_spread_rate: this.state.fireSpreadRate,
     };
 
-    const { vehicleDispatch, escalate } = this.state;qq
+    const { vehicleDispatch, escalate } = this.state;
+    qq;
 
     axios
       .post('/api/incident/create', postBody)
       .then(res => {
         const newIncidentId = res.data.incident_id;
         if (escalate) {
-          axios.post('/api/incident/update_escalation', {
-            incident_id: newIncidentId,
-            if_escalate_hq: 1
-          })
+          axios
+            .post('/api/incident/update_escalation', {
+              incident_id: newIncidentId,
+              if_escalate_hq: 1,
+            })
             .then(res => {
-              axios.post('/api/incident/create_civil_emergency', {
-                incident_id: newIncidentId
-              })
-                .then(res => res)
+              axios
+                .post('/api/incident/create_civil_emergency', {
+                  incident_id: newIncidentId,
+                })
+                .then(res => {
+                  io.emit('notify', Enum.socketEvents.ESCALATE_INCIDENT);
+                  console.log(
+                    'SocketIo: emitted "escalate incident" at ' +
+                      new Date().getTime() +
+                      'ms',
+                  );
+                })
                 .catch(err => console.log(err));
             })
             .catch(err => console.log(err));
@@ -190,8 +200,9 @@ class CreateNewIncidentModal extends React.Component {
           const body = {
             incident_id: newIncidentId,
             plate_number: vehicle.plate,
-          }
-          axios.post('/api/incident/dispatch', body)
+          };
+          axios
+            .post('/api/incident/dispatch', body)
             .then(() => {
               setTimeout(() => {
                 this.setState({ submittingIncident: false });
