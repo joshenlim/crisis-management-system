@@ -50,7 +50,7 @@ class GcDashboard extends React.Component {
           .then(data => this.setState({
             activeIncident: data,
             loading: false,
-            vehStatus: data[0].veh_status,
+            vehStatus: data.length > 0 ? data[0].veh_status : "",
           }))
           .catch(err => console.log(err));
       })
