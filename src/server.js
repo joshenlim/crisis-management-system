@@ -80,7 +80,7 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json({ type: 'application/json' }));
+app.use(bodyParser.json({ limit: '50mb', type: 'application/json' }));
 app.use(flash());
 
 //
@@ -194,6 +194,16 @@ app.use('/api/hospitals', hospitalAPI);
 app.use('/api/sms', smsAPI);
 app.use('/api/twitter', twitterAPI);
 // app.use('/ops/dashboard', opsRouter);
+
+//
+// Retrieve report
+// -----------------------------------------------------------------------------
+
+app.get('/reports/aa/:id', (req, res) => {
+  const id = req.params.id;
+  var file = './reports/' + id + '/AA.pdf';
+  res.download(file);
+});
 
 //
 // Middleware Auth for ops, hq, pmo systems
