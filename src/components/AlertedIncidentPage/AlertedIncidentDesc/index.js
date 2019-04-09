@@ -203,22 +203,28 @@ class AlertedIncidentDesc extends Component {
   };
 
   render() {
+    const { user } = this.props;
+
     return (
       <div className={s.container}>
-        <div className={s.inputPanel}>
-          <textarea
-            className={s.textarea}
-            placeholder="Enter updates here..."
-            onChange={this.updateOnchange}
-            value={this.state.desc}
-          />
-          <div
-            onClick={this.updateOnclick}
-            className={this.state.updateBtnState.class}
-          >
-            {this.state.updateBtnState.text}
+        <b>Incident logs</b> <br />
+        {user.role_id != 5 && (
+          <div className={s.inputPanel}>
+            <textarea
+              className={s.textarea}
+              placeholder="Enter updates here."
+              onChange={this.updateOnchange}
+              value={this.state.desc}
+            />
+
+            <div
+              onClick={this.updateOnclick}
+              className={this.state.updateBtnState.class}
+            >
+              {this.state.updateBtnState.text}
+            </div>
           </div>
-        </div>
+        )}
         <div className={s.descPanel}>{this.renderDesc()}</div>
       </div>
     );

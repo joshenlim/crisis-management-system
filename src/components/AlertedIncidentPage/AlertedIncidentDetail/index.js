@@ -261,12 +261,6 @@ class AlertedIncidentDetail extends Component {
 
             {user.role_id != 5 && <hr />}
 
-            {user.role_id != 5 && (
-              <div className={s.descriptionPanel}>
-                <AlertedIncidentDesc incidentId={incident.id} />
-              </div>
-            )}
-
             {user.role_id == 5 &&
               incident.status != Enum.incidentStatus.CLOSED && (
                 <div className={s.segment}>
@@ -287,6 +281,12 @@ class AlertedIncidentDetail extends Component {
                   </div>
                 </div>
               )}
+
+            {
+              <div className={s.descriptionPanel}>
+                <AlertedIncidentDesc user={user} incidentId={incident.id} />
+              </div>
+            }
           </div>
 
           {user.role_id != 5 && (
