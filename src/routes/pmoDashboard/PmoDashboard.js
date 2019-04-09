@@ -49,7 +49,7 @@ class PmoDashboard extends React.Component {
     fetch(API_HOST + 'api/incident/get_escalated')
       .then(res => res.json())
       .then(data => data.reverse())
-      .then(data => this.setState({ escalatedIncident: data }));
+      .then(data => this.setState({ escalatedIncidents: data }));
 
     fetch(API_HOST + 'api/incident/get_escalated_archived')
       .then(res => res.json())
