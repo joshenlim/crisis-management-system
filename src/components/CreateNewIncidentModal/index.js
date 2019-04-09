@@ -195,32 +195,35 @@ class CreateNewIncidentModal extends React.Component {
             .catch(err => console.log(err));
         }
 
-        vehicleDispatch.forEach(vehicle => {
-          const body = {
-            incident_id: newIncidentId,
-            plate_number: vehicle.plate,
-          };
-          axios
-            .post('/api/incident/dispatch', body)
-            .then(() => {
-              setTimeout(() => {
-                this.setState({ submittingIncident: false });
-                io.emit('notify', Enum.socketEvents.NEW_INCIDENT);
-                console.log(
-                  'SocketIo: emitted "new incident" at ' +
-                    new Date().getTime() +
-                    'ms',
-                );
-              }, 1000);
+        if (vehicleDispatch.length > 0) {
+          vehicleDispatch.forEach(vehicle => {
+            console.log(vehicle)
+            const body = {
+              incident_id: newIncidentId,
+              plate_number: vehicle.plate,
+            };
+            axios
+              .post('/api/incident/dispatch', body)
+              .then(res => res)
+              .catch(err => {
+                console.log(err);
+              });
+          });
+        }
+        this.props.refreshFireStationList();
+        setTimeout(() => {
+          this.setState({ submittingIncident: false });
+          io.emit('notify', Enum.socketEvents.NEW_INCIDENT);
+          console.log(
+            'SocketIo: emitted "new incident" at ' +
+              new Date().getTime() +
+              'ms',
+          );
+        }, 1000);
 
-              setTimeout(() => {
-                this.closeModal();
-              }, 3000);
-            })
-            .catch(err => {
-              console.log(err);
-            });
-        });
+        setTimeout(() => {
+          this.closeModal();
+        }, 3000);
       })
       .catch(err => {
         console.log(err);
@@ -315,7 +318,7 @@ class CreateNewIncidentModal extends React.Component {
               <div className={s.escalateQuestion}>
                 <div className={s.textQuestion}>
                   <div className={s.question}>
-                    <p className={s.title}>Escalate Incident to HQ:</p>
+                    <p className={s.title}>Escalate Incident to CNC:</p>
                   </div>
                   <input
                     name="escalateToHQ"

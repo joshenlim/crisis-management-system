@@ -1,12 +1,16 @@
 import React, { Component } from 'react';
+import axios from 'axios';
+import Socket from 'socket.io-client';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import s from '../ViewDetailsModal.scss';
 import Enum from '../../../constants/enum';
-import { API_HOST } from '../../../constants';
+import { SOCKIO_HOST, API_HOST } from '../../../constants';
 import formatUtils from '../../../formatUtils';
 import DispatchMap from '../DispatchMap';
 import DispatchVehicleList from '../DispatchVehicleList';
 import escalateIcon from '../../../assets/images/escalate.svg';
+
+const io = Socket(SOCKIO_HOST);
 
 class IncidentModal extends Component {
   constructor(props) {
@@ -106,6 +110,38 @@ class IncidentModal extends Component {
       .then(res => res.json())
       .then(data => this.setState({ dispatched_vehicles: data }))
       .catch(err => console.log(err));
+  }
+
+  escalateIncident = () => {
+    if (confirm("Confirm to escalate this incident to CNC")) {
+      axios.post('/api/incident/update_escalation', {
+        incident_id: this.state.incident.id,
+        if_escalate_hq: 1,
+      })
+      .then(res => {
+        axios
+          .post('/api/incident/create_civil_emergency', {
+            incident_id: this.state.incident.id,
+          })
+          .then(res => {
+            io.emit('notify', Enum.socketEvents.NEW_INCIDENT);
+            io.emit('notify', Enum.socketEvents.ESCALATE_INCIDENT);
+            console.log(
+              'SocketIo: emitted "escalate incident" at ' +
+                new Date().getTime() +
+                'ms',
+            );
+            this.setState({
+              incident: {
+                ...this.state.incident,
+                if_escalate_hq: 1,
+              }
+            })
+          })
+          .catch(err => console.log(err));
+      })
+      .catch(err => console.log(err));
+    }
   }
 
   renderIncidentCatDetails = (category) => {
@@ -212,6 +248,7 @@ class IncidentModal extends Component {
     const { page, fireStationList } = this.props;
     const formattedDispatch = formatUtils.formatDispatchVehicles(dispatched_vehicles);
     var statusClass = '';
+
     switch (this.state.status) {
       case Enum.incidentStatus.DISPATCHED:
         statusClass = s.dispatched;
@@ -294,6 +331,7 @@ class IncidentModal extends Component {
                   name="SPF"
                   type="checkbox"
                   checked={incident.if_alerted}
+                  disabled={incident.status == "CLOSED"}
                   onChange={this.updateAlert}
                 />
               </div>
@@ -306,10 +344,27 @@ class IncidentModal extends Component {
                     name="LTA"
                     type="checkbox"
                     checked={incident.additionalFields.if_alerted}
+                    disabled={incident.status == "CLOSED"}
                     onChange={this.updateAlert}
                   />
                 </div>
               }
+            </div>
+
+            <p className={s.contentHeader}>Escalate Incident</p>
+            <div className={s.contentBody}>
+              <div className={s.textQuestion}>
+                <div className={s.question}>
+                  <p className={s.title}>Escalate Incident to CNC:</p>
+                </div>
+                <input
+                  name="escalate"
+                  type="checkbox"
+                  checked={incident.if_escalate_hq == 1}
+                  disabled={incident.if_escalate_hq == 1}
+                  onChange={this.escalateIncident}
+                />
+              </div>
             </div>
 
             <p className={s.contentHeader}>Dispatchment Details</p>
@@ -321,7 +376,7 @@ class IncidentModal extends Component {
                     <ul className={s.dispatchList}>
                       {
                         station.dispatch.map((vehicle, index) => {
-                          return <li key={index} className={s.dispatchInfo}>{vehicle.call_sign} - {vehicle.type}</li>
+                          return <li key={index} className={s.dispatchInfo}>{vehicle.call_sign} - {vehicle.type} ({vehicle.veh_status})</li>
                         })
                       }
                     </ul>
@@ -331,13 +386,15 @@ class IncidentModal extends Component {
               {
                 formattedDispatch.length == 0 && <p className={s.noDispatch}>There are no units dispatched to this incident</p>
               }
-              <p className={s.dispatchAdditional} onClick={this.nextPage}>Dispatch Additional Units</p>
+              {
+                incident.status != "CLOSED" && <p className={s.dispatchAdditional} onClick={this.nextPage}>Dispatch Additional Units</p>
+              }
             </div>
           </div>
         }
 
         {
-          incident.status != "CLOSED" && page == 1 && <div>
+          incident.status != "CLOSED" && page == 1 && incident.if_escalate_hq == 0 && <div>
             <hr />
             <div className={s.closeIncButton} onClick={this.closeIncident}>
               Close Incident

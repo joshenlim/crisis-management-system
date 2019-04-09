@@ -45,6 +45,7 @@ class ViewDetailsModal extends React.Component {
       }
       axios.post('/api/incident/dispatch', body)
         .then((res) => {
+          this.props.refreshFireStationList();
           setTimeout(() => {
             this.setState({
               updatingIncident: false,

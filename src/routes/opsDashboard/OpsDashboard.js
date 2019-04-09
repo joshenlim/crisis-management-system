@@ -29,6 +29,7 @@ class OpsDashboard extends React.Component {
       detailModalId: '',
       detailModalType: Enum.detailType.INCIDENT,
       showCreateNewIncidentModal: false,
+      fireStationList: this.props.fireStationList,
     };
   }
 
@@ -48,6 +49,22 @@ class OpsDashboard extends React.Component {
       activeTab: e.target.name,
     });
   };
+
+  refreshFireStationList = async() => {
+    const fireStationList = await fetch(API_HOST + 'api/station/get_all_station')
+      .then(res => res.json())
+      .then(data => data)
+
+    for (const station of fireStationList) {
+      await fetch(API_HOST + 'api/station/get_station_vehicles?id=' + station.id)
+        .then(res => res.json())
+        .then(data => {
+          station.vehicles = data;
+        });
+    }
+
+    this.setState({ fireStationList: fireStationList })
+  }
 
   fetchOngoingIncident = () => {
     fetch(API_HOST + 'api/incident/get_ongoing', {
@@ -86,7 +103,8 @@ class OpsDashboard extends React.Component {
           id={this.state.detailModalId}
           type={this.state.detailModalType}
           mountModal={this.mountModal}
-          fireStationList={this.props.fireStationList}
+          fireStationList={this.state.fireStationList}
+          refreshFireStationList={this.refreshFireStationList}
         />
       );
     }
@@ -97,10 +115,11 @@ class OpsDashboard extends React.Component {
       return (
         <CreateNewIncidentModal
           mountModal={this.mountCreateNewIncidentModal}
-          fireStationList={this.props.fireStationList}
+          fireStationList={this.state.fireStationList}
           publicHospitalList={this.props.publicHospitalList}
           privateHospitalList={this.props.privateHospitalList}
           ongoingIncidentList={this.props.ongoingIncidentList}
+          refreshFireStationList={this.refreshFireStationList}
         />
       );
     }
@@ -160,7 +179,7 @@ class OpsDashboard extends React.Component {
           {this.state.activeTab == 0 && (
             <Map
               mountModal={this.mountModal}
-              fireStationList={this.props.fireStationList}
+              fireStationList={this.state.fireStationList}
               publicHospitalList={this.props.publicHospitalList}
               privateHospitalList={this.props.privateHospitalList}
               ongoingIncidentList={this.props.ongoingIncidentList}

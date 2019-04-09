@@ -55,7 +55,7 @@ class Header extends React.Component {
         logoSrc = logoAlt;
         cssProfile = s.userProfileHQ;
         cssLogout = s.logoutHQ;
-        dashboardTitle = "HQ"
+        dashboardTitle = "CNC"
         mockProfile =
           'https://az616578.vo.msecnd.net/files/2016/07/24/6360498492827782071652557381_corgi%20header.jpg';
         break;
