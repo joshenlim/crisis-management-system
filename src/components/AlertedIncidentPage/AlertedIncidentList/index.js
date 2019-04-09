@@ -11,19 +11,6 @@ import Enum from '../../../constants/enum';
 var io = Socket(SOCKIO_HOST);
 
 class AlertedIncidentList extends Component {
-  componentWillMount() {
-    io.on('fetch', type => {
-      if (Enum.socketEvents.ESCALATE_INCIDENT == type) {
-        this.fetchEscalatedIncident();
-        console.log(
-          'SocketIo: received "escalate incident" at ' +
-          new Date().getTime() +
-          'ms',
-        );
-      }
-    });
-  }
-
   render() {
     const { escalatedIncidents } = this.props;
     if (escalatedIncidents.length > 0) {

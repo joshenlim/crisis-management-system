@@ -73,6 +73,11 @@ router.get('/get_escalated', async (req, res) => {
   return res.status(200).send(incidents);
 });
 
+router.get('/get_escalated_archived', async (req, res) => {
+  const incidents = await database.getEscalatedArchived();
+  return res.status(200).send(incidents);
+});
+
 router.post('/create', async (req, res) => {
   const reqBody = {
     ...req.body,
