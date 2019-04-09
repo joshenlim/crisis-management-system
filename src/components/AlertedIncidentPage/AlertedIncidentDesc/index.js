@@ -208,23 +208,24 @@ class AlertedIncidentDesc extends Component {
     return (
       <div className={s.container}>
         <b>Incident logs</b> <br />
-        {user.role_id != 5 && (
-          <div className={s.inputPanel}>
-            <textarea
-              className={s.textarea}
-              placeholder="Enter updates here."
-              onChange={this.updateOnchange}
-              value={this.state.desc}
-            />
+        {user.role_id != 5 &&
+          this.props.incidentStatus !== Enum.incidentStatus.CLOSED && (
+            <div className={s.inputPanel}>
+              <textarea
+                className={s.textarea}
+                placeholder="Enter updates here."
+                onChange={this.updateOnchange}
+                value={this.state.desc}
+              />
 
-            <div
-              onClick={this.updateOnclick}
-              className={this.state.updateBtnState.class}
-            >
-              {this.state.updateBtnState.text}
+              <div
+                onClick={this.updateOnclick}
+                className={this.state.updateBtnState.class}
+              >
+                {this.state.updateBtnState.text}
+              </div>
             </div>
-          </div>
-        )}
+          )}
         <div className={s.descPanel}>{this.renderDesc()}</div>
       </div>
     );

@@ -85,6 +85,39 @@ class AlertedIncidentDetail extends Component {
       .catch(err => console.log(err));
   };
 
+  closeCase = () => {
+    if (
+      confirm(
+        "You are about to set this incident as 'CLOSED'. " +
+          '\nAre you sure you want to continue?',
+      )
+    ) {
+      fetch(API_HOST + 'api/incident/update_status', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          incident_id: this.props.incidentId,
+          status: Enum.incidentStatus.CLOSED,
+        }),
+      })
+        .then(() => {
+          io.emit('notify', Enum.socketEvents.INCIDENT_DETAIL);
+          io.emit('notify', Enum.socketEvents.ESCALATE_INCIDENT);
+          io.emit('notify', Enum.socketEvents.NEW_INCIDENT);
+          console.log(
+            'SocketIo: emitted "incident detail", "new incident" and "escalated incident" at ' +
+              new Date().getTime() +
+              'ms',
+          );
+
+          alert('Incident successfully closed!');
+        })
+        .catch(err => console.log(err));
+    }
+  };
+
   resolveCase = () => {
     if (
       confirm(
@@ -104,8 +137,10 @@ class AlertedIncidentDetail extends Component {
       })
         .then(() => {
           io.emit('notify', Enum.socketEvents.INCIDENT_DETAIL);
+          io.emit('notify', Enum.socketEvents.ESCALATE_INCIDENT);
+          io.emit('notify', Enum.socketEvents.NEW_INCIDENT);
           console.log(
-            'SocketIo: emitted "incident detail" at ' +
+            'SocketIo: emitted "incident detail", "new incident" and "escalated incident" at ' +
               new Date().getTime() +
               'ms',
           );
@@ -194,6 +229,18 @@ class AlertedIncidentDetail extends Component {
           </div>
         </span>
       );
+    } else if (incident.status === Enum.incidentStatus.RESOLVED) {
+      return (
+        <span>
+          <hr />
+
+          <div className={s.buttonPanel}>
+            <div className={s.resolveBtn} onClick={this.closeCase}>
+              Mark Case as Closed
+            </div>
+          </div>
+        </span>
+      );
     }
   };
 
@@ -204,7 +251,7 @@ class AlertedIncidentDetail extends Component {
       incident.status !== Enum.incidentStatus.CLOSED
     ) {
       return <DispatchVehicleList {...this.props} />;
-    } else {
+    } else if (incident.status === Enum.incidentStatus.RESOLVED) {
       return <SubmitReportPanel incidentId={incident.id} />;
     }
   }
@@ -299,6 +346,51 @@ class AlertedIncidentDetail extends Component {
               {this.renderDispatchDetails()}
             </div>
 
+            {user.role_id == 5 &&
+              incident.status != Enum.incidentStatus.CLOSED && (
+                <div className={s.segment}>
+                  <div className={s.header2}>Alert External Services</div>
+                  <label>
+                    <input type="checkbox" label="" />
+                    &nbsp;Singapore Press Holdings
+                  </label>
+                  <br />
+                  <label>
+                    <input type="checkbox" label="" />
+                    &nbsp;First Aid Providers
+                  </label>
+                  <br />
+                  <label>
+                    <input type="checkbox" label="" />
+                    &nbsp;Public/Private Hospitals
+                  </label>
+                </div>
+              )}
+
+            {user.role_id == 5 &&
+              incident.status == Enum.incidentStatus.CLOSED && (
+                <div className={s.segment}>
+                  <div className={s.header2}>Alert External Services</div>
+                  <label>
+                    <input type="checkbox" label="" disabled />
+                    &nbsp;
+                    <span className={s.disabled}>Singapore Press Holdings</span>
+                  </label>
+                  <br />
+                  <label>
+                    <input type="checkbox" label="" disabled />
+                    &nbsp;
+                    <span className={s.disabled}>First Aid Providers</span>
+                  </label>
+                  <br />
+                  <label>
+                    <input type="checkbox" label="" disabled />
+                    &nbsp;
+                    <span className={s.disabled}>Public/Private Hospitals</span>
+                  </label>
+                </div>
+              )}
+
             {user.role_id != 5 && this.renderResolveBtn()}
 
             {user.role_id != 5 && <hr />}
@@ -348,7 +440,11 @@ class AlertedIncidentDetail extends Component {
 
             {
               <div className={s.descriptionPanel}>
-                <AlertedIncidentDesc user={user} incidentId={incident.id} />
+                <AlertedIncidentDesc
+                  user={user}
+                  incidentId={incident.id}
+                  incidentStatus={incident.status}
+                />
               </div>
             }
           </div>
