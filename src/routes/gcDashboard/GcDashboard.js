@@ -155,7 +155,12 @@ class GcDashboard extends React.Component {
             <p>Casualty successfully added!</p>  
           </div>
 
-          <div className={s.card + " " + (page > 1 && s.expandCard)}>
+          <div className={s.card + " " +
+            (page == 2 && vehStatus == Enum.vehicleStatus.ON_SITE && s.expandOnsite) + " " +
+            (page == 2 && vehStatus == Enum.vehicleStatus.ENROUTE_BACK && s.expandEnroute) + " " +
+            (page == 2 && vehStatus == Enum.vehicleStatus.ON_THE_WAY && s.expandOntheway) + " " +
+            (page == 3 && s.expandAddcasualty) + " " +
+            (page == 4 && s.expandViewcasualty)}>
 
             {
               page == 1 && <GcProfile user={user}

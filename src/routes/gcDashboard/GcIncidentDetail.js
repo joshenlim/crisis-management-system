@@ -119,13 +119,13 @@ class GcProfile extends React.Component {
             </div>
           }
           {
-            vehStatus == Enum.vehicleStatus.ON_SITE &&<div className={s.statusReportBtn} onClick={this.reportEnroute}>
-              Report Enroute
+            (vehStatus == Enum.vehicleStatus.ENROUTE_BACK || vehStatus == Enum.vehicleStatus.ON_SITE) && <div className={s.statusReportBtn} onClick={this.viewCasualty}>
+              View Casualty Information
             </div>
           }
           {
-            vehStatus == Enum.vehicleStatus.ENROUTE_BACK &&<div className={s.statusReportBtn} onClick={this.viewCasualty}>
-              View Casualty Information
+            vehStatus == Enum.vehicleStatus.ON_SITE &&<div className={s.statusReportBtn} onClick={this.reportEnroute}>
+              Report Enroute
             </div>
           }
           {

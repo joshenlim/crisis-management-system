@@ -172,7 +172,7 @@ hr {
       padding: 10px 0;
       width: 280px;
       text-align: center;
-      font-size: 0.8em;
+      font-size: 0.7em;
       color: var(--white);
       cursor: pointer;
       margin-bottom: 10px;
@@ -349,7 +349,7 @@ hr {
       border-radius: 10px;
       height: 500px;
       width: 550px;
-      max-height: 750px;
+      max-height: 780px;
       overflow-y: scroll;
       box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
       padding: 20px;
@@ -442,7 +442,39 @@ hr {
       }
     }
 
-    .expandCard {
+    .expandOntheway {
+      width: 600px !important;
+      height: 700px !important;
+      justify-content: flex-start;
+      align-items: flex-start;
+      padding: 25px !important;
+    }
+
+    .expandOnsite {
+      width: 600px !important;
+      height: 800px !important;
+      justify-content: flex-start;
+      align-items: flex-start;
+      padding: 25px !important;
+    }
+
+    .expandEnroute {
+      width: 600px !important;
+      height: 750px !important;
+      justify-content: flex-start;
+      align-items: flex-start;
+      padding: 25px !important;
+    }
+
+    .expandAddcasualty {
+      width: 600px !important;
+      height: 680px !important;
+      justify-content: flex-start;
+      align-items: flex-start;
+      padding: 25px !important;
+    }
+
+    .expandViewcasualty {
       width: 600px !important;
       height: 750px !important;
       justify-content: flex-start;
