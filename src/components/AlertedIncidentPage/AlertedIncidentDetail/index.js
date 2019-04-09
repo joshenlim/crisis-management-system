@@ -21,6 +21,7 @@ import Socket from 'socket.io-client';
 import smsIcon from '../../../assets/images/sms.svg';
 import emailIcon from '../../../assets/images/email.svg';
 import socialIcon from '../../../assets/images/social.svg';
+import docIcon from '../../../assets/images/download.svg';
 
 var io = Socket(SOCKIO_HOST);
 
@@ -30,12 +31,18 @@ var io = Socket(SOCKIO_HOST);
 class AlertedIncidentDetail extends Component {
   constructor(props) {
     super(props);
-    this.state = { incident: {}, dispatchedUnits: [] };
+    this.state = {
+      incident: {},
+      dispatchedUnits: [],
+      downloadAA: false,
+      downloadMP: false,
+    };
   }
 
   componentWillMount() {
     this.fetchIncident();
     this.fetchDispatchUnit();
+    this.checkReportExist();
 
     io.on('fetch', type => {
       if (Enum.socketEvents.INCIDENT_DETAIL == type) {
@@ -47,8 +54,36 @@ class AlertedIncidentDetail extends Component {
             'ms',
         );
       }
+      if (Enum.socketEvents.REPORT == type) {
+        this.checkReportExist();
+        console.log(
+          'SocketIo: received "report" at ' + new Date().getTime() + 'ms',
+        );
+      }
     });
   }
+
+  checkReportExist = () => {
+    fetch(
+      API_HOST +
+        'api/incident/report_exist?incident_id=' +
+        this.props.incidentId,
+      {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      },
+    )
+      .then(res => res.json())
+      .then(data =>
+        this.setState({
+          downloadAA: data.aa_exists,
+          downloadMP: data.mp_exists,
+        }),
+      )
+      .catch(err => console.log(err));
+  };
 
   resolveCase = () => {
     if (
@@ -178,6 +213,13 @@ class AlertedIncidentDetail extends Component {
   sendEmail = () => this.props.mountModal('email', this.state.incident);
   sendSocial = () => this.props.mountModal('social', this.state.incident);
 
+  downloadAA = () => {
+    window.location = API_HOST + 'reports/aa/' + this.props.incidentId;
+  };
+  downloadMP = () => {
+    window.location = API_HOST + 'reports/mp/' + this.props.incidentId;
+  };
+
   render() {
     const { incident } = this.state;
     const { user } = this.props;
@@ -278,6 +320,28 @@ class AlertedIncidentDetail extends Component {
                       <img src={socialIcon} alt="social" />
                       <p className={s.actionName}>Social Media</p>
                     </div>
+                  </div>
+                </div>
+              )}
+
+            {user.role_id == 5 &&
+              incident.status == Enum.incidentStatus.CLOSED &&
+              (this.state.downloadAA || this.state.downloadMP) && (
+                <div className={s.segment}>
+                  <div className={s.header2}>Reports</div>
+                  <div className={s.broadcastActions}>
+                    {this.state.downloadAA && (
+                      <div className={s.actionBubble} onClick={this.downloadAA}>
+                        <img src={docIcon} alt="afteraction" />
+                        <p className={s.actionName}>After Action</p>
+                      </div>
+                    )}
+                    {this.state.downloadMP && (
+                      <div className={s.actionBubble} onClick={this.downloadMP}>
+                        <img src={docIcon} alt="manpower" />
+                        <p className={s.actionName}>Manpower</p>
+                      </div>
+                    )}
                   </div>
                 </div>
               )}
