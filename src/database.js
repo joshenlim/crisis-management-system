@@ -59,13 +59,32 @@ class MySQLDB {
     return res;
   }
 
+  getGCDetails(staff_id) {
+    const res = this.query(
+      `SELECT staff.id, staff.name, staff.s_rank,
+       fs.id AS fire_station_id, fs.name AS fire_station_name,
+       gc.veh_plate_num, vehicle.call_sign FROM staff
+       JOIN fire_station_gc AS gc on gc.staff_id = staff.id
+       JOIN fire_station AS fs ON fs.id = gc.fire_station_id
+       JOIN vehicle ON vehicle.plate_number = gc.veh_plate_num
+       WHERE staff_id = ?`,
+      [staff_id],
+    )
+      .then(rows => rows)
+      .catch(err => {
+        console.error('Error from getGCDetails:', err.sqlMessage);
+        return err.code;
+      });
+    return res;
+  }
+
   createStaff(name, sRank, username, password, roleId) {
     const res = this.query(
       `INSERT INTO staff (name, s_rank, username, password, role_id)
                             VALUES (?, ?, ?, ?, ?)`,
       [name, sRank, username, password, roleId],
     )
-      .then(rows => rows)
+      .then(res => res.insertId)
       .catch(err => {
         console.error('Error from createStaff:', err.sqlMessage);
         return err.code;
@@ -81,6 +100,19 @@ class MySQLDB {
       .then(rows => rows)
       .catch(err => {
         console.error('Error from getPolicies:', err.sqlMessage);
+        return err.code;
+      });
+    return res;
+  }
+
+  updateFirestationGC(staff_id, fire_station_id, veh_plate_num) {
+    const res = this.query(
+      `INSERT INTO fire_station_gc (staff_id, fire_station_id, veh_plate_num) VALUES (?, ?, ?);`,
+      [staff_id, fire_station_id, veh_plate_num]
+    )
+      .then(rows => rows)
+      .catch(err => {
+        console.error('Error from updateFirestationGC:', err.sqlMessage);
         return err.code;
       });
     return res;
@@ -202,7 +234,7 @@ class MySQLDB {
       });
     return res;
   }
-  
+
   getIncidentByID(id) {
     const res = this.query('SELECT * FROM incidents WHERE id = ?', [id])
       .then(rows => rows)
@@ -214,7 +246,10 @@ class MySQLDB {
   }
 
   getRTADetails(incident_id) {
-    const res = this.query('SELECT * FROM road_traffic_acc WHERE incident_id = ?', [incident_id])
+    const res = this.query(
+      'SELECT * FROM road_traffic_acc WHERE incident_id = ?',
+      [incident_id],
+    )
       .then(rows => rows)
       .catch(err => {
         console.error('Error from getIncidentCategoryDetails:', err.sqlMessage);
@@ -224,7 +259,10 @@ class MySQLDB {
   }
 
   getFEDetails(incident_id) {
-    const res = this.query('SELECT * FROM fire_emergency WHERE incident_id = ?', [incident_id])
+    const res = this.query(
+      'SELECT * FROM fire_emergency WHERE incident_id = ?',
+      [incident_id],
+    )
       .then(rows => rows)
       .catch(err => {
         console.error('Error from getIncidentCategoryDetails:', err.sqlMessage);
@@ -234,7 +272,10 @@ class MySQLDB {
   }
 
   getMEDetails(incident_id) {
-    const res = this.query('SELECT * FROM med_emergency WHERE incident_id = ?', [incident_id])
+    const res = this.query(
+      'SELECT * FROM med_emergency WHERE incident_id = ?',
+      [incident_id],
+    )
       .then(rows => rows)
       .catch(err => {
         console.error('Error from getIncidentCategoryDetails:', err.sqlMessage);
@@ -649,6 +690,116 @@ class MySQLDB {
       `UPDATE incidents SET completed_at = ?, status = 'CLOSED' WHERE id = ?`,
       [completed_at, incident_id],
     )
+      .then(rows => rows)
+      .catch(err => {
+        console.error('Error from closeIncident:', err.sqlMessage);
+        return res.status(409).send({ Error: err.code });
+      });
+  }
+
+  logSMS(body) {
+    const { op_id, incident_id, sms_id } = body;
+    const res = this.query(
+      `INSERT INTO sms_log(creater_id, incident_id, send_time, sms_id) VALUES (?,?,CURRENT_TIMESTAMP,?) `,
+      [op_id, incident_id, sms_id],
+    )
+      .then(rows => rows)
+      .catch(err => {
+        console.error('Error from logSMS:', err.sqlMessage);
+        return res.status(409).send({ Error: err.code });
+      });
+  }
+
+  logEmail(body) {
+    const { op_id, incident_id, email_id } = body;
+    const res = this.query(
+      `INSERT INTO email_log(creater_id, incident_id, send_time, email_id) VALUES (?,?,CURRENT_TIMESTAMP,?) `,
+      [op_id, incident_id, email_id],
+    )
+      .then(rows => rows)
+      .catch(err => {
+        console.error('Error from logEmail:', err.sqlMessage);
+        return res.status(409).send({ Error: err.code });
+      });
+  }
+  
+  logTwitter(body) {
+    const { op_id, incident_id } = body;
+    const res = this.query(
+      `INSERT INTO social_media_log(send_time, staff_id, incident_id) VALUES (CURRENT_TIMESTAMP,?,?) `,
+      [op_id, incident_id],
+    )
+      .then(rows => rows)
+      .catch(err => {
+        console.error('Error from logTwitter:', err.sqlMessage);
+        return res.status(409).send({ Error: err.code });
+      });
+  }
+
+  getGCActiveIncident(plate_number) {
+    const res = this.query(
+      `SELECT * FROM vehicle_incident
+       JOIN incidents ON incidents.id = vehicle_incident.incident_id
+       WHERE plate_number = ? AND veh_status <> "RETURNED"`,
+      [plate_number],
+    )
+      .then(rows => rows)
+      .catch(err => {
+        console.error('Error from getGCActiveIncident:', err.sqlMessage);
+        return res.status(409).send({ Error: err.code });
+      });
+
+    return res;
+  }
+
+  updateGCVehStatus(status, incident_id, plate_number) {
+    const res = this.query(`UPDATE vehicle_incident SET veh_status = ? WHERE incident_id = ? AND plate_number = ?`,
+      [status, incident_id, plate_number]
+    )
+      .then(rows => rows)
+      .catch(err => {
+        console.error('Error from updateGCVehStatus:', err.sqlMessage);
+        return res.status(409).send({ Error: err.code });
+      });
+
+    return res;
+  }
+
+  addCasualtyInformation(body) {
+    const {
+      nric, name, race, gender,
+      curr_condition, allergy, 
+      level_of_consc, medical_history,
+      hospital_id, incident_id
+    } = body;
+    const res = this.query(`INSERT INTO inc_casualty (
+      nric, name, race, gender, curr_condition, allergy,
+      level_of_consc, medical_history, hospital_id, incident_id) VALUES (
+      ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      [nric, name, race, gender, curr_condition, allergy,
+      level_of_consc, medical_history, hospital_id, incident_id]
+    )
+      .then(rows => rows)
+      .catch(err => {
+        console.error('Error from addCasualtyInformation:', err.sqlMessage);
+        return res.status(409).send({ Error: err.code });
+      });
+    return res;
+  }
+
+  getCasualtyList(incident_id) {
+    const res = this.query(
+      `SELECT nric, inc_casualty.name, race, gender, curr_condition,
+      allergy, level_of_consc, medical_history, hospital.name AS hospital FROM inc_casualty
+      JOIN hospital ON hospital.id = inc_casualty.hospital_id
+      WHERE incident_id = ?`
+      , [incident_id])
+      .then(rows => rows)
+      .catch(err => {
+        console.error('Error from getCasualtyList:', err.sqlMessage);
+        return res.status(409).send({ Error: err.code });
+      });
+    return res;
   }
 }
 

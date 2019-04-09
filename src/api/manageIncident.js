@@ -21,6 +21,18 @@ router.get('/get', async (req, res) => {
   return res.status(200).send(incidents);
 });
 
+router.get('/get_gc_active_incident', async (req, res) => {
+  const { plate } = req.query;
+  const incidentDetail = await database.getGCActiveIncident(plate);
+  return res.status(200).send(incidentDetail);
+});
+
+router.get('/get_casualty_list', async (req, res) => {
+  const { id } = req.query;
+  const casualtyList = await database.getCasualtyList(id);
+  return res.status(200).send(casualtyList);
+});
+
 router.get('/get_RTA_details', async (req, res) => {
   const { id } = req.query;
   const incidentDetail = await database.getRTADetails(id);
@@ -130,6 +142,24 @@ router.post('/update_status', async (req, res) => {
   });
 });
 
+router.post('/update_gc_veh_status', async (req, res) => {
+  const { status, incident_id, plate_number } = req.body
+  await database.updateGCVehStatus(status, incident_id, plate_number);
+  return res.status(201).send({
+    Success: 'GC Vehicle successfully updated',
+  });
+});
+
+router.post('/add_casualty_info', async (req, res) => {
+  const body = {
+    ...req.body,
+  }
+  await database.addCasualtyInformation(body);
+  return res.status(200).send({
+    Success: 'Casualty Information successfully added',
+  });
+});
+
 router.post('/update_escalation', async (req, res) => {
   const reqBody = {
     ...req.body,
@@ -217,6 +247,62 @@ router.post('/remove_ce_desc', async (req, res) => {
   });
 });
 
+router.post('/uploadReportAA', async (req, res) => {
+  const { incidentId, fileAA } = req.body;
+  let dir = './reports/' + incidentId;
+  let path = dir + '/AA.pdf';
+
+  if (!fs.existsSync('./reports')) {
+    fs.mkdirSync('./reports');
+  }
+  if (!fs.existsSync(dir)) {
+    fs.mkdirSync(dir);
+  }
+
+  await fs.writeFile(path, fileAA, { encoding: 'binary' }, err => {
+    if (err) console.log(err);
+    else {
+      console.log('File saved: ' + path);
+      return res.status(201).send({
+        Success: 'AA report successfully saved!',
+      });
+    }
+  });
+});
+
+router.post('/uploadReportMP', async (req, res) => {
+  const { incidentId, fileMP } = req.body;
+  let dir = './reports/' + incidentId;
+  let path = dir + '/MP.pdf';
+
+  if (!fs.existsSync('./reports')) {
+    fs.mkdirSync('./reports');
+  }
+  if (!fs.existsSync(dir)) {
+    fs.mkdirSync(dir);
+  }
+
+  await fs.writeFile(path, fileMP, { encoding: 'binary' }, err => {
+    if (err) console.log(err);
+    else {
+      //TODO - update ce with file path
+
+      console.log('File saved: ' + path);
+    }
+  });
+});
+
+router.get('/report_exist', async (req, res) => {
+  const { incident_id } = req.query;
+  let pathAA = './reports/' + incident_id + '/AA.pdf';
+  let pathMP = './reports/' + incident_id + '/MP.pdf';
+
+  let existsAA = fs.existsSync(pathAA);
+  let existsMP = fs.existsSync(pathMP);
+
+  return res.status(200).send({ aa_exists: existsAA, mp_exists: existsMP });
+});
+
 // on click of generate report button (by today or this week)
 // call t
 // get data from the incidents table by current date or 7 days before and plus current date
@@ -301,10 +387,11 @@ router.post('/generate_dailyreport', async (req, res) => {
     doc.end(); // we end the document writing
   } else {
     return res
-      .status(201)
-      .send(
-        'Daily Report cannot be generated because of 0 such records with the current date (as completed_at) on the database',
-      );
+      .status(409)
+      .send({
+        Error:
+          'Daily Report cannot be generated because of 0 such records with the current date (as completed_at) on the database',
+      });
   }
 
   // download the PDF

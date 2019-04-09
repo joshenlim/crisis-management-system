@@ -2,14 +2,34 @@ import React, { Component } from 'react';
 import withStyles from 'isomorphic-style-loader/lib/withStyles';
 import LineGraph from './LineGraph';
 
+import { API_HOST } from '../../constants';
+
 import s from './StatisticVisualPage.scss';
 import PieChart from './PieChart';
+
+import fetch from 'node-fetch';
 
 class StatisticVisualPage extends Component {
   constructor(props) {
     super(props);
     this.state = {};
   }
+
+  generateReport = () => {
+    fetch('/api/incident/generate_dailyreport', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+      .then(res => res.json())
+      .then(res => {
+        if (res.Error) alert(res.Error);
+        else window.location = API_HOST + 'reports/daily';
+      })
+      .catch(err => console.log(err));
+  };
+
   render() {
     return (
       <div className={s.container}>
@@ -63,7 +83,10 @@ class StatisticVisualPage extends Component {
           </div>
         </div>
         <div className={s.cardTop}>
-          <div className={s.title}>Generate Daily Report</div>
+          <div className={s.title}>Daily Report</div>
+          <div className={s.downloadBtn} onClick={this.generateReport}>
+            Generate Report
+          </div>
         </div>
         <div className={s.card}>
           <div className={s.title}>Weekly Statistics</div>

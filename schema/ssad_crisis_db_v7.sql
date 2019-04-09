@@ -1,0 +1,1 @@
+ALTER TABLE `inc_casualty` CHANGE `nric` `nric` VARCHAR(255) NOT NULL;

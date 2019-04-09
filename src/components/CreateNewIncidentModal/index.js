@@ -166,7 +166,6 @@ class CreateNewIncidentModal extends React.Component {
     };
 
     const { vehicleDispatch, escalate } = this.state;
-    qq;
 
     axios
       .post('/api/incident/create', postBody)
