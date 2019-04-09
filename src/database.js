@@ -234,7 +234,7 @@ class MySQLDB {
       });
     return res;
   }
-  
+
   getIncidentByID(id) {
     const res = this.query('SELECT * FROM incidents WHERE id = ?', [id])
       .then(rows => rows)
@@ -246,7 +246,10 @@ class MySQLDB {
   }
 
   getRTADetails(incident_id) {
-    const res = this.query('SELECT * FROM road_traffic_acc WHERE incident_id = ?', [incident_id])
+    const res = this.query(
+      'SELECT * FROM road_traffic_acc WHERE incident_id = ?',
+      [incident_id],
+    )
       .then(rows => rows)
       .catch(err => {
         console.error('Error from getIncidentCategoryDetails:', err.sqlMessage);
@@ -256,7 +259,10 @@ class MySQLDB {
   }
 
   getFEDetails(incident_id) {
-    const res = this.query('SELECT * FROM fire_emergency WHERE incident_id = ?', [incident_id])
+    const res = this.query(
+      'SELECT * FROM fire_emergency WHERE incident_id = ?',
+      [incident_id],
+    )
       .then(rows => rows)
       .catch(err => {
         console.error('Error from getIncidentCategoryDetails:', err.sqlMessage);
@@ -266,7 +272,10 @@ class MySQLDB {
   }
 
   getMEDetails(incident_id) {
-    const res = this.query('SELECT * FROM med_emergency WHERE incident_id = ?', [incident_id])
+    const res = this.query(
+      'SELECT * FROM med_emergency WHERE incident_id = ?',
+      [incident_id],
+    )
       .then(rows => rows)
       .catch(err => {
         console.error('Error from getIncidentCategoryDetails:', err.sqlMessage);
@@ -684,6 +693,45 @@ class MySQLDB {
       .then(rows => rows)
       .catch(err => {
         console.error('Error from closeIncident:', err.sqlMessage);
+        return res.status(409).send({ Error: err.code });
+      });
+  }
+
+  logSMS(body) {
+    const { op_id, incident_id, sms_id } = body;
+    const res = this.query(
+      `INSERT INTO sms_log(creater_id, incident_id, send_time, sms_id) VALUES (?,?,CURRENT_TIMESTAMP,?) `,
+      [op_id, incident_id, sms_id],
+    )
+      .then(rows => rows)
+      .catch(err => {
+        console.error('Error from logSMS:', err.sqlMessage);
+        return res.status(409).send({ Error: err.code });
+      });
+  }
+
+  logEmail(body) {
+    const { op_id, incident_id, email_id } = body;
+    const res = this.query(
+      `INSERT INTO email_log(creater_id, incident_id, send_time, email_id) VALUES (?,?,CURRENT_TIMESTAMP,?) `,
+      [op_id, incident_id, email_id],
+    )
+      .then(rows => rows)
+      .catch(err => {
+        console.error('Error from logEmail:', err.sqlMessage);
+        return res.status(409).send({ Error: err.code });
+      });
+  }
+  
+  logTwitter(body) {
+    const { op_id, incident_id } = body;
+    const res = this.query(
+      `INSERT INTO social_media_log(send_time, staff_id, incident_id) VALUES (CURRENT_TIMESTAMP,?,?) `,
+      [op_id, incident_id],
+    )
+      .then(rows => rows)
+      .catch(err => {
+        console.error('Error from logTwitter:', err.sqlMessage);
         return res.status(409).send({ Error: err.code });
       });
   }
