@@ -212,19 +212,23 @@ async function start() {
   appPromiseResolve();
 
   // Launch the development server with Browsersync and HMR
-  await new Promise((resolve, reject) =>
-    browserSync.create().init(
-      {
-        // https://www.browsersync.io/docs/options
-        server: 'src/server.js',
-        middleware: [server],
-        open: !process.argv.includes('--silent'),
-        ...(isDebug ? {} : { notify: false, ui: false }),
-      },
-      (error, bs) => (error ? reject(error) : resolve(bs)),
-    ),
-  );
+  // await new Promise((resolve, reject) =>
+  //   browserSync.create().init(
+  //     {
+  //       // https://www.browsersync.io/docs/options
+  //       server: 'src/server.js',
+  //       middleware: [server],
+  //       open: !process.argv.includes('--silent'),
+  //       ...(isDebug ? {} : { notify: false, ui: false }),
+  //     },
+  //     (error, bs) => (error ? reject(error) : resolve(bs)),
+  //   ),
+  // );
 
+  server.listen(3000, () => {
+    console.info("Server running on localhost:3000");
+  })
+  
   const timeEnd = new Date();
   const time = timeEnd.getTime() - timeStart.getTime();
   console.info(`[${format(timeEnd)}] Server launched after ${time} ms`);

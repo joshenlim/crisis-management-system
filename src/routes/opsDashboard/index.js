@@ -2,7 +2,9 @@ import React from 'react';
 import OpsDashboard from './OpsDashboard';
 import Layout from '../../components/Layout';
 
-const localAPI = 'http://localhost:3000/api';
+import { API_HOST } from '../../constants/index';
+
+const localAPI = `${API_HOST}api`;
 
 async function action({ fetch }) {
   const fireStationList = await fetch(localAPI + '/station/get_all_station')

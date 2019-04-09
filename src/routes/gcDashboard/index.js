@@ -1,7 +1,8 @@
 import React from 'react';
 import GcDashboard from './GcDashboard';
+import { API_HOST } from '../../constants/index';
 
-const localAPI = 'http://localhost:3000/api';
+const localAPI = `${API_HOST}api`;
 
 async function action({ fetch }) {
   const publicHospitalList = await fetch(localAPI + '/hospitals/get_public_hospital')
