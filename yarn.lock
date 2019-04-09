@@ -9334,6 +9334,11 @@ react-error-overlay@^4.0.1:
   resolved "https://registry.yarnpkg.com/react-error-overlay/-/react-error-overlay-4.0.1.tgz#417addb0814a90f3a7082eacba7cee588d00da89"
   integrity sha512-xXUbDAZkU08aAkjtUvldqbvI04ogv+a1XdHxvYuHPYKIVk/42BIOD0zSKTHAWV4+gDy3yGm283z2072rA2gdtw==
 
+react-file-reader-input@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/react-file-reader-input/-/react-file-reader-input-2.0.0.tgz#44d2a466731d2cc3f51dee9970f204585742243b"
+  integrity sha512-1XgkCpwMnNQsuOIy938UCntz8Xzwt9ECwHaH3cCfIQK1SPpH+y7gCYtqEcb6Rm0hAUq7Lp9+Ljoti9zGMswYrQ==
+
 react-is@^16.8.1:
   version "16.8.1"
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.8.1.tgz#a80141e246eb894824fb4f2901c0c50ef31d4cdb"

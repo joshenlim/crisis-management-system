@@ -28,6 +28,8 @@ import configureStore from './store/configureStore';
 
 import Enum from './constants/enum';
 
+import moment from 'moment';
+
 import { setRuntimeVariable } from './actions/runtime';
 
 import authRouter from './api/auth';
@@ -81,7 +83,7 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json({ type: 'application/json' }));
+app.use(bodyParser.json({ limit: '50mb', type: 'application/json' }));
 app.use(flash());
 
 //
@@ -196,6 +198,47 @@ app.use('/api/sms', smsAPI);
 app.use('/api/twitter', twitterAPI);
 app.use('/api/email', emailAPI);
 // app.use('/ops/dashboard', opsRouter);
+
+//
+// Retrieve report
+// -----------------------------------------------------------------------------
+
+app.get('/reports/aa/:id', (req, res) => {
+  if (req.session.passport.user) {
+    const id = req.params.id;
+    var file = './reports/' + id + '/AA.pdf';
+    res.download(file);
+  } else {
+    res.status(403).send({
+      Error: 'Access not authorized',
+    });
+  }
+});
+
+app.get('/reports/mp/:id', (req, res) => {
+  if (req.session.passport.user) {
+    const id = req.params.id;
+    var file = './reports/' + id + '/MP.pdf';
+    res.download(file);
+  } else {
+    res.status(403).send({
+      Error: 'Access not authorized',
+    });
+  }
+});
+
+app.get('/reports/daily', (req, res) => {
+  var reportdate = moment().format('YYYY-MM-DD');
+  var file = './reports/DailyReport_' + reportdate + '.pdf';
+
+  if (req.session.passport.user) {
+    res.download(file);
+  } else {
+    res.status(403).send({
+      Error: 'Access not authorized',
+    });
+  }
+});
 
 //
 // Middleware Auth for ops, hq, pmo systems

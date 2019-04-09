@@ -242,6 +242,62 @@ router.post('/remove_ce_desc', async (req, res) => {
   });
 });
 
+router.post('/uploadReportAA', async (req, res) => {
+  const { incidentId, fileAA } = req.body;
+  let dir = './reports/' + incidentId;
+  let path = dir + '/AA.pdf';
+
+  if (!fs.existsSync('./reports')) {
+    fs.mkdirSync('./reports');
+  }
+  if (!fs.existsSync(dir)) {
+    fs.mkdirSync(dir);
+  }
+
+  await fs.writeFile(path, fileAA, { encoding: 'binary' }, err => {
+    if (err) console.log(err);
+    else {
+      console.log('File saved: ' + path);
+      return res.status(201).send({
+        Success: 'AA report successfully saved!',
+      });
+    }
+  });
+});
+
+router.post('/uploadReportMP', async (req, res) => {
+  const { incidentId, fileMP } = req.body;
+  let dir = './reports/' + incidentId;
+  let path = dir + '/MP.pdf';
+
+  if (!fs.existsSync('./reports')) {
+    fs.mkdirSync('./reports');
+  }
+  if (!fs.existsSync(dir)) {
+    fs.mkdirSync(dir);
+  }
+
+  await fs.writeFile(path, fileMP, { encoding: 'binary' }, err => {
+    if (err) console.log(err);
+    else {
+      //TODO - update ce with file path
+
+      console.log('File saved: ' + path);
+    }
+  });
+});
+
+router.get('/report_exist', async (req, res) => {
+  const { incident_id } = req.query;
+  let pathAA = './reports/' + incident_id + '/AA.pdf';
+  let pathMP = './reports/' + incident_id + '/MP.pdf';
+
+  let existsAA = fs.existsSync(pathAA);
+  let existsMP = fs.existsSync(pathMP);
+
+  return res.status(200).send({ aa_exists: existsAA, mp_exists: existsMP });
+});
+
 // on click of generate report button (by today or this week)
 // call t
 // get data from the incidents table by current date or 7 days before and plus current date
@@ -326,10 +382,11 @@ router.post('/generate_dailyreport', async (req, res) => {
     doc.end(); // we end the document writing
   } else {
     return res
-      .status(201)
-      .send(
-        'Daily Report cannot be generated because of 0 such records with the current date (as completed_at) on the database',
-      );
+      .status(409)
+      .send({
+        Error:
+          'Daily Report cannot be generated because of 0 such records with the current date (as completed_at) on the database',
+      });
   }
 
   // download the PDF
