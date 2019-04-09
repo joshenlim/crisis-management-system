@@ -62,6 +62,11 @@ class BroadcastModal extends React.Component {
     const { emailTitle, emailMsg, publicMsg } = this.state;
     switch (this.props.type) {
       case 'sms': {
+        this.setState({
+          page: 0,
+          updatingIncident: true,
+          message: 'Broadcasting SMS',
+        });
         axios
           .post('/api/sms/broadcast', {
             message: publicMsg,
@@ -69,6 +74,17 @@ class BroadcastModal extends React.Component {
           .then(res => {
             console.log('BROADCAST FROM SMS ', res);
             if (res.data.success) {
+              setTimeout(() => {
+                this.setState({
+                  updatingIncident: false,
+                  message: 'SMS successfully broadcasted!',
+                });
+              }, 1000)
+          
+              setTimeout(() => {
+                this.closeModal()
+              }, 3000)
+
               axios
                 .post('/api/sms/log', {
                   incident_id: this.props.incident.id,
@@ -84,6 +100,11 @@ class BroadcastModal extends React.Component {
         break;
       }
       case 'email': {
+        this.setState({
+          page: 0,
+          updatingIncident: true,
+          message: 'Broadcasting Email',
+        });
         axios
           .post('/api/email/send', {
             title: emailTitle,
@@ -92,6 +113,16 @@ class BroadcastModal extends React.Component {
           .then(res => {
             console.log('BROADCAST FROM EMAIL ', res);
             if (res.data.success) {
+              setTimeout(() => {
+                this.setState({
+                  updatingIncident: false,
+                  message: 'Email successfully broadcasted!',
+                });
+              }, 1000)
+          
+              setTimeout(() => {
+                this.closeModal()
+              }, 3000)
               axios
                 .post('/api/email/log', {
                   incident_id: this.props.incident.id,
@@ -107,6 +138,11 @@ class BroadcastModal extends React.Component {
         break;
       }
       case 'social': {
+        this.setState({
+          page: 0,
+          updatingIncident: true,
+          message: 'Broadcasting Social Media',
+        });
         axios
           .post('/api/twitter/tweet', {
             message: publicMsg,
@@ -114,6 +150,16 @@ class BroadcastModal extends React.Component {
           .then(res => {
             console.log('BROADCAST FROM TWITTER ', res);
             if (res.status == 200) {
+              setTimeout(() => {
+                this.setState({
+                  updatingIncident: false,
+                  message: 'Successfully broadcasted on Twitter!',
+                });
+              }, 1000)
+          
+              setTimeout(() => {
+                this.closeModal()
+              }, 3000)
               axios
                 .post('/api/twitter/log', {
                   incident_id: this.props.incident.id,
